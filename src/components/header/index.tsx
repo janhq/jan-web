@@ -2,19 +2,19 @@
 import React, { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { DiscordIcon, AvararIcon } from "@/assets";
+import { DiscordIcon } from "@/assets";
 import Image from "next/image";
 import Link from "next/link";
 
 const navigation = [
   { name: "Chat", icon: "/icons/chat.svg", href: "/chat" },
-  { name: "AIs", icon: "/icons/brain.svg", href: "/" },
+  { name: "AIs", icon: "/icons/brain.svg", href: "/ai" },
 ];
 
 const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
-    <header className="text-sm bg-white border-b-[1px] border-gray-200">
+    <header className="text-sm bg-white border-b-[1px] border-gray-200 ">
       <nav
         className="mx-auto flex items-center justify-between p-6 lg:px-8"
         aria-label="Global"

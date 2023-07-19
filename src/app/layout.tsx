@@ -1,13 +1,15 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { LayoutHome } from "@/components";
+import { Header } from "@/components";
+import classNames from "classnames";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Jan: On-Device AI + Cloud AIs",
-  description: "No subscription needed. Protect your privacy. Use AI without an internet connection",
+  description:
+    "No subscription needed. Protect your privacy. Use AI without an internet connection",
 };
 
 export default function RootLayout({
@@ -17,8 +19,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <LayoutHome>{children}</LayoutHome>
+      <body
+        className={classNames(
+          inter.className,
+          "flex flex-col w-full h-full min-h-screen"
+        )}
+      >
+        <Header/>
+        {children}
       </body>
     </html>
   );

@@ -2,6 +2,7 @@ import { Search, Slider } from "@/components";
 import AiTypeList from "@/components/AiTypeList";
 import ConversationalList from "@/components/ConversationalList";
 import GenerateImageList from "@/components/GenerateImageList";
+import Footer from "@/components/footer";
 
 const AiPage: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ const AiPage: React.FC = () => {
       </div>
       <ConversationalList />
       <GenerateImageList />
+      <Footer />
     </main>
   );
 };
