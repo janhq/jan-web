@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "compile": "tsc --noEmit -p . --pretty"
+    "configure": "op read op://Shared/MobileStagingConfig/config.dev.ts > src/config/config.dev.ts"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.15",
