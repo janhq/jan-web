@@ -42,3 +42,13 @@ export interface ApiConfig {
    */
   timeout: number;
 }
+
+export interface StreamMessageOptions {
+  stream: boolean;
+  model: string;
+  max_tokens: Number;
+  messages: string[]; // TODO: Change message content type
+  onUpdate?: (message: string, chunk: string) => void;
+  onFinish: (message: string) => void;
+  onError?: (err: Error) => void;
+}
