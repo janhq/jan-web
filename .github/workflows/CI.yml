@@ -1,0 +1,29 @@
+name: Linter & Test
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  test-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Getting the repo
+        uses: actions/checkout@v2
+      - name: Installing node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.12
+      - name: Install yarn dependencies
+        run: |
+          yarn install
+      - name: Running lint
+        run: |
+          yarn lint
+      - name: Running compile
+        run: |
+          yarn compile
