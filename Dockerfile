@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.4
 FROM node:20-alpine AS base
 
 # 1. Install dependencies only when needed
