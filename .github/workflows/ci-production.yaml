@@ -24,6 +24,12 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
+      - name: Get .env file for build time
+        run: base64 -d <<< "$ENV_FILE_BASE64" > .env
+        shell: bash
+        env:
+          ENV_FILE_BASE64: ${{ secrets.ENV_FILE_BASE64 }}
+
       - run: |
           docker build -t ${{ env.ACR_REPOSITORY_URL }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }} .
           docker push ${{ env.ACR_REPOSITORY_URL }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
