@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Image from "next/image";
 
 type Props = {
@@ -5,12 +6,8 @@ type Props = {
   senderName: string;
   time: string;
   text: string;
-  imageUrl: {
-    src: string;
-    width: number;
-    height: number;
-  };
-}
+  imageUrl: string;
+};
 
 export const SimpleImageMessage: React.FC<Props> = ({
   senderName,
@@ -31,11 +28,16 @@ export const SimpleImageMessage: React.FC<Props> = ({
         </div>
         <div className="leading-[20px] text-[14px]">{text}</div>
         <div className="flex items-center gap-3">
-          <Image
-            src={imageUrl.src}
-            width={imageUrl.width}
-            height={imageUrl.height}
+          <img
+            src={
+              process.env.NEXT_PUBLIC_ENV === "development"
+                ? `${process.env.NEXT_PUBLIC_DEV_BUCKET_URL}/${imageUrl
+                    .split("/")
+                    .pop()}`
+                : imageUrl
+            }
             alt=""
+            className="w-72 aspect-square rounded-lg"
           />
           <button className="flex gap-1 items-center px-2 py-1 bg-[#F3F4F6] rounded-[12px]">
             <Image src="/icons/download.svg" width={16} height={16} alt="" />

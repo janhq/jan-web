@@ -4,15 +4,15 @@ import Image from "next/image";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { ChatBody } from "./ChatBody";
-import { InputToolbar } from "./InputToolbar";
+import { ChatBody } from "@/components/ChatBody";
+import { InputToolbar } from "@/components/InputToolbar";
 import { UserToolbar } from "../../components/UserToolbar";
 import avatar from "@/assets/Thumbnail02.png";
 import ShortcutList from "@/components/ShortcutList";
 import HistoryList from "@/components/HistoryList";
 import SearchBar from "@/components/SearchBar";
 import ModelMenu from "@/components/ModelMenu";
-import ModelDetail from "./ModelDetail";
+import ModelDetail from "@/components/ModelDetail";
 
 const Page: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
