@@ -1,9 +1,9 @@
 import { ApiResponse, ApisauceInstance, create } from "apisauce";
+import { fetchEventSource, EventStreamContentType } from "@microsoft/fetch-event-source";
 
 import Config from "../../config";
 import { getFirebaseToken } from "../firebase";
-
-import type { ApiConfig, MagicPromptResponse, MagicPromptText } from "./api.types";
+import type { ApiConfig, MagicPromptResponse, MagicPromptText, StreamMessageOptions } from "./api.types";
 import { GeneralApiProblem, getGeneralApiProblem } from "./api.problems";
 
 /**
@@ -119,6 +119,95 @@ export class Api {
       return { kind: "ok", outputs: outputs };
     } catch (e) {
       return { kind: "bad-data" };
+    }
+  }
+
+  /**
+   * Sending messages to Cloudflare SSE.
+   * @description Using callbacks to decouple sending message from modifying DOM / data store
+   * @param options
+   */
+  async streamMessageChat(options: StreamMessageOptions) {
+    const streamURL = Config.SSE_INFERENCE_ENDPOINT + options.model;
+    try {
+      const chatPayload = {
+        messages: options.messages,
+        strearm: options.stream,
+        max_tokens: options.max_tokens,
+      };
+
+      const authToken = await getFirebaseToken();
+      const chatRequestPayload = {
+        method: "POST",
+        body: JSON.stringify(chatPayload),
+        headers: {
+          Accept: "text/event-stream",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${authToken}`,
+          be_key: Config.BE_KEY || "",
+        },
+        debug: false,
+        pollingInterval: 100000,
+      };
+
+      const controller = new AbortController();
+      const reqTimeoutId = setTimeout(() => controller.abort(), 10000); // TODO: make time out value be configurable
+      let responseText = "";
+      const finish = () => {
+        options.onFinish(responseText);
+      };
+
+      fetchEventSource(streamURL, {
+        ...chatRequestPayload,
+        async onopen(res) {
+          clearTimeout(reqTimeoutId);
+          // if the returned content does not have type as epxected
+          if (res.ok && res.headers.get("content-type") !== EventStreamContentType) {
+            responseText += await res.clone().json();
+            return finish();
+          }
+
+          if (res.status === 401) {
+            let extraInfo = { error: undefined };
+            try {
+              extraInfo = await res.clone().json();
+            } catch {}
+
+            if (extraInfo.error) {
+              responseText += "\n\n" + JSON.stringify(extraInfo);
+            }
+            return finish();
+          }
+        },
+        onmessage(msg) {
+          if (msg.data === "[DONE]") {
+            return finish();
+          }
+
+          const text = msg.data;
+          try {
+            const json = JSON.parse(text);
+            const delta = json.choices[0].delta.content;
+            if (delta) {
+              responseText += delta;
+              options.onUpdate?.(responseText, delta);
+            }
+          } catch (e) {
+            console.error("[Response] parsing data error", text, msg);
+          }
+        },
+        onclose() {
+          finish();
+        },
+        onerror(e) {
+          options.onError?.(e);
+        },
+        openWhenHidden: true,
+      });
+    } catch (error) {
+      console.error("[Request] could not send chat message", error);
+      options.onError?.(error as Error);
     }
   }
 }
