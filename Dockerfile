@@ -8,14 +8,14 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
-COPY --link package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN  npm install --production && npm i -g @nestjs/cli typescript ts-node
 
 # 2. Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
-COPY --from=deps --link /app/node_modules ./node_modules
-COPY --link . .
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 # This will do the trick, use the corresponding env file for each environment.
 
 RUN npm run build
@@ -30,7 +30,7 @@ RUN \
   addgroup -g 1001 -S nodejs; \
   adduser -S nextjs -u 1001
 
-COPY --from=builder --link /app/public ./public
+COPY --from=builder /app/public ./public
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
