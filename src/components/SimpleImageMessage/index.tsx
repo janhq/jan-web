@@ -2,7 +2,7 @@ import Image from "next/image";
 
 type Props = {
   avatarUrl: string;
-  SenderName: string;
+  senderName: string;
   time: string;
   text: string;
   imageUrl: {
@@ -13,7 +13,7 @@ type Props = {
 }
 
 export const SimpleImageMessage: React.FC<Props> = ({
-  SenderName,
+  senderName,
   avatarUrl,
   imageUrl,
   text,
@@ -25,7 +25,7 @@ export const SimpleImageMessage: React.FC<Props> = ({
       <div className="flex flex-col gap-1">
         <div className="flex gap-1 justify-start items-baseline">
           <div className="text-[#1B1B1B] text-[13px] font-extrabold leading-[15.2px]">
-            {SenderName}
+            {senderName}
           </div>
           <div className="text-[11px] leading-[13.2px] font-medium">{time}</div>
         </div>

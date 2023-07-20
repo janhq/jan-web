@@ -1,36 +1,16 @@
 import Image from "next/image";
 import React from "react";
-import avartar from "@/assets/Thumbnail02.png";
 import ShortcutItem from "../ShortcutItem";
+import { observer } from "mobx-react-lite";
+import { useStore } from "../../models/RootStore";
 
 type Props = {
   onShortcutClicked: (id: string) => void;
 };
 
-const ShortcutList: React.FC<Props> = ({ onShortcutClicked }) => {
+const ShortcutList: React.FC<Props> = observer(({ onShortcutClicked }) => {
   const [expand, setExpand] = React.useState<boolean>(false);
-  const datas = [
-    {
-      id: "chatgpt",
-      title: "ChatGPT",
-      avatar: avartar.src,
-    },
-    {
-      id: "chatgpt",
-      title: "Guanaco",
-      avatar: avartar.src,
-    },
-    {
-      id: "chatgpt",
-      title: "OpenJourney",
-      avatar: avartar.src,
-    },
-    {
-      id: "chatgpt",
-      title: "Dreamshaper",
-      avatar: avartar.src,
-    },
-  ];
+  const { availableShortcuts } = useStore();
 
   return (
     <div className="flex flex-col w-full">
@@ -50,18 +30,18 @@ const ShortcutList: React.FC<Props> = ({ onShortcutClicked }) => {
         />
       </button>
       <div className={`flex flex-col gap-4 ${!expand ? "hidden " : "block"}`}>
-        {datas.map(({ id, title, avatar }, index) => (
+        {availableShortcuts.map(({ name, title, avatarUrl }, index) => (
           <ShortcutItem
-            id={id}
+            id={name}
             title={title}
             key={index}
-            avatar={avatar}
+            avatar={avatarUrl}
             onClick={onShortcutClicked}
           />
         ))}
       </div>
     </div>
   );
-};
+});
 
 export default ShortcutList;
