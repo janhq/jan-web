@@ -1,14 +1,29 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { firebaseAuth } from "../../services/firebase";
 
+interface LoginModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
 /**
  * Modal of signing in with Google and other Authentication Provider
- * @returns 
+ * @returns
  */
-const LoginModal = () => {
+const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  const handleOutsideClick = (event: React.MouseEvent) => {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      onClose();
+    }
+  };
+
+  if (!isOpen) return null;
+
   // Handling sign in with Google & Firebase
   const signInWithGoole = () => {
     try {
@@ -32,8 +47,14 @@ const LoginModal = () => {
   };
 
   return (
-    <>
-      <div className="mt-10 flex justify-center items-center flex-col w-80 rounded-lg shadow-2xl h-auto p-6">
+    <div
+      className="fixed top-0 left-0 right-0 bottom-0 bg-opacity-50 flex justify-center items-center bg-opacity-50 bg-black z-50"
+      onClick={handleOutsideClick}
+    >
+      <div
+        ref={modalRef}
+        className="flex justify-center items-center flex-col w-[383px] h-[288px] bg-white p-6 rounded-lg shadow-2xl"
+      >
         <Image src="/icons/janai_logo.svg" alt={""} width={64} height={64} objectFit="contain" />
         <h2 className="text-lg mt-2 mx-4 text-black font-semibold text-center">Login to continue</h2>
         <button
@@ -65,7 +86,7 @@ const LoginModal = () => {
           Continue with Apple
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -15,7 +15,7 @@ const MobileDownload = () => {
         Stay up to date and move work forward with Jan on iOS & Android. Download the app today.
       </p>
       {/** Buttons */}
-      <div className="flex w-full mt-6 justify-between">
+      <div className="flex w-full mt-4 justify-between">
         <a href={DOWNLOAD_IOS} target="_blank" rel="noopener noreferrer" className="w-[48%]">
           <div className="flex box-border h-11 rounded-md bg-gray-300 p-2 items-center hover:bg-gray-200 focus:bg-gray-600">
             <Image src="/icons/apple_logo.svg" alt={""} width={26} height={26} objectFit="contain" />
