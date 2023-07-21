@@ -13,7 +13,7 @@ export const InputToolbar: React.FC = () => {
     <div className="flex items-start space-x-4">
       <div className="min-w-0 flex-1">
         <form action="#" className="relative">
-          <div className="overflow-hidden rounded-lg shadow-sm ring-1 ring-inset ring-gray-300">
+          <div className="overflow-hidden rounded-lg shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-indigo-600">
             <label htmlFor="comment" className="sr-only">
               Add your comment
             </label>
@@ -21,7 +21,7 @@ export const InputToolbar: React.FC = () => {
               rows={2}
               name="comment"
               id="comment"
-              className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+              className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
               placeholder="Add your comment..."
               defaultValue={""}
             />

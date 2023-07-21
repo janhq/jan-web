@@ -1,39 +1,164 @@
 import avatar from "@/assets/Thumbnail02.png";
-import { SimpleImageMessage } from "@/components/SimpleImageMessage";
+import test from "@/assets/test.jpg";
 import { SimpleTextMessage } from "@/components/SimpleTextMessage";
+import React, { useState } from "react";
+import InfiniteScroll from "react-infinite-scroller";
 
 export const ChatBody: React.FC = () => {
-  const datas = [
+  const ref = React.useRef(null);
+  const [height, setHeight] = React.useState(0);
+  const [messages, setMessages] = useState([
     {
       avatarUrl: avatar.src,
-      senderName: "Engerraund Serac",
-      time: "11:56",
-      text: "It's a serene mountain lake surrounded by lush green forests. The water is crystal clear, reflecting the towering peaks in the distance. The sky is a brilliant shade of blue, with fluffy white clouds scattered across it. There's a small wooden dock stretching out into the lake, adding a touch of tranquility to the scene.",
-    },
-    {
-      avatarUrl: avatar.src,
-      senderName: "Engerraund Serac",
+      SenderName: "Engerraund Serac",
       time: "11:56",
       text: "Here’s the picture inspired from your prompt:",
-      imageUrl:
-        "https://9707100ef42a1a25bd70e3ee2137bd0e.r2.cloudflarestorage.com/jan/0008391a-ef4a-4b79-b858-c7c194a221a4-1688485606317.jpeg",
+      imageUrl: test,
     },
-  ];
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+    {
+      avatarUrl: avatar.src,
+      SenderName: "Engerraund Serac",
+      time: "11:56",
+      text: "Here’s the picture inspired from your prompt:",
+      imageUrl: test,
+    },
+  ]);
+  React.useLayoutEffect(() => {
+    setHeight(ref.current?.offsetHeight);
+  }, []);
+
+  const user = {
+    avatarUrl: avatar.src,
+    SenderName: "Engerraund Serac",
+    time: "11:56",
+    text: "Here’s the picture inspired from your prompt:",
+    imageUrl: test,
+  };
+
+  const loadFunc = () => {};
+
+  const loader = (
+    <div key="loader" className="loader">
+      Loading ...
+    </div>
+  );
+
   return (
-    <div className="flex-1 w-full">
-      <div className="flex flex-col gap-8">
-        {datas.map((item, index) =>
-          item.imageUrl ? (
-            <SimpleImageMessage
-              key={index}
-              {...item}
-              senderName={item.senderName}
-            />
-          ) : (
-            <SimpleTextMessage key={index} {...item} />
-          )
-        )}
-      </div>
+    <div className={`flex-1 w-full`} ref={ref}>
+      {height > 0 && (
+        <div style={{ height: height, overflowX: "hidden" }}>
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={loadFunc}
+            hasMore={false}
+            loader={loader}
+          >
+            <div className={`flex flex-col justify-end gap-8 py-2`}>
+              {messages.map((item, index) => (
+                <SimpleTextMessage senderName={""} key={index} {...user} />
+              ))}
+            </div>
+          </InfiniteScroll>
+        </div>
+      )}
     </div>
   );
 };
