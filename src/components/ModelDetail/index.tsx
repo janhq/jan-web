@@ -34,8 +34,10 @@ const ModelDetail: FC<Props> = ({ hidden }) => {
         <div className="flex items-center justify-center gap-2 w-[350px]">
           <button
             onClick={() => onTabClick("overview")}
-            className={`w-1/2 flex items-center border-b-[1px] justify-center rounded-[4px] py-[6px] px-3 gap-2 ${
-              tab === "overview" ? "border-[#111928]" : "border-transparent"
+            className={`w-1/2 flex items-center border-b-[1px] justify-center rounded-[4px] py-[6px] px-3 gap-2 relative ${
+              tab === "overview"
+                ? "before:absolute before:contents[''] before:w-full before:h-[1px] before:bg-[#111928] before:bottom-0 before:left-0"
+                : "border-transparent"
             }`}
           >
             <Image
@@ -48,9 +50,9 @@ const ModelDetail: FC<Props> = ({ hidden }) => {
           </button>
           <button
             onClick={() => onTabClick("api")}
-            className={`w-1/2 flex items-center justify-center rounded-[4px] py-[6px] border-b-[1px] px-3 gap-2 ${
+            className={`w-1/2 flex items-center justify-center rounded-[4px] py-[6px] border-b-[1px] px-3 gap-2 relative ${
               tab === "api"
-                ? "border-b-[1px] border-[#111928]"
+                ? "before:absolute before:contents[''] before:w-full before:h-[1px] before:bg-[#111928] before:bottom-0 before:left-0"
                 : "border-transparent"
             }`}
           >

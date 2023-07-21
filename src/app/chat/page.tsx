@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
@@ -15,13 +15,19 @@ import ModelMenu from "@/components/ModelMenu";
 import ModelDetail from "@/components/ModelDetail";
 import MobileDownload from "@/components/MobileDownload";
 import { useStore } from "../../models/RootStore";
+import { ChatBlankState } from "@/components/ChatBlankState";
+import { observer } from "mobx-react-lite";
 
-const Page: React.FC = () => {
-  const { historyStore } = useStore();
-  historyStore.createTestConversation();
-
+const Page: React.FC = observer(() => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showModelDetail, setShowModelDetail] = useState(false);
+  const { historyStore } = useStore();
+
+  useEffect(() => {
+    historyStore.createTestConversation();
+  }, []);
+
+  const showBodyChat = historyStore.activeConversationId != null;
 
   const data = {
     avatar: avatar.src,
@@ -107,7 +113,7 @@ const Page: React.FC = () => {
       </Transition.Root>
 
       {/* Static sidebar for desktop */}
-      <div className="hidden lg:inset-y-0 lg:flex lg:w-72 lg:flex-col">
+      <div className="hidden lg:inset-y-0 lg:flex lg:w-72 lg:flex-col overflow-hidden">
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="h-full flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 px-2">
           <div className="flex flex-col h-16 shrink-0 items-center gap-[10px] pt-1">
@@ -120,42 +126,51 @@ const Page: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col w-full">
-        <div className="flex h-16 w-full shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-          <button
-            type="button"
-            className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <span className="sr-only">Open sidebar</span>
-            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-          </button>
+      {showBodyChat ? (
+        <div className="flex-1 flex flex-col w-full">
+          <div className="flex h-16 w-full shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+            <button
+              type="button"
+              className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <span className="sr-only">Open sidebar</span>
+              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+            </button>
 
-          {/* Separator */}
-          <div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
-
-          <div className="flex justify-between flex-1 gap-x-4 self-stretch lg:gap-x-6">
-            <UserToolbar {...data} />
-            <ModelMenu
-              showModelDetail={showModelDetail}
-              onModelInfoClick={() => setShowModelDetail(!showModelDetail)}
+            {/* Separator */}
+            <div
+              className="h-6 w-px bg-gray-200 lg:hidden"
+              aria-hidden="true"
             />
-          </div>
-        </div>
 
-        {/* Your content */}
-        <main className="py-5 w-full h-full">
-          <div className="flex flex-col h-full px-1 sm:px-2 lg:px-3">
-            <ChatBody />
-            <InputToolbar />
+            <div className="flex justify-between flex-1 gap-x-4 self-stretch lg:gap-x-6">
+              <UserToolbar {...data} />
+              <ModelMenu
+                showModelDetail={showModelDetail}
+                onModelInfoClick={() => setShowModelDetail(!showModelDetail)}
+              />
+            </div>
           </div>
-        </main>
-      </div>
+
+          {/* Your content */}
+          <main className="py-5 w-full h-full">
+            <div className="flex flex-col h-full px-1 sm:px-2 lg:px-3">
+              <ChatBody />
+              <InputToolbar />
+            </div>
+          </main>
+        </div>
+      ) : (
+        <div className="flex-1 flex flex-col w-full">
+          <ChatBlankState />
+        </div>
+      )}
       <div>
         <ModelDetail hidden={showModelDetail} />
       </div>
     </div>
   );
-};
+});
 
 export default Page;

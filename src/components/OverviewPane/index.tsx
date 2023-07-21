@@ -36,7 +36,7 @@ const OverviewPane: React.FC = () => {
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-[#6B7280]">Model URL</span>
-          <a className="text-[#1C64F2]" href={modelUrl}>
+          <a className="text-[#1C64F2] break-all pr-10" href={modelUrl}>
             {modelUrl}
           </a>
         </div>
@@ -47,7 +47,7 @@ const OverviewPane: React.FC = () => {
           {defaultPrompts.map((item, index) => (
             <li
               key={index}
-              className="text-[14px] leading-[20px] flex p-[12px] gap-[10px] border-b-[1px] border-[#E5E7EB] hover:text-blue-400"
+              className="text-[14px] leading-[20px] flex p-[12px] gap-[10px] border-b-[1px] border-[#E5E7EB] hover:text-blue-400 last:border-b-[0px]"
             >
               <a href="#">{item}</a>
             </li>
