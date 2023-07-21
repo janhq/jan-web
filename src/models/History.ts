@@ -72,4 +72,17 @@ export const History = types
       }
       return [];
     },
+
+    sendMessageOnActiveConversation(text: string) {
+      if (self.activeConversationId) {
+        const conversation = self.conversations.find(
+          (c) => c.id === self.activeConversationId
+        );
+
+        if (conversation) {
+          conversation.sendUserMessage(text);
+        }
+      }
+      console.error("No active conversation found");
+    },
   }));

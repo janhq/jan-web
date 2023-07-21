@@ -1,7 +1,7 @@
 import { types } from "mobx-state-tree";
 import { AiModel } from "./AiModel";
 import { v4 as uuidv4 } from "uuid";
-import { ChatMessage, MessageSenderType } from "./ChatMessage";
+import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
 import { User } from "./User";
 
 export const Conversation = types
@@ -33,18 +33,28 @@ export const Conversation = types
   })
   .actions((self) => ({
     sendUserMessage(text: string) {
-      //   const newMessage = ChatMessage.create({
-      //     conversationId: self.id,
-      //     messageSenderType: MessageSenderType.User,
-      //     senderUid: self.user.id,
-      //     senderName: self.user.displayName,
-      //     senderAvatarUrl: self.user.avatarUrl,
-      //     text: text,
-      //   });
-      //   self.chatMessages.push(newMessage);
+      const newMessage = ChatMessage.create({
+        messageType: MessageType.Text,
+        conversationId: self.id,
+        messageSenderType: MessageSenderType.User,
+        senderUid: "", // TODO
+        senderName: "",
+        senderAvatarUrl: "",
+        text: text,
+      });
+      self.chatMessages.push(newMessage);
     },
 
-    createAiResponseMessage() {
-      // TODO
+    createAiResponseMessage(text: string) {
+      const newMessage = ChatMessage.create({
+        messageType: MessageType.Text,
+        conversationId: self.id,
+        messageSenderType: MessageSenderType.Ai,
+        senderUid: "", // TODO
+        senderName: "",
+        senderAvatarUrl: "",
+        text: text,
+      });
+      self.chatMessages.push(newMessage);
     },
   }));
