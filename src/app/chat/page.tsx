@@ -4,11 +4,29 @@ import Image from "next/image";
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { ChatBody } from "./ChatBody";
-import { InputToolbar } from "./InputToolbar";
+import { ChatBody } from "@/components/ChatBody";
+import { InputToolbar } from "@/components/InputToolbar";
+import { UserToolbar } from "../../components/UserToolbar";
+import avatar from "@/assets/Thumbnail02.png";
+import ShortcutList from "@/components/ShortcutList";
+import HistoryList from "@/components/HistoryList";
+import SearchBar from "@/components/SearchBar";
+import ModelMenu from "@/components/ModelMenu";
+import ModelDetail from "@/components/ModelDetail";
 
 const Page: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showModelDetail, setShowModelDetail] = useState(false);
+
+  const data = {
+    avatar: avatar.src,
+    name: "Guanaco",
+  };
+
+  const onShortcutClicked = (modelId: string): void => {};
+
+  const onHistoryClicked = (conversationId: string): void => {};
+
   return (
     <div className="flex flex-row flex-1 w-full">
       <Transition.Root show={sidebarOpen} as={Fragment}>
@@ -86,8 +104,12 @@ const Page: React.FC = () => {
       {/* Static sidebar for desktop */}
       <div className="hidden lg:inset-y-0 lg:flex lg:w-72 lg:flex-col">
         {/* Sidebar component, swap this element with another sidebar if you like */}
-        <div className="h-full flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200  px-6 pb-4">
-          <div className="flex h-16 shrink-0 items-center"></div>
+        <div className="h-full flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 px-3 pb-4">
+          <div className="flex flex-col h-16 shrink-0 items-center gap-[10px] pt-1">
+            <SearchBar />
+            <ShortcutList onShortcutClicked={onShortcutClicked} />
+            <HistoryList onHistoryClicked={onHistoryClicked} />
+          </div>
           <nav className="flex flex-1 flex-col"></nav>
         </div>
       </div>
@@ -106,18 +128,28 @@ const Page: React.FC = () => {
           {/* Separator */}
           <div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
 
-          <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6"></div>
+          <div className="flex justify-between flex-1 gap-x-4 self-stretch lg:gap-x-6">
+            <UserToolbar {...data} />
+            <ModelMenu
+              showModelDetail={showModelDetail}
+              onModelInfoClick={() => setShowModelDetail(!showModelDetail)}
+            />
+          </div>
         </div>
 
+        {/* Your content */}
         <main className="py-5 w-full h-full">
           <div className="flex flex-col h-full px-1 sm:px-2 lg:px-3">
-            {/* Your content */}
             <ChatBody />
             <InputToolbar />
           </div>
         </main>
       </div>
+      <div>
+        <ModelDetail hidden={showModelDetail} />
+      </div>
     </div>
   );
 };
+
 export default Page;
