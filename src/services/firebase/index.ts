@@ -16,9 +16,13 @@ function getCurrentUser(): User | null {
 // Retuns firebase token from current user profile
 async function getFirebaseToken() {
   let token = getCurrentUser()?.getIdToken();
-  if (token === undefined || token === null) {
-    let anonyAccount = await signInAnonymously(firebaseAuth);
-    token = anonyAccount.user.getIdToken();
+  try {
+    if (token === undefined || token === null) {
+      let anonyAccount = await signInAnonymously(firebaseAuth);
+      token = anonyAccount.user.getIdToken();
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 
