@@ -18,19 +18,6 @@ const ModelDetail: FC<Props> = ({ hidden }) => {
     setTab(clickedTab);
   };
 
-  const data = {
-    model: "Guanaco-7B-GGML",
-    modelUrl: "https://huggingface.co/JosephusCheung/Guanaco",
-    tryIt: [
-      "What is the meaning of life?",
-      "What are some key principles for living a meaningful life?",
-      "Can you share perspectives on the importance of relationships and social connections?",
-      "Can you provide advice on finding and pursuing one's passion?",
-    ],
-    description:
-      "With Guanaco, you can lorem ipsum dolor asimet uis nostrud exercitation ullamco laboris nisi ut aliquip ex ea With Guanaco, you can lorem ipsum dolor asimet ",
-  };
-
   return (
     <div
       className={`${
@@ -76,7 +63,7 @@ const ModelDetail: FC<Props> = ({ hidden }) => {
             API
           </button>
         </div>
-        {tab === "overview" ? <OverviewPane {...data} /> : <ApiPane />}
+        {tab === "overview" ? <OverviewPane /> : <ApiPane />}
       </div>
     </div>
   );

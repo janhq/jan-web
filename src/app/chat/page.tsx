@@ -14,8 +14,12 @@ import SearchBar from "@/components/SearchBar";
 import ModelMenu from "@/components/ModelMenu";
 import ModelDetail from "@/components/ModelDetail";
 import MobileDownload from "@/components/MobileDownload";
+import { useStore } from "../../models/RootStore";
 
 const Page: React.FC = () => {
+  const { historyStore } = useStore();
+  historyStore.createTestConversation();
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showModelDetail, setShowModelDetail] = useState(false);
 
@@ -31,7 +35,11 @@ const Page: React.FC = () => {
   return (
     <div className="flex flex-row flex-1 w-full">
       <Transition.Root show={sidebarOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
+        <Dialog
+          as="div"
+          className="relative z-50 lg:hidden"
+          onClose={setSidebarOpen}
+        >
           <Transition.Child
             as={Fragment}
             enter="transition-opacity ease-linear duration-300"
@@ -65,16 +73,29 @@ const Page: React.FC = () => {
                   leaveTo="opacity-0"
                 >
                   <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
-                    <button type="button" className="-m-2.5 p-2.5" onClick={() => setSidebarOpen(false)}>
+                    <button
+                      type="button"
+                      className="-m-2.5 p-2.5"
+                      onClick={() => setSidebarOpen(false)}
+                    >
                       <span className="sr-only">Close sidebar</span>
-                      <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                      <XMarkIcon
+                        className="h-6 w-6 text-white"
+                        aria-hidden="true"
+                      />
                     </button>
                   </div>
                 </Transition.Child>
                 {/* Sidebar component, swap this element with another sidebar if you like */}
                 <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
                   <div className="flex h-16 shrink-0 items-center">
-                    <Image className="h-8 w-auto" src="/icons/app_icon.svg" width={32} height={32} alt="Your Company" />
+                    <Image
+                      className="h-8 w-auto"
+                      src="/icons/app_icon.svg"
+                      width={32}
+                      height={32}
+                      alt="Your Company"
+                    />
                     <span className="">Jan</span>
                   </div>
                   <nav className="flex flex-1 flex-col"></nav>
@@ -101,7 +122,11 @@ const Page: React.FC = () => {
 
       <div className="flex-1 flex flex-col w-full">
         <div className="flex h-16 w-full shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-          <button type="button" className="-m-2.5 p-2.5 text-gray-700 lg:hidden" onClick={() => setSidebarOpen(true)}>
+          <button
+            type="button"
+            className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+            onClick={() => setSidebarOpen(true)}
+          >
             <span className="sr-only">Open sidebar</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
