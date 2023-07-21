@@ -8,7 +8,7 @@ export const InputToolbar: React.FC = () => {
   const { historyStore } = useStore();
   const [text, setText] = useState("");
 
-  const handleMessageChange = (event) => {
+  const handleMessageChange = (event: any) => {
     setText(event.target.value);
   };
 
