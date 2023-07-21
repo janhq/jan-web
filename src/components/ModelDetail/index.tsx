@@ -18,19 +18,6 @@ const ModelDetail: FC<Props> = ({ hidden }) => {
     setTab(clickedTab);
   };
 
-  const data = {
-    model: "Guanaco-7B-GGML",
-    modelUrl: "https://huggingface.co/JosephusCheung/Guanaco",
-    tryIt: [
-      "What is the meaning of life?",
-      "What are some key principles for living a meaningful life?",
-      "Can you share perspectives on the importance of relationships and social connections?",
-      "Can you provide advice on finding and pursuing one's passion?",
-    ],
-    description:
-      "With Guanaco, you can lorem ipsum dolor asimet uis nostrud exercitation ullamco laboris nisi ut aliquip ex ea With Guanaco, you can lorem ipsum dolor asimet ",
-  };
-
   return (
     <div
       className={`${
@@ -47,8 +34,10 @@ const ModelDetail: FC<Props> = ({ hidden }) => {
         <div className="flex items-center justify-center gap-2 w-[350px]">
           <button
             onClick={() => onTabClick("overview")}
-            className={`w-1/2 flex items-center border-b-[1px] justify-center rounded-[4px] py-[6px] px-3 gap-2 ${
-              tab === "overview" ? "border-[#111928]" : "border-transparent"
+            className={`w-1/2 flex items-center border-b-[1px] justify-center rounded-[4px] py-[6px] px-3 gap-2 relative ${
+              tab === "overview"
+                ? "before:absolute before:contents[''] before:w-full before:h-[1px] before:bg-[#111928] before:bottom-0 before:left-0"
+                : "border-transparent"
             }`}
           >
             <Image
@@ -61,9 +50,9 @@ const ModelDetail: FC<Props> = ({ hidden }) => {
           </button>
           <button
             onClick={() => onTabClick("api")}
-            className={`w-1/2 flex items-center justify-center rounded-[4px] py-[6px] border-b-[1px] px-3 gap-2 ${
+            className={`w-1/2 flex items-center justify-center rounded-[4px] py-[6px] border-b-[1px] px-3 gap-2 relative ${
               tab === "api"
-                ? "border-b-[1px] border-[#111928]"
+                ? "before:absolute before:contents[''] before:w-full before:h-[1px] before:bg-[#111928] before:bottom-0 before:left-0"
                 : "border-transparent"
             }`}
           >
@@ -76,7 +65,7 @@ const ModelDetail: FC<Props> = ({ hidden }) => {
             API
           </button>
         </div>
-        {tab === "overview" ? <OverviewPane {...data} /> : <ApiPane />}
+        {tab === "overview" ? <OverviewPane /> : <ApiPane />}
       </div>
     </div>
   );

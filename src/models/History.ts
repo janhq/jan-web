@@ -1,6 +1,8 @@
 import { castToSnapshot, types } from "mobx-state-tree";
 import { Conversation } from "./Conversation";
 import { Shortcut } from "./Shortcut";
+import { AiModel, AiModelType } from "./AiModel";
+import { User } from "./User";
 
 export const History = types
   .model("History", {
@@ -28,8 +30,45 @@ export const History = types
     ]),
     conversations: types.optional(types.array(Conversation), []),
     activeConversationId: types.maybe(types.string),
+
+    // just for testing
+    testConversation: types.maybe(Conversation),
   })
   .actions((self) => ({
+    createTestConversation() {
+      const newUser = User.create({
+        id: "123",
+        displayName: "NamH",
+        avatarUrl: "https://google.com",
+      });
+
+      const newAiModel = AiModel.create({
+        name: "ChatGPT",
+        aiModelType: AiModelType.LLM,
+        description:
+          "With Guanaco, you can lorem ipsum dolor asimet uis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        modelUrl: "https://google.com",
+        modelVersion: "Guanaco-7B-GGML",
+        defaultPrompts: [
+          "What is the meaning of life?",
+          "What are some key principles for living a meaningful life?",
+          "Can you share perspectives on the importance of relationships and social connections?",
+          "Can you provide advice on finding and pursuing one's passion?",
+        ],
+      });
+
+      const newConvo = Conversation.create({
+        aiModel: newAiModel,
+        user: newUser,
+      });
+
+      self.testConversation = newConvo;
+    },
+
+    getTestConverstaion() {
+      return self.testConversation;
+    },
+
     setActiveConversationId(id: string) {
       self.activeConversationId = id;
     },

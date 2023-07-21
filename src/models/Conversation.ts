@@ -14,7 +14,7 @@ export const Conversation = types
     /**
      * AI model that the conversation is using
      */
-    aiModel: types.map(AiModel),
+    aiModel: AiModel,
 
     /**
      * Conversation's messages, should ordered by time (createdAt)
@@ -24,7 +24,7 @@ export const Conversation = types
     /**
      * User who initiate the chat with the above AI model
      */
-    user: types.map(User),
+    user: User,
 
     /**
      * Indicates whether the model is still processing the user's input
