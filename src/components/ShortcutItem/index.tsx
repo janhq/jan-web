@@ -1,6 +1,5 @@
-import Image from "next/image";
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
-import avartar from "@/assets/Thumbnail02.png";
 
 type Props = {
   id: string;
@@ -16,7 +15,7 @@ const ShortcutItem: React.FC<Props> = ({ id, avatar, title, onClick }) => {
 
   return (
     <button className="flex items-center gap-2 w-full" onClick={onClickHandler}>
-      <Image src={avartar.src} width={36} height={36} alt="" />
+      <img src={avatar} className="w-9 aspect-square rounded-full" alt="" />
       <div className="flex flex-col text-[14px] leading-[20px]">
         <span className="text-[#111928]">{title}</span>
       </div>

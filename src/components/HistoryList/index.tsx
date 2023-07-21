@@ -29,7 +29,7 @@ const HistoryList: React.FC<Props> = ({ onHistoryClicked }) => {
 
   return (
     <div className="flex flex-col pt-2">
-      <h2 className="text-#9CA3AF font-semibold text-[12px] leading-[18px] pb-3">
+      <h2 className="text-[#9CA3AF] font-bold text-[12px] leading-[12px]">
         HISTORY
       </h2>
       {datas.map((item, index) => (
