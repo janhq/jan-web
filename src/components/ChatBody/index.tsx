@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 
 export const ChatBody: React.FC = () => {
-  const ref = React.useRef(null);
+  const ref = React.useRef<HTMLDivElement>(null);
   const [height, setHeight] = React.useState(0);
   const [messages, setMessages] = useState([
     {
@@ -122,7 +122,7 @@ export const ChatBody: React.FC = () => {
     },
   ]);
   React.useLayoutEffect(() => {
-    setHeight(ref.current?.offsetHeight);
+    setHeight(ref.current?.offsetHeight || 0);
   }, []);
 
   const user = {
