@@ -2,7 +2,7 @@ import { Search, Slider } from "@/components";
 import AiTypeList from "@/components/AiTypeList";
 import ConversationalList from "@/components/ConversationalList";
 import GenerateImageList from "@/components/GenerateImageList";
-import Footer from "@/components/footer";
+import Footer from "@/components/Footer";
 
 const AiPage: React.FC = () => {
   return (

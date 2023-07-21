@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "compile": "tsc --noEmit -p . --pretty",
-    "configure": "op read op://Shared/MobileStagingConfig/config.dev.ts > src/config/config.dev.ts"
+    "configure": "op read op://Shared/WebDevelopmentEnv/.env > .env && op read op://Shared/WebDevelopmentFirebaseConfig/firebase_configs.json > src/services/firebase/firebase_configs.json"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.15",
@@ -36,6 +36,8 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.5.4"
+    "@tailwindcss/forms": "^0.5.4",
+    "@types/react-infinite-scroller": "^1.2.3",
+    "@types/uuid": "^9.0.2"
   }
 }

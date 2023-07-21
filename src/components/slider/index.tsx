@@ -1,5 +1,5 @@
 import { FC } from "react";
-import Slide from "../slide";
+import Slide from "../Slide";
 
 const Slider: FC = () => {
   const data = [1, 2, 3];
