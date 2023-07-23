@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { DiscordIcon } from "@/assets";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/contexts/auth_context";
@@ -22,16 +21,35 @@ const Header: React.FC<HeaderProps> = ({ handleClickLogin }) => {
 
   return (
     <header className="text-sm bg-white border-b-[1px] border-gray-200 ">
-      <nav className="mx-auto flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+      <nav
+        className="mx-auto flex items-center justify-between p-6 lg:px-8"
+        aria-label="Global"
+      >
         <div className="flex space-x-5 items-center">
           <Link href="/" className="flex items-center space-x-3">
-            <Image className="h-8 w-auto" src="/icons/app_icon.svg" alt="" width={32} height={32} />
+            <Image
+              className="h-8 w-auto"
+              src="/icons/app_icon.svg"
+              alt=""
+              width={32}
+              height={32}
+            />
             <span className="font-bold">Jan</span>
           </Link>
           {navigation.map((item) => (
-            <Link key={item.name} href={item.href} className="text-sm font-base leading-6 text-gray-900">
+            <Link
+              key={item.name}
+              href={item.href}
+              className="text-sm font-base leading-6 text-gray-900"
+            >
               <div className="flex items-center">
-                <Image src={item.icon} alt={"nav"} width={16} height={16} className="m-2" />
+                <Image
+                  src={item.icon}
+                  alt={"nav"}
+                  width={16}
+                  height={16}
+                  className="m-2"
+                />
                 <span>{item.name}</span>
               </div>
             </Link>
@@ -50,11 +68,17 @@ const Header: React.FC<HeaderProps> = ({ handleClickLogin }) => {
         <div className="hidden lg:flex">
           <div className="flex items-center gap-5">
             <div className="flex gap-2">
-              <DiscordIcon />
+              <Image src={"/icons/discord.svg"} width={20} height={20} alt="" />
             </div>
             {authenticated ? (
               <button className="flex items-center gap-4">
-                <Image className="rounded-sm" alt="avatar" src={"/icons/app_icon.svg"} width={32} height={32} />
+                <Image
+                  className="rounded-sm"
+                  alt="avatar"
+                  src={"/icons/app_icon.svg"}
+                  width={32}
+                  height={32}
+                />
                 John
               </button>
             ) : (
@@ -76,13 +100,24 @@ const Header: React.FC<HeaderProps> = ({ handleClickLogin }) => {
           </div>
         </div>
       </nav>
-      <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
+      <Dialog
+        as="div"
+        className="lg:hidden"
+        open={mobileMenuOpen}
+        onClose={setMobileMenuOpen}
+      >
         <div className="fixed inset-0 z-10" />
         <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
-              <Image className="h-8 w-auto" width={32} height={32} src="/icons/app_icon.svg" alt="" />
+              <Image
+                className="h-8 w-auto"
+                width={32}
+                height={32}
+                src="/icons/app_icon.svg"
+                alt=""
+              />
             </a>
             <button
               type="button"

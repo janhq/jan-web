@@ -1,13 +1,12 @@
 import { FC } from "react";
 import Image from "next/image";
-import img from "@/assets/Image.png";
 
 const Slide: FC = () => {
   return (
     <div className="w-full relative">
       <Image
         className="w-full"
-        src={img.src}
+        src={"/images/Image.png"}
         width={1000}
         height={1000}
         alt=""

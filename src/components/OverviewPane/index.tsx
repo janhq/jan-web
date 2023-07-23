@@ -4,7 +4,7 @@ import { useStore } from "../../models/RootStore";
 const OverviewPane: React.FC = () => {
   const [read, setRead] = useState<boolean>(true);
   const { historyStore } = useStore();
-  const conversation = historyStore.getTestConverstaion();
+  const conversation = historyStore.getActiveConversation();
 
   if (!conversation) {
     return <></>;
@@ -16,7 +16,7 @@ const OverviewPane: React.FC = () => {
   return (
     <div className="w-[350px] flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h2 className="text-[#000000] font-bold">About this AI</h2>
+        <h2 className="text-black font-bold">About this AI</h2>
         <span>
           <p className={`text-[#6B7280] ${read ? "hidden-text-model" : ""}`}>
             {description}

@@ -48,15 +48,23 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 bottom-0 bg-opacity-50 flex justify-center items-center bg-opacity-50 bg-black z-50"
+      className="fixed top-0 left-0 right-0 bottom-0 bg-opacity-50 flex justify-center items-center bg-black z-50"
       onClick={handleOutsideClick}
     >
       <div
         ref={modalRef}
         className="flex justify-center items-center flex-col w-[383px] h-[288px] bg-white p-6 rounded-lg shadow-2xl"
       >
-        <Image src="/icons/janai_logo.svg" alt={""} width={64} height={64} objectFit="contain" />
-        <h2 className="text-lg mt-2 mx-4 text-black font-semibold text-center">Login to continue</h2>
+        <Image
+          src="/icons/janai_logo.svg"
+          alt={""}
+          width={64}
+          height={64}
+          style={{ objectFit: "contain" }}
+        />
+        <h2 className="text-lg mt-2 mx-4 text-black font-semibold text-center">
+          Login to continue
+        </h2>
         <button
           className="text-sm mt-4 flex items-center justify-center px-10 py-1 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring focus:ring-gray-200"
           onClick={signInWithGoole}
@@ -68,6 +76,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             width={180}
             height={37}
             priority
+            style={{ objectFit: "contain" }}
           />
           Continue with Google
         </button>
@@ -82,6 +91,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             width={180}
             height={37}
             priority
+            style={{ objectFit: "contain" }}
           />
           Continue with Apple
         </button>

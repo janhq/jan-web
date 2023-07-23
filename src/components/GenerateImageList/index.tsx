@@ -1,32 +1,30 @@
-import avatar from "@/assets/user.png";
 import Image from "next/image";
-import imgIcon from "@/assets/Vector.svg";
 import GenerateImageCard from "../GenerateImageCard";
 
 const GenerateImageList: React.FC = () => {
   const datas = [
     {
       title: "majicMIX realistic",
-      img: avatar.src,
+      img: "/images/user.png",
     },
     {
       title: "majicMIX realistic",
-      img: avatar.src,
+      img: "/images/user.png",
     },
     {
       title: "majicMIX realistic",
-      img: avatar.src,
+      img: "/images/user.png",
     },
     {
       title: "majicMIX realistic",
-      img: avatar.src,
+      img: "/images/user.png",
     },
   ];
   return (
     <div>
       <div className="flex mt-4 justify-between">
         <div className="gap-4 flex items-center">
-          <Image src={imgIcon.src} width={20} height={20} alt="" />
+          <Image src={"icons/ic_image.svg"} width={20} height={20} alt="" />
           <h2 className="text-gray-900 font-bold">Generate Images</h2>
         </div>
         <button className="flex gap-2 px-3 py-2 bg-gray-200 text-[#1F2A37] rounded-md">

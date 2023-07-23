@@ -1,4 +1,4 @@
-import { Search, Slider } from "@/components";
+import { AiSearch, Slider } from "@/components";
 import AiTypeList from "@/components/AiTypeList";
 import ConversationalList from "@/components/ConversationalList";
 import GenerateImageList from "@/components/GenerateImageList";
@@ -11,7 +11,7 @@ const AiPage: React.FC = () => {
         <h2 className="font-bold leading-[52px] text-[40px] text-gray-400">
           AIs
         </h2>
-        <Search />
+        <AiSearch />
       </div>
       <div className="flex gap-20">
         <div className="w-[70%]">

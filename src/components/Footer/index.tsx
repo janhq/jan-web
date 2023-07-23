@@ -1,10 +1,10 @@
-import { Frame1 } from "@/assets";
+import Image from "next/image";
 
 export default function Footer() {
   return (
     <div className="flex items-center justify-between container m-auto">
       <div className="flex items-center gap-3">
-        <Frame1 />
+        <Image src={"/icons/app_icon.svg"} width={32} height={32} alt="" />
         <span>Jan</span>
       </div>
       <div className="flex gap-4 my-6">

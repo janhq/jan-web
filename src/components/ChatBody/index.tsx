@@ -1,137 +1,25 @@
-import avatar from "@/assets/Thumbnail02.png";
-import test from "@/assets/test.jpg";
 import { SimpleTextMessage } from "@/components/SimpleTextMessage";
-import React, { useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
+import { useStore } from "../../models/RootStore";
+import { observer } from "mobx-react-lite";
 
-export const ChatBody: React.FC = () => {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const [height, setHeight] = React.useState(0);
-  const [messages, setMessages] = useState([
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-    {
-      avatarUrl: avatar.src,
-      SenderName: "Engerraund Serac",
-      time: "11:56",
-      text: "Here’s the picture inspired from your prompt:",
-      imageUrl: test,
-    },
-  ]);
-  React.useLayoutEffect(() => {
-    setHeight(ref.current?.offsetHeight || 0);
-  }, []);
+type Props = {
+  chatHeight: number;
+};
 
-  const user = {
-    avatarUrl: avatar.src,
-    SenderName: "Engerraund Serac",
-    time: "11:56",
-    text: "Here’s the picture inspired from your prompt:",
-    imageUrl: test,
-  };
+export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
+  const { historyStore } = useStore();
+  const ref = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    if (chatHeight > 60) {
+      setHeight(ref.current?.offsetHeight ?? 0 - 24);
+    } else {
+      setHeight(ref.current?.offsetHeight ?? 0);
+    }
+  }, [chatHeight]);
 
   const loadFunc = () => {};
 
@@ -152,13 +40,23 @@ export const ChatBody: React.FC = () => {
             loader={loader}
           >
             <div className={`flex flex-col justify-end gap-8 py-2`}>
-              {messages.map((item, index) => (
-                <SimpleTextMessage senderName={""} key={index} {...user} />
-              ))}
+              {historyStore
+                .getActiveMessages()
+                .map(
+                  ({ senderAvatarUrl, senderName, createdAt, text }, index) => (
+                    <SimpleTextMessage
+                      key={index}
+                      avatarUrl={senderAvatarUrl}
+                      senderName={senderName}
+                      createdAt={createdAt}
+                      text={text}
+                    />
+                  )
+                )}
             </div>
           </InfiniteScroll>
         </div>
       )}
     </div>
   );
-};
+});

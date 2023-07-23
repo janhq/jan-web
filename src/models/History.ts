@@ -3,6 +3,8 @@ import { Conversation } from "./Conversation";
 import { Shortcut } from "./Shortcut";
 import { AiModel, AiModelType } from "./AiModel";
 import { User } from "./User";
+import { Product } from "./Product";
+import { v4 as uuidv4 } from "uuid";
 
 export const History = types
   .model("History", {
@@ -30,43 +32,42 @@ export const History = types
     ]),
     conversations: types.optional(types.array(Conversation), []),
     activeConversationId: types.maybe(types.string),
-
-    // just for testing
-    testConversation: types.maybe(Conversation),
   })
   .actions((self) => ({
-    createTestConversation() {
+    createConversationWithModel(product: Product) {
       const newUser = User.create({
         id: "123",
         displayName: "NamH",
-        avatarUrl: "https://google.com",
+      });
+
+      const textPrompts: string[] = [];
+      product.action.params.suggestedPrompts?.map((p) => {
+        if (typeof p === "string") {
+          textPrompts.push(p);
+        }
       });
 
       const newAiModel = AiModel.create({
-        name: "ChatGPT",
+        name: product.name,
+        title: product.decoration.title,
         aiModelType: AiModelType.LLM,
-        description:
-          "With Guanaco, you can lorem ipsum dolor asimet uis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        modelUrl: "https://google.com",
-        modelVersion: "Guanaco-7B-GGML",
-        defaultPrompts: [
-          "What is the meaning of life?",
-          "What are some key principles for living a meaningful life?",
-          "Can you share perspectives on the importance of relationships and social connections?",
-          "Can you provide advice on finding and pursuing one's passion?",
-        ],
+        description: product.decoration.technicalDescription,
+        modelUrl: product.decoration.technicalURL,
+        modelVersion: product.decoration.technicalVersion,
+        avatarUrl: product.decoration.images[0],
+        defaultPrompts: textPrompts,
       });
 
       const newConvo = Conversation.create({
+        id: uuidv4(),
         aiModel: newAiModel,
         user: newUser,
       });
 
-      self.testConversation = newConvo;
-    },
+      // todo: add some default messages
 
-    getTestConverstaion() {
-      return self.testConversation;
+      self.conversations.push(newConvo);
+      self.activeConversationId = newConvo.id;
     },
 
     setActiveConversationId(id: string) {
@@ -76,6 +77,7 @@ export const History = types
     deleteConversationById(id: string) {
       const updateConversations = self.conversations.filter((c) => c.id !== id);
       self.conversations = castToSnapshot([...updateConversations]);
+      self.activeConversationId = undefined;
     },
 
     deleteActiveConversation() {
@@ -84,6 +86,7 @@ export const History = types
           (c) => c.id !== self.activeConversationId
         );
         self.conversations = castToSnapshot([...updateConversations]);
+        self.activeConversationId = undefined;
       }
     },
 
@@ -113,15 +116,26 @@ export const History = types
     },
 
     sendMessageOnActiveConversation(text: string) {
-      if (self.activeConversationId) {
-        const conversation = self.conversations.find(
-          (c) => c.id === self.activeConversationId
-        );
-
-        if (conversation) {
-          conversation.sendUserMessage(text);
-        }
+      if (!self.activeConversationId) {
+        console.error("No active conversation found");
+        return;
       }
-      console.error("No active conversation found");
+
+      const conversation = self.conversations.find(
+        (c) => c.id === self.activeConversationId
+      );
+
+      if (!conversation) {
+        return;
+      }
+      conversation.sendUserTextMessage(
+        conversation.user.id,
+        conversation.user.displayName,
+        text,
+        conversation.user.avatarUrl
+      );
+
+      // TODO: maybe we delay some time to simulate the model processing
+      conversation.isWaitingForModelResponse = true;
     },
   }));

@@ -1,17 +1,25 @@
 import Image from "next/image";
-import angelDown from "../../../../public/icons/unicorn_angle-down.svg";
+import { observer } from "mobx-react-lite";
+import { useStore } from "@/models/RootStore";
 
-interface Props {
-  avatar: string;
-  name: string;
-}
+export const UserToolbar: React.FC = observer(() => {
+  const { historyStore } = useStore();
+  const conversation = historyStore.getActiveConversation();
 
-export const UserToolbar: React.FC<Props> = ({ avatar, name }) => {
+  const avatarUrl = conversation?.aiModel.avatarUrl ?? "";
+  const title = conversation?.aiModel.title ?? "";
+
   return (
     <div className="flex items-center gap-3 p-1">
-      <Image src={avatar} width={36} height={36} alt="" />
+      <Image
+        className="rounded-full"
+        src={avatarUrl}
+        width={36}
+        height={36}
+        alt=""
+      />
       <span className="flex gap-[2px] leading-[24px] text-[16px] font-semibold">
-        {name}
+        {title}
       </span>
       <Image
         src="/icons/unicorn_angle-down.svg"
@@ -21,4 +29,4 @@ export const UserToolbar: React.FC<Props> = ({ avatar, name }) => {
       />
     </div>
   );
-};
+});
