@@ -1,6 +1,12 @@
+import { Product } from "@/models/Product";
 import AiTypeCard from "../AiTypeCard";
 
-const AiTypeList: React.FC = () => {
+interface IAiTypeListProps {
+  conversationals: Product[]
+  generativeArts: Product[]
+}
+
+const AiTypeList: React.FC<IAiTypeListProps> = (props) => {
   const datas = [
     {
       name: "Conversational AIs",

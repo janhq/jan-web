@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -8,9 +9,21 @@ export default function Footer() {
         <span>Jan</span>
       </div>
       <div className="flex gap-4 my-6">
-        <span>Privacy</span>
+        <Link
+          href={process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || ""}
+          target="_blank_"
+          className="cursor-pointer"
+        >
+          Privacy
+        </Link>
         <span>&#8226;</span>
-        <span>Support</span>
+        <Link
+          href={process.env.NEXT_PUBLIC_SUPPORT_URL || ""}
+          className="cursor-pointer"
+          target="_blank_"
+        >
+          Support
+        </Link>
       </div>
     </div>
   );
