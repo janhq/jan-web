@@ -72,6 +72,15 @@ export interface ProductDecorationSample {
   prompt: string;
 }
 
+export interface Section {
+  name: string
+  type: string
+  title: string
+  leftIcon?: string
+  products: Product[]
+}
+
+
 export enum ProductActionType {
   CHAT = "chat",
   CATEGORY = "",
