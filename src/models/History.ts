@@ -1,45 +1,47 @@
-import { castToSnapshot, types } from "mobx-state-tree";
+import { Instance, castToSnapshot, flow, types } from "mobx-state-tree";
 import { Conversation } from "./Conversation";
-import { Shortcut } from "./Shortcut";
 import { AiModel, AiModelType } from "./AiModel";
 import { User } from "./User";
 import { Product } from "./Product";
 import { v4 as uuidv4 } from "uuid";
+import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
+import { api } from "../services/api";
+import { Role } from "../services/api/api.types";
 
 export const History = types
   .model("History", {
-    availableShortcuts: types.optional(types.array(Shortcut), [
-      {
-        name: "chat-gpt",
-        title: "ChatGPT",
-        avatarUrl: "https://i.imgur.com/7eX1j5t.png",
-      },
-      {
-        name: "guanaco",
-        title: "Guanaco",
-        avatarUrl: "https://i.imgur.com/7eX1j5t.png",
-      },
-      {
-        name: "openjourney",
-        title: "OpenJourney",
-        avatarUrl: "https://i.imgur.com/7eX1j5t.png",
-      },
-      {
-        name: "dreamshaper",
-        title: "Dreamshaper",
-        avatarUrl: "https://i.imgur.com/7eX1j5t.png",
-      },
-    ]),
     conversations: types.optional(types.array(Conversation), []),
     activeConversationId: types.maybe(types.string),
   })
-  .actions((self) => ({
-    createConversationWithModel(product: Product) {
-      const newUser = User.create({
-        id: "123",
-        displayName: "NamH",
-      });
+  .views((self) => ({
+    getActiveConversation() {
+      if (self.activeConversationId) {
+        return self.conversations.find(
+          (c) => c.id === self.activeConversationId
+        );
+      }
+    },
 
+    getActiveMessages() {
+      if (self.activeConversationId) {
+        const conversation = self.conversations.find(
+          (c) => c.id === self.activeConversationId
+        );
+
+        if (conversation) {
+          return conversation.chatMessages;
+        }
+      }
+      return [];
+    },
+  }))
+  .actions((self) => ({
+    createConversationWithModel(
+      product: Product,
+      userId: string,
+      displayName: string,
+      avatarUrl?: string
+    ) {
       const textPrompts: string[] = [];
       product.action.params.suggestedPrompts?.map((p) => {
         if (typeof p === "string") {
@@ -47,10 +49,22 @@ export const History = types
         }
       });
 
+      let modelType = AiModelType.LLM;
+      if (product.decoration.tags.includes("Awesome Art")) {
+        modelType = AiModelType.GenerativeArt;
+      }
+
+      const modelId = product.action.params.models[0].name;
+      if (!modelId) {
+        console.error("No model id found");
+        return;
+      }
+
       const newAiModel = AiModel.create({
         name: product.name,
+        modelId: modelId,
         title: product.decoration.title,
-        aiModelType: AiModelType.LLM,
+        aiModelType: modelType,
         description: product.decoration.technicalDescription,
         modelUrl: product.decoration.technicalURL,
         modelVersion: product.decoration.technicalVersion,
@@ -61,10 +75,29 @@ export const History = types
       const newConvo = Conversation.create({
         id: uuidv4(),
         aiModel: newAiModel,
-        user: newUser,
+        user: User.create({
+          id: userId,
+          displayName,
+          avatarUrl,
+        }),
+        createdAt: Date.now(),
       });
 
-      // todo: add some default messages
+      const welcomeText = product.action.params.welcomeMessage;
+      if (welcomeText) {
+        const welcomeMsg = ChatMessage.create({
+          id: uuidv4(),
+          conversationId: newConvo.id,
+          messageType: MessageType.Text,
+          messageSenderType: MessageSenderType.Ai,
+          senderUid: newAiModel.name,
+          senderName: newAiModel.title,
+          senderAvatarUrl: newAiModel.avatarUrl,
+          text: welcomeText,
+          createdAt: Date.now(),
+        });
+        newConvo.addMessage(welcomeMsg);
+      }
 
       self.conversations.push(newConvo);
       self.activeConversationId = newConvo.id;
@@ -93,49 +126,134 @@ export const History = types
     getConversationById(conversationId: string) {
       return self.conversations.find((c) => c.id === conversationId);
     },
+  }))
+  .actions((self) => {
+    const sendTextToTextMessage = flow(function* (
+      conversation: Instance<typeof Conversation>
+    ) {
+      // TODO: handle case timeout using higher order function
+      const latestMessages = conversation.chatMessages
+        .slice(0, 10)
+        .reverse()
+        .map((e) => ({
+          role:
+            e.messageSenderType === MessageSenderType.User
+              ? Role.User
+              : Role.Assistant,
+          content: e.text,
+        }));
 
-    getActiveConversation() {
-      if (self.activeConversationId) {
-        return self.conversations.find(
-          (c) => c.id === self.activeConversationId
-        );
+      const modelName =
+        self.getActiveConversation()?.aiModel.name ?? "gpt-3.5-turbo";
+      console.log(latestMessages);
+      api.streamMessageChat({
+        stream: true,
+        model: modelName,
+        max_tokens: 500,
+        messages: latestMessages,
+        onUpdate: (message: string, chunk: string) => {
+          console.log("namh update", message, chunk);
+        },
+        onFinish: (message: string) => {
+          console.log("namh finish", message);
+        },
+        onError: (err: Error) => {
+          console.log("namh error", err);
+        },
+      });
+    });
+
+    const sendTextToImageMessage = flow(function* (
+      message: string,
+      conversation: Instance<typeof Conversation>
+    ) {
+      // TODO: handle case timeout using higher order function
+      const data = yield api.textToImage(conversation.aiModel.modelId, message);
+
+      if (data.kind !== "ok") {
+        console.error(`Error`, JSON.stringify(data));
+        return;
       }
-    },
 
-    getActiveMessages() {
-      if (self.activeConversationId) {
-        const conversation = self.conversations.find(
-          (c) => c.id === self.activeConversationId
-        );
+      if (
+        data.outputs &&
+        data.outputs.length > 0 &&
+        data.outputs[0].startsWith("https://")
+      ) {
+        const imageResponseMessage = ChatMessage.create({
+          id: uuidv4(),
+          conversationId: conversation.id,
+          messageType: MessageType.Image,
+          messageSenderType: MessageSenderType.Ai,
+          senderUid: conversation.aiModel.name,
+          senderName: conversation.aiModel.title,
+          senderAvatarUrl: conversation.aiModel.avatarUrl,
+          imageUrls: data.outputs,
+          createdAt: Date.now(),
+        });
 
-        if (conversation) {
-          return conversation.chatMessages;
-        }
+        conversation.addMessage(imageResponseMessage);
+        conversation.setProp("updatedAt", Date.now());
+        conversation.setProp("lastImageUrl", data.outputs[0]);
       }
-      return [];
-    },
+    });
 
-    sendMessageOnActiveConversation(text: string) {
+    return {
+      sendTextToTextMessage,
+      sendTextToImageMessage,
+    };
+  })
+  .actions((self) => {
+    const sendMessage = flow(function* (
+      message: string,
+      userId: string,
+      displayName: string,
+      avatarUrl?: string
+    ) {
       if (!self.activeConversationId) {
         console.error("No active conversation found");
         return;
       }
 
-      const conversation = self.conversations.find(
-        (c) => c.id === self.activeConversationId
-      );
-
+      const conversation = self.getActiveConversation();
       if (!conversation) {
+        console.error(
+          "No active conversation found with id",
+          self.activeConversationId
+        );
         return;
       }
-      conversation.sendUserTextMessage(
-        conversation.user.id,
-        conversation.user.displayName,
-        text,
-        conversation.user.avatarUrl
+
+      // adding user message
+      conversation.addMessage(
+        ChatMessage.create({
+          id: uuidv4(),
+          conversationId: self.activeConversationId,
+          messageType: MessageType.Text,
+          messageSenderType: MessageSenderType.User,
+          senderUid: userId,
+          senderName: displayName,
+          senderAvatarUrl: avatarUrl,
+          text: message,
+          createdAt: Date.now(),
+        })
       );
 
-      // TODO: maybe we delay some time to simulate the model processing
-      conversation.isWaitingForModelResponse = true;
-    },
-  }));
+      if (conversation.aiModel.aiModelType === AiModelType.LLM) {
+        yield self.sendTextToTextMessage(conversation);
+      } else if (
+        conversation.aiModel.aiModelType === AiModelType.GenerativeArt
+      ) {
+        yield self.sendTextToImageMessage(message, conversation);
+      } else {
+        console.error(
+          "We do not support this model type yet:",
+          conversation.aiModel.aiModelType
+        );
+      }
+    });
+
+    return {
+      sendMessage,
+    };
+  });

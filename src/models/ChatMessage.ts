@@ -1,4 +1,5 @@
 import { types } from "mobx-state-tree";
+import { withSetPropAction } from "../helpers/withSetPropAction";
 
 export enum MessageType {
   Text = "Text",
@@ -12,16 +13,18 @@ export enum MessageSenderType {
   User = "User",
 }
 
-export const ChatMessage = types.model("ChatMessage", {
-  id: types.string,
-  conversationId: types.string,
-  messageType: types.enumeration(Object.values(MessageType)),
-  messageSenderType: types.enumeration(Object.values(MessageSenderType)),
-  senderUid: types.string,
+export const ChatMessage = types
+  .model("ChatMessage", {
+    id: types.string,
+    conversationId: types.string,
+    messageType: types.enumeration(Object.values(MessageType)),
+    messageSenderType: types.enumeration(Object.values(MessageSenderType)),
+    senderUid: types.string,
 
-  senderName: types.string,
-  senderAvatarUrl: types.maybe(types.string),
-  text: types.maybe(types.string),
-  imageUrls: types.maybe(types.array(types.string)),
-  createdAt: types.optional(types.number, Date.now()),
-});
+    senderName: types.string,
+    senderAvatarUrl: types.maybe(types.string),
+    text: types.maybe(types.string),
+    imageUrls: types.maybe(types.array(types.string)),
+    createdAt: types.number,
+  })
+  .actions(withSetPropAction);

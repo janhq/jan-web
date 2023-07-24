@@ -9,10 +9,6 @@ export const RootStore = types
     historyStore: types.optional(History, {}),
   })
   .views((self) => ({
-    get availableShortcuts() {
-      return values(self.historyStore.availableShortcuts);
-    },
-
     get activeConversationId() {
       return values(self.historyStore.activeConversationId);
     },

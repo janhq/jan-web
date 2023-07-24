@@ -47,8 +47,18 @@ export interface StreamMessageOptions {
   stream: boolean;
   model: string;
   max_tokens: Number;
-  messages: string[]; // TODO: Change message content type
+  messages: MessageContent[];
   onUpdate?: (message: string, chunk: string) => void;
   onFinish: (message: string) => void;
   onError?: (err: Error) => void;
+}
+
+export type MessageContent = {
+  role: Role;
+  content: string | undefined;
+};
+
+export enum Role {
+  User = "user",
+  Assistant = "assistant",
 }

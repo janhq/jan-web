@@ -13,7 +13,7 @@ interface ProfileProps {
  */
 const Profile: React.FC<ProfileProps> = ({ closeProfileFunc }) => {
   return (
-    <div className="relative flex flex-col w-[283px] h-[430px] rounded-lg shadow-2xl p-4 h-[430px]">
+    <div className="relative flex flex-col w-[283px] h-[430px] rounded-lg shadow-2xl p-4">
       {/* Exit button */}
       <Image
         className="absolute top-0 right-0 mt-[5px] mr-[5px] p-2"

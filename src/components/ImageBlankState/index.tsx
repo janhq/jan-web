@@ -1,6 +1,8 @@
 import { Product } from "@/models/Product";
 import { useStore } from "@/models/RootStore";
 import Image from "next/image";
+import { useAuth } from "../../contexts/auth_context";
+import { DefaultUser } from "../../models/User";
 
 type Props = {
   product: Product;
@@ -8,8 +10,14 @@ type Props = {
 
 export const ImageBlankState: React.FC<Props> = ({ product }) => {
   const { historyStore } = useStore();
+  const { currentUser } = useAuth();
+
   const onClick = () => {
-    historyStore.createConversationWithModel(product);
+    historyStore.createConversationWithModel(
+      product,
+      currentUser?.uid ?? DefaultUser.id,
+      currentUser?.displayName ?? DefaultUser.displayName
+    );
   };
 
   const imageUrl =

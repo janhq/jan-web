@@ -1,6 +1,8 @@
 import { Product } from "@/models/Product";
 import { useStore } from "@/models/RootStore";
-import React, { useCallback } from "react";
+import React from "react";
+import { useAuth } from "../../contexts/auth_context";
+import { DefaultUser } from "../../models/User";
 
 type Props = {
   product: Product;
@@ -8,13 +10,17 @@ type Props = {
 
 const ShortcutItem: React.FC<Props> = ({ product }) => {
   const { historyStore } = useStore();
-
-  const onClickHandler = useCallback(() => {
-    historyStore.createConversationWithModel(product);
-  }, [product.name]);
-
+  const { currentUser } = useAuth();
   const { decoration } = product;
   const avatarUrl = decoration.images.length > 0 ? decoration.images[0] : "";
+
+  const onClickHandler = () => {
+    historyStore.createConversationWithModel(
+      product,
+      currentUser?.uid ?? DefaultUser.id,
+      currentUser?.displayName ?? DefaultUser.displayName
+    );
+  };
 
   return (
     <button className="flex items-center gap-2 w-full" onClick={onClickHandler}>

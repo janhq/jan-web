@@ -154,7 +154,7 @@ export class Api {
     try {
       const chatPayload = {
         messages: options.messages,
-        strearm: options.stream,
+        stream: options.stream,
         max_tokens: options.max_tokens,
       };
 
