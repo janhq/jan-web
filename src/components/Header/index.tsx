@@ -17,7 +17,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ handleClickLogin }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { currentUser, firebaseToken } = useAuth();
+  const { currentUser } = useAuth();
 
   return (
     <header className="text-sm bg-white border-b-[1px] border-gray-200 ">
