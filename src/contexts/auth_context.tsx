@@ -10,6 +10,7 @@ import { GoogleAuthProvider, User, getAuth, onAuthStateChanged, signInWithPopup 
 
 interface AuthContextType {
   currentUser: User | undefined;
+  firebaseToken: String | null;
   handleSignInWithGoogle: (onComplete: () => void) => Promise<void>;
 }
 
@@ -22,6 +23,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | undefined>();
+  const [firebaseToken, setFirebaseToken] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -29,6 +31,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(currentAuth, (user) => {
       if (user) {
         setCurrentUser(user);
+        user.getIdToken().then(token => {
+          setFirebaseToken(token)
+        })
         setLoading(false);
       } else {
         setCurrentUser(undefined);
@@ -47,6 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const user = result.user as any;
         if (result.user) {
           setCurrentUser(user);
+          setFirebaseToken(await user.getIdToken())
           setLoading(false);
         }
       });
@@ -57,9 +63,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-
   return (
-    <AuthContext.Provider value={{ currentUser, handleSignInWithGoogle }}>
+    <AuthContext.Provider value={{ currentUser, firebaseToken, handleSignInWithGoogle }}>
       {children}
     </AuthContext.Provider>
   );

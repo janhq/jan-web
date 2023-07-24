@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
@@ -17,7 +17,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ handleClickLogin }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { currentUser } = useAuth();
+  const { currentUser, firebaseToken } = useAuth();
 
   return (
     <header className="text-sm bg-white border-b-[1px] border-gray-200 ">
