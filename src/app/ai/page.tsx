@@ -7,6 +7,7 @@ import { api } from "@/services/api";
 import { Product, Section } from "@/models/Product";
 
 const AiPage: React.FC = async () => {
+  
   const discover = await api.getConfigurations("discover");
   const categoryProducts: Product[] =
     discover.kind === "ok"

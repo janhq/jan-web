@@ -1,17 +1,15 @@
 import { useState } from "react";
-import { useStore } from "../../models/RootStore";
 
-const OverviewPane: React.FC = () => {
+interface IOverviewPanelProps {
+  description?: string;
+  technicalVersion?: string;
+  technicalURL?: string;
+  samples?: string[];
+}
+const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
   const [read, setRead] = useState<boolean>(true);
-  const { historyStore } = useStore();
-  const conversation = historyStore.getActiveConversation();
 
-  if (!conversation) {
-    return <></>;
-  }
-
-  const { description, modelVersion, modelUrl, defaultPrompts } =
-    conversation.aiModel;
+  const { samples, description, technicalVersion, technicalURL } = props;
 
   return (
     <div className="w-[350px] flex flex-col gap-6">
@@ -32,24 +30,26 @@ const OverviewPane: React.FC = () => {
       <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-[16px]">
         <div className="flex flex-col gap-1">
           <span className="text-[#6B7280] ">Model Version</span>
-          <span className="font-semibold">{modelVersion}</span>
+          <span className="font-semibold">{technicalVersion}</span>
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-[#6B7280]">Model URL</span>
-          <a className="text-[#1C64F2] break-all pr-10" href={modelUrl}>
-            {modelUrl}
+          <a className="text-[#1C64F2] break-all pr-10" href={technicalURL}>
+            {technicalURL}
           </a>
         </div>
       </div>
       <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-[16px]">
         <h2 className="font-bold">Try it yourself</h2>
         <ul className="border-[1px] border-[#D1D5DB] rounded-[12px]">
-          {defaultPrompts.map((item, index) => (
+          {samples?.map((item, index) => (
             <li
               key={index}
               className="text-[14px] leading-[20px] flex p-[12px] gap-[10px] border-b-[1px] border-[#E5E7EB] hover:text-blue-400 last:border-b-[0px]"
             >
-              <a href="#">{item}</a>
+              <a href="#" className="p-2">
+                {item}
+              </a>
             </li>
           ))}
         </ul>

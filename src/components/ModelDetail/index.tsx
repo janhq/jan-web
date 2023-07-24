@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { FC, useState } from "react";
-import OverviewPane from "@/components/OverviewPane";
+import OverviewPane from "@/screens/AIModelDetail/components/OverviewPane";
 import ApiPane from "@/components/ApiPane";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/models/RootStore";
@@ -76,7 +76,12 @@ const ModelDetail: FC<Props> = observer(({ hidden }) => {
           </button>
         </div>
         {tab === "overview" ? (
-          <OverviewPane />
+          <OverviewPane
+            description={conversation?.aiModel.description}
+            samples={conversation?.aiModel.defaultPrompts}
+            technicalURL={conversation?.aiModel.modelUrl}
+            technicalVersion={conversation?.aiModel.modelVersion}
+          />
         ) : (
           <div className="w-[350px]">
             <ApiPane />

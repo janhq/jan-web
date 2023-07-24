@@ -22,6 +22,7 @@ const GenerateImageList: React.FC<IGenerateImage> = (props) => {
         {props.products.slice(0, 4).map((item, index) => (
           <GenerateImageCard
             key={index}
+            name={item.name}
             img={item.decoration.images[0]}
             title={item.decoration.title}
           />
