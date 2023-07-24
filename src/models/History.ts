@@ -152,13 +152,13 @@ export const History = types
         max_tokens: 500,
         messages: latestMessages,
         onUpdate: (message: string, chunk: string) => {
-          console.log("namh update", message, chunk);
+          console.log("update", message, chunk);
         },
         onFinish: (message: string) => {
-          console.log("namh finish", message);
+          console.log("finish", message);
         },
         onError: (err: Error) => {
-          console.log("namh error", err);
+          console.log("error", err);
         },
       });
     });

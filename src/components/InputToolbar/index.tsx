@@ -7,14 +7,19 @@ import { useAuth } from "@/contexts/auth_context";
 import { DefaultUser } from "../../models/User";
 
 type Props = {
+  prefillPrompt: string;
   callback: (value: number) => void;
 };
 
-export const InputToolbar: React.FC<Props> = ({ callback }) => {
+export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const { historyStore } = useStore();
   const { currentUser } = useAuth();
-  const [text, setText] = useState("");
+  const [text, setText] = useState(prefillPrompt);
+
+  useEffect(() => {
+    setText(prefillPrompt);
+  }, [prefillPrompt]);
 
   const handleMessageChange = (event: any) => {
     setText(event.target.value);

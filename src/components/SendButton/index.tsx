@@ -5,7 +5,7 @@ type Props = {
   disabled?: boolean;
 };
 
-const SendButton: React.FC<Props> = ({ onClick, disabled }) => {
+const SendButton: React.FC<Props> = ({ onClick, disabled = false }) => {
   const enabledStyle = {
     backgroundColor: "#FACA15",
   };

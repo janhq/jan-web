@@ -7,9 +7,10 @@ import { useStore } from "@/models/RootStore";
 
 type Props = {
   hidden: boolean;
+  onPromptClick?: (prompt: string) => void;
 };
 
-const ModelDetail: FC<Props> = observer(({ hidden }) => {
+const ModelDetail: FC<Props> = observer(({ hidden, onPromptClick }) => {
   const [tab, setTab] = useState<"overview" | "api">("overview");
   const conversation = useStore().historyStore.getActiveConversation();
   const title = conversation?.aiModel.title ?? "";
@@ -81,6 +82,7 @@ const ModelDetail: FC<Props> = observer(({ hidden }) => {
             samples={conversation?.aiModel.defaultPrompts}
             technicalURL={conversation?.aiModel.modelUrl}
             technicalVersion={conversation?.aiModel.modelVersion}
+            onPromptClick={onPromptClick}
           />
         ) : (
           <div className="w-[350px]">
