@@ -1,8 +1,7 @@
 "use client";
 import React, { useRef } from "react";
 import Image from "next/image";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { firebaseAuth } from "../../services/firebase";
+import { useAuth } from "@/contexts/auth_context";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -15,6 +14,7 @@ interface LoginModalProps {
  */
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  const { handleSignInWithGoogle } = useAuth();
 
   const handleOutsideClick = (event: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
@@ -25,14 +25,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   // Handling sign in with Google & Firebase
-  const signInWithGoole = () => {
+  const signInWithGoole = async () => {
     try {
-      const googleAuthProvider = new GoogleAuthProvider();
-      signInWithPopup(firebaseAuth, googleAuthProvider).then(async (result) => {
-        const user = result.user as any;
-        console.log("firebase token: ", user.accessToken);
-        // Call backend to validate the token, or store it in local storage
-      });
+      await handleSignInWithGoogle(onClose);
     } catch (error) {
       console.log(error);
     }
