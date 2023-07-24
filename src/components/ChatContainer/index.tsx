@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useLayoutEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ChatBody } from "@/components/ChatBody";
@@ -12,35 +12,31 @@ import SearchBar from "@/components/SearchBar";
 import ModelMenu from "@/components/ModelMenu";
 import ModelDetail from "@/components/ModelDetail";
 import { Product } from "@/models/Product";
-import avatar from "@/assets/Thumbnail02.png";
 import MobileDownload from "@/components/MobileDownload";
 import { useStore } from "../../models/RootStore";
 import { ChatBlankState } from "@/components/ChatBlankState";
 import { observer } from "mobx-react-lite";
+import { HistoryEmpty } from "../HistoryEmpty";
 
 interface IChatContainerProps {
   products: Product[];
 }
 
 const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
+  const ref = useRef<HTMLDivElement>(null);
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showModelDetail, setShowModelDetail] = useState(false);
   const { historyStore } = useStore();
 
-  useEffect(() => {
-    historyStore.createTestConversation();
-  }, []);
-
   const showBodyChat = historyStore.activeConversationId != null;
+  const showHistoryList = historyStore.conversations.length > 0;
+  const [heightNav, setHeightNav] = useState(0);
+  const [heightChat, setHeightChat] = useState(0);
 
-  const data = {
-    avatar: avatar.src,
-    name: "Guanaco",
-  };
-
-  const onShortcutClicked = (modelId: string): void => {};
-
-  const onHistoryClicked = (conversationId: string): void => {};
+  useLayoutEffect(() => {
+    setHeightNav(ref.current?.offsetHeight ?? 0);
+  }, [showHistoryList]);
 
   return (
     <div className="flex flex-row flex-1 w-full">
@@ -122,13 +118,15 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
         <div className="h-full flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 px-2">
           <div className="flex flex-col h-16 shrink-0 items-center gap-[10px] pt-1">
             <SearchBar />
-            <ShortcutList
-              products={props.products}
-              onShortcutClicked={onShortcutClicked}
-            />
-            <HistoryList onHistoryClicked={onHistoryClicked} />
           </div>
-          <nav className="flex flex-1 flex-col"></nav>
+          <div
+            className="flex flex-col flex-auto overflow-x-hidden h-full scroll"
+            ref={ref}
+            style={heightNav > 0 ? { maxHeight: `${heightNav}px` } : {}}
+          >
+            <ShortcutList products={props.products} />
+            {showHistoryList ? <HistoryList /> : <HistoryEmpty />}
+          </div>
           <MobileDownload />
         </div>
       </div>
@@ -152,7 +150,7 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
             />
 
             <div className="flex justify-between flex-1 gap-x-4 self-stretch lg:gap-x-6">
-              <UserToolbar {...data} />
+              <UserToolbar />
               <ModelMenu
                 showModelDetail={showModelDetail}
                 onModelInfoClick={() => setShowModelDetail(!showModelDetail)}
@@ -163,14 +161,14 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
           {/* Your content */}
           <main className="py-5 w-full h-full">
             <div className="flex flex-col h-full px-1 sm:px-2 lg:px-3">
-              <ChatBody />
-              <InputToolbar />
+              <ChatBody chatHeight={heightChat} />
+              <InputToolbar callback={(value) => setHeightChat(value)} />
             </div>
           </main>
         </div>
       ) : (
         <div className="flex-1 flex flex-col w-full">
-          <ChatBlankState />
+          <ChatBlankState products={props.products} />
         </div>
       )}
       <div>

@@ -1,15 +1,15 @@
 import { types } from "mobx-state-tree";
 import { AiModel } from "./AiModel";
-import { v4 as uuidv4 } from "uuid";
 import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
 import { User } from "./User";
+import { v4 as uuidv4 } from "uuid";
 
 export const Conversation = types
   .model("Conversation", {
     /**
      * Unique identifier for the conversation
      */
-    id: types.optional(types.string, uuidv4()),
+    id: types.string,
 
     /**
      * AI model that the conversation is using
@@ -32,29 +32,43 @@ export const Conversation = types
     isWaitingForModelResponse: types.optional(types.boolean, false),
   })
   .actions((self) => ({
-    sendUserMessage(text: string) {
-      const newMessage = ChatMessage.create({
-        messageType: MessageType.Text,
-        conversationId: self.id,
-        messageSenderType: MessageSenderType.User,
-        senderUid: "", // TODO
-        senderName: "",
-        senderAvatarUrl: "",
-        text: text,
-      });
-      self.chatMessages.push(newMessage);
+    sendUserTextMessage(
+      userId: string,
+      userName: string,
+      text: string,
+      avatarUrl?: string
+    ) {
+      self.chatMessages.push(
+        ChatMessage.create({
+          id: uuidv4(),
+          messageType: MessageType.Text,
+          conversationId: self.id,
+          messageSenderType: MessageSenderType.User,
+          senderUid: userId,
+          senderName: userName,
+          senderAvatarUrl: avatarUrl,
+          text: text,
+        })
+      );
     },
 
-    createAiResponseMessage(text: string) {
-      const newMessage = ChatMessage.create({
-        messageType: MessageType.Text,
-        conversationId: self.id,
-        messageSenderType: MessageSenderType.Ai,
-        senderUid: "", // TODO
-        senderName: "",
-        senderAvatarUrl: "",
-        text: text,
-      });
-      self.chatMessages.push(newMessage);
+    sendAiResponseTextMessage(
+      modelName: string,
+      modelTitle: string,
+      modelAvatarUrl: string,
+      text: string
+    ) {
+      self.chatMessages.push(
+        ChatMessage.create({
+          id: uuidv4(),
+          messageType: MessageType.Text,
+          conversationId: self.id,
+          messageSenderType: MessageSenderType.Ai,
+          senderUid: modelName,
+          senderName: modelTitle,
+          senderAvatarUrl: modelAvatarUrl,
+          text: text,
+        })
+      );
     },
   }));

@@ -1,17 +1,34 @@
 import EnhanceButton from "@/components/EnhanceButton";
 import RandomButton from "@/components/RandomButton";
 import SendButton from "@/components/SendButton";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useStore } from "../../models/RootStore";
 
-export const InputToolbar: React.FC = () => {
+type Props = {
+  callback: (value: number) => void;
+};
+
+export const InputToolbar: React.FC<Props> = ({ callback }) => {
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const { historyStore } = useStore();
   const [text, setText] = useState("");
 
   const handleMessageChange = (event: any) => {
     setText(event.target.value);
   };
+  const resizeTextArea = () => {
+    if (textAreaRef.current) {
+      textAreaRef.current.style.height = "auto";
+      textAreaRef.current.style.height =
+        textAreaRef.current.scrollHeight + "px";
+      textAreaRef.current.style.maxHeight = "200px";
 
+      callback(textAreaRef.current.offsetHeight);
+    }
+  };
+  useEffect(() => {
+    resizeTextArea();
+  }, [text]);
   const onEnhanceClick = () => {};
 
   const onRandomClick = () => {};
@@ -22,6 +39,9 @@ export const InputToolbar: React.FC = () => {
     setText("");
   };
 
+  const shouldDisableSubmitButton =
+    historyStore.getActiveConversation()?.isWaitingForModelResponse || false;
+
   return (
     <div className="flex items-start space-x-4">
       <div className="min-w-0 flex-1">
@@ -31,6 +51,7 @@ export const InputToolbar: React.FC = () => {
               Add your comment
             </label>
             <textarea
+              ref={textAreaRef}
               value={text}
               onChange={handleMessageChange}
               rows={2}
@@ -62,7 +83,10 @@ export const InputToolbar: React.FC = () => {
               <RandomButton onClick={onRandomClick} />
             </div>
             <div className="flex-shrink-0">
-              <SendButton onClick={onSubmitClick} />
+              <SendButton
+                onClick={onSubmitClick}
+                disabled={shouldDisableSubmitButton}
+              />
             </div>
           </div>
         </div>

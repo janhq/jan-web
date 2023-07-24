@@ -16,6 +16,10 @@ export const RootStore = types
     get activeConversationId() {
       return values(self.historyStore.activeConversationId);
     },
+
+    get conversations() {
+      return values(self.historyStore.conversations);
+    },
   }));
 
 let _store: any = null;

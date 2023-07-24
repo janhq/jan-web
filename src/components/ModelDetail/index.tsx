@@ -1,15 +1,19 @@
 import Image from "next/image";
-import avatar from "@/assets/Thumbnail02.png";
 import { FC, useState } from "react";
 import OverviewPane from "@/components/OverviewPane";
 import ApiPane from "@/components/ApiPane";
+import { observer } from "mobx-react-lite";
+import { useStore } from "@/models/RootStore";
 
 type Props = {
   hidden: boolean;
 };
 
-const ModelDetail: FC<Props> = ({ hidden }) => {
+const ModelDetail: FC<Props> = observer(({ hidden }) => {
   const [tab, setTab] = useState<"overview" | "api">("overview");
+  const conversation = useStore().historyStore.getActiveConversation();
+  const title = conversation?.aiModel.title ?? "";
+  const avatarUrl = conversation?.aiModel.avatarUrl ?? "";
 
   const onTabClick = (clickedTab: "overview" | "api") => {
     if (clickedTab === tab) {
@@ -25,9 +29,15 @@ const ModelDetail: FC<Props> = ({ hidden }) => {
       } flex flex-col gap-[20px] h-full p-5 border-l-[1px] border-[#E5E7EB]`}
     >
       <div className="flex gap-3 items-center">
-        <Image src={avatar} width={38} height={38} alt="" />
+        <Image
+          className="rounded-full"
+          src={avatarUrl}
+          width={38}
+          height={38}
+          alt=""
+        />
         <h2 className="test-black font-bold text-[20px] leading-[25px] tracking-[-0.4px]">
-          Guanaco
+          {title}
         </h2>
       </div>
       <div className="flex-col gap-6 flex items-center">
@@ -65,10 +75,16 @@ const ModelDetail: FC<Props> = ({ hidden }) => {
             API
           </button>
         </div>
-        {tab === "overview" ? <OverviewPane /> : <ApiPane />}
+        {tab === "overview" ? (
+          <OverviewPane />
+        ) : (
+          <div className="w-[350px]">
+            <ApiPane />
+          </div>
+        )}
       </div>
     </div>
   );
-};
+});
 
 export default ModelDetail;
