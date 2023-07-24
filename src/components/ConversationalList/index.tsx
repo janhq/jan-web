@@ -17,6 +17,7 @@ const ConversationalList: React.FC<IConversational> = (props) => {
         {props.products.map((item, index) => (
           <ConversationalCard
             key={index}
+            name={item.name}
             image={item.decoration.images[0]}
             title={item.decoration.title}
             description={

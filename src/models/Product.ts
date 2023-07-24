@@ -19,7 +19,7 @@ export interface ProductActionParam {
   models: ActionParamModel[];
   welcomeMessage?: string;
   defaultPrompt?: string;
-  suggestedPrompts?: ProductDecorationSample[];
+  suggestedPrompts?: string[];
 
   // Category in Category
   products?: Product[]; // nested products in product
@@ -68,18 +68,17 @@ export interface ProductCategoryDecorationHeader {
 }
 
 export interface ProductDecorationSample {
-  image: string;
-  prompt: string;
+  image?: string;
+  prompt?: string;
 }
 
 export interface Section {
-  name: string
-  type: string
-  title: string
-  leftIcon?: string
-  products: Product[]
+  name: string;
+  type: string;
+  title: string;
+  leftIcon?: string;
+  products: Product[];
 }
-
 
 export enum ProductActionType {
   CHAT = "chat",

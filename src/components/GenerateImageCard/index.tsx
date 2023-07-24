@@ -4,11 +4,12 @@ import Link from "next/link";
 type Props = {
   title: string;
   img: string;
+  name: string;
 };
 
-const GenerateImageCard: React.FC<Props> = ({ img, title }) => {
+const GenerateImageCard: React.FC<Props> = ({ img, title, name }) => {
   return (
-    <Link href={`/ai/${title}`}>
+    <Link href={`/ai/${name}`}>
       <div className="group relative active:opacity-50">
         <div className="h-56 w-full overflow-hidden rounded-[8px] bg-gray-200 group-hover:opacity-75 lg:h-72 xl:h-80">
           <Image
