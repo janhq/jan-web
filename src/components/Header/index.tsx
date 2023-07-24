@@ -17,7 +17,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ handleClickLogin }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { authenticated } = useAuth();
+  const { currentUser } = useAuth();
 
   return (
     <header className="text-sm bg-white border-b-[1px] border-gray-200 ">
@@ -67,28 +67,30 @@ const Header: React.FC<HeaderProps> = ({ handleClickLogin }) => {
         </div>
         <div className="hidden lg:flex">
           <div className="flex items-center gap-5">
-            <div className="flex gap-2">
+            <Link
+              className="flex gap-2 cursor-pointer"
+              href={process.env.NEXT_PUBLIC_DISCORD_INVITATION_URL || ""}
+              target="_blank_"
+            >
               <Image src={"/icons/discord.svg"} width={20} height={20} alt="" />
-            </div>
-            {authenticated ? (
+            </Link>
+            {currentUser ? (
               <button className="flex items-center gap-4">
-                <Image
-                  className="rounded-sm"
+                <img
+                  className="rounded-sm w-8 aspect-square"
                   alt="avatar"
-                  src={"/icons/app_icon.svg"}
-                  width={32}
-                  height={32}
+                  src={currentUser?.photoURL || "/icons/app_icon.svg"}
                 />
-                John
+                {currentUser?.displayName || "Jan"}
               </button>
             ) : (
               <div className="flex justify-center">
-                <button
+                {/* <button
                   className="w-24 h-8 bg-gray-500 hover:bg-gray-600 text-white rounded-md mr-2"
                   onClick={handleClickLogin}
                 >
                   Sign up
-                </button>
+                </button> */}
                 <button
                   className="w-24 h-8 bg-black hover:bg-gray-700 text-white rounded-md"
                   onClick={handleClickLogin}
