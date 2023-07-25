@@ -11,7 +11,7 @@ export const UserToolbar: React.FC = observer(() => {
 
   return (
     <div className="flex items-center gap-3 p-1">
-      <Image
+      <img
         className="rounded-full"
         src={avatarUrl}
         width={36}

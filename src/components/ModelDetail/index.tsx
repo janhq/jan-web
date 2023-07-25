@@ -30,7 +30,7 @@ const ModelDetail: FC<Props> = observer(({ hidden, onPromptClick }) => {
       } flex flex-col gap-[20px] h-full p-5 border-l-[1px] border-[#E5E7EB]`}
     >
       <div className="flex gap-3 items-center">
-        <Image
+        <img
           className="rounded-full"
           src={avatarUrl}
           width={38}
@@ -41,7 +41,7 @@ const ModelDetail: FC<Props> = observer(({ hidden, onPromptClick }) => {
           {title}
         </h2>
       </div>
-      <div className="flex-col gap-6 flex items-center">
+      <div className="flex-col gap-6 flex items-center flex-1">
         <div className="flex items-center justify-center gap-2 w-[350px]">
           <button
             onClick={() => onTabClick("overview")}

@@ -4,7 +4,7 @@ import ApiPane from "@/components/ApiPane";
 import { ModelDetailHeader } from "@/components/ModelDetailHeader";
 import { SampleImage } from "@/screens/AIModelDetail/components/SampleImage";
 import OverviewPane from "@/screens/AIModelDetail/components/OverviewPane";
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Product } from "@/models/Product";
 
 interface AIModelDetailProps {
@@ -12,13 +12,19 @@ interface AIModelDetailProps {
 }
 
 export const AIModelDetail: React.FC<AIModelDetailProps> = (props) => {
+  const ref = useRef<HTMLDivElement>(null);
   const [tab, setTab] = useState<"overview" | "api">("overview");
+  const [inAIModel, setInAIModel] = useState(0);
   const onTabClick = (clickedTab: "overview" | "api") => {
     if (clickedTab === tab) {
       return;
     }
     setTab(clickedTab);
   };
+  useLayoutEffect(() => {
+    if (!ref.current) return;
+    setInAIModel(ref.current.offsetHeight);
+  }, []);
   return (
     <div className="container mx-auto">
       <ModelDetailHeader />
@@ -46,9 +52,10 @@ export const AIModelDetail: React.FC<AIModelDetailProps> = (props) => {
               API
             </button>
           </div>
-          <div className="mt-3">
+          <div className="mt-3 h-full" ref={ref}>
             {tab === "overview" ? (
               <OverviewPane
+                inAIModel={inAIModel}
                 description={props.product.decoration.description}
                 samples={
                   props.product.decoration.samples?.length > 0

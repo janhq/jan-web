@@ -54,8 +54,13 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
     setText("");
   };
 
-  const shouldDisableSubmitButton =
-    historyStore.getActiveConversation()?.isWaitingForModelResponse || false;
+  let shouldDisableSubmitButton = false;
+  if (historyStore.getActiveConversation()?.isWaitingForModelResponse) {
+    shouldDisableSubmitButton = true;
+  }
+  if (text.length === 0) {
+    shouldDisableSubmitButton = true;
+  }
 
   return (
     <div className="flex items-start space-x-4">

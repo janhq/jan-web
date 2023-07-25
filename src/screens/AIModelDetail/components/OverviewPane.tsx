@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 interface IOverviewPanelProps {
   description?: string;
@@ -6,9 +6,12 @@ interface IOverviewPanelProps {
   technicalURL?: string;
   samples?: string[];
   onPromptClick?: (prompt: string) => void;
+  inAIModel?: number;
 }
 const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
+  const ref = useRef<HTMLDivElement>(null);
   const [read, setRead] = useState<boolean>(true);
+  const [height, setHeight] = useState<number>(0);
 
   const {
     samples = [],
@@ -16,10 +19,24 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
     technicalVersion,
     technicalURL,
     onPromptClick,
+    inAIModel,
   } = props;
 
+  useLayoutEffect(() => {
+    if (!ref.current) return;
+    setHeight(ref.current?.offsetHeight);
+  }, [read]);
+  useLayoutEffect(() => {
+    if (!ref.current) return;
+    setHeight(ref.current?.offsetHeight);
+  }, []);
+
   return (
-    <div className="w-[350px] flex flex-col gap-6">
+    <div
+      className="w-[350px] flex flex-auto flex-col gap-6 overflow-x-hidden"
+      ref={ref}
+      style={!inAIModel ? { height: `${height}px` } : { height: "100%" }}
+    >
       <div className="flex flex-col gap-2">
         <h2 className="text-black font-bold">About this AI</h2>
         <span>

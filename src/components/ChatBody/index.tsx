@@ -16,8 +16,8 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
   const [height, setHeight] = useState(0);
 
   useLayoutEffect(() => {
-    if (chatHeight > 60) {
-      setHeight(ref.current?.offsetHeight ?? 0 - 24);
+    if (chatHeight > 60 && ref.current?.offsetHeight) {
+      setHeight(ref.current?.offsetHeight - 24);
     } else {
       setHeight(ref.current?.offsetHeight ?? 0);
     }

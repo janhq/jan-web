@@ -134,7 +134,6 @@ export const History = types
       // TODO: handle case timeout using higher order function
       const latestMessages = conversation.chatMessages
         .slice(0, 10)
-        .reverse()
         .map((e) => ({
           role:
             e.messageSenderType === MessageSenderType.User
@@ -145,17 +144,35 @@ export const History = types
 
       const modelName =
         self.getActiveConversation()?.aiModel.name ?? "gpt-3.5-turbo";
-      console.log(latestMessages);
+
+      const aiResponseMessage = ChatMessage.create({
+        id: uuidv4(),
+        conversationId: conversation.id,
+        messageType: MessageType.Text,
+        messageSenderType: MessageSenderType.Ai,
+        senderUid: conversation.aiModel.name,
+        senderName: conversation.aiModel.title,
+        senderAvatarUrl: conversation.aiModel.avatarUrl,
+        text: "",
+        createdAt: Date.now(),
+      });
+
       api.streamMessageChat({
         stream: true,
         model: modelName,
         max_tokens: 500,
         messages: latestMessages,
+        onOpen: () => {
+          conversation.addMessage(aiResponseMessage);
+        },
         onUpdate: (message: string, chunk: string) => {
-          console.log("update", message, chunk);
+          aiResponseMessage.setProp("text", message);
+          conversation.setProp("updatedAt", Date.now());
         },
         onFinish: (message: string) => {
-          console.log("finish", message);
+          conversation.setProp("updatedAt", Date.now());
+          conversation.setProp("isWaitingForModelResponse", false);
+          conversation.setProp("lastTextMessage", message);
         },
         onError: (err: Error) => {
           console.log("error", err);
@@ -172,6 +189,7 @@ export const History = types
 
       if (data.kind !== "ok") {
         console.error(`Error`, JSON.stringify(data));
+        conversation.setProp("isWaitingForModelResponse", false);
         return;
       }
 
@@ -196,6 +214,7 @@ export const History = types
         conversation.setProp("updatedAt", Date.now());
         conversation.setProp("lastImageUrl", data.outputs[0]);
       }
+      conversation.setProp("isWaitingForModelResponse", false);
     });
 
     return {
@@ -238,6 +257,8 @@ export const History = types
           createdAt: Date.now(),
         })
       );
+      conversation.setProp("isWaitingForModelResponse", true);
+      conversation.setProp("lastTextMessage", message);
 
       if (conversation.aiModel.aiModelType === AiModelType.LLM) {
         yield self.sendTextToTextMessage(conversation);
