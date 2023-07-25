@@ -1,9 +1,11 @@
 import React from "react";
 import Image from "next/image";
+import { useAuth } from "@/contexts/auth_context";
 
 interface ProfileProps {
   // Parent component can inject a function to close this modal once the close button is clicked
   closeProfileFunc: () => void;
+  logoutCallBack: () => void;
   isOpen: boolean;
 }
 
@@ -12,8 +14,19 @@ interface ProfileProps {
  * @param param0
  * @returns
  */
-const Profile: React.FC<ProfileProps> = ({ closeProfileFunc, isOpen }) => {
+const Profile: React.FC<ProfileProps> = ({
+  isOpen,
+  logoutCallBack,
+  closeProfileFunc,
+}) => {
   if (!isOpen) return null;
+
+  const { currentUser, handleSignOut } = useAuth();
+
+  const handlSignOutClick = () => {
+    handleSignOut();
+    logoutCallBack();
+  };
 
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 bg-opacity-50 flex justify-center items-center bg-black z-50">
@@ -35,11 +48,9 @@ const Profile: React.FC<ProfileProps> = ({ closeProfileFunc, isOpen }) => {
               className="relative rounded-full overflow-hidden"
               style={{ width: "75px", height: "75px" }}
             >
-              <Image
-                src={"/images/dummy_profile_img.jpg"}
+              <img
+                src={currentUser?.photoURL || "/icons/app_icon.svg"}
                 alt={"Profile Image"}
-                layout="fill"
-                objectFit="cover"
                 className="rounded-full"
               />
             </div>
@@ -56,7 +67,9 @@ const Profile: React.FC<ProfileProps> = ({ closeProfileFunc, isOpen }) => {
         {/** Name */}
         <div className="flex flex-col justify-center items-center mt-4">
           <div className="flex flex-row">
-            <p className="text-base mr-1">Engerraund Serac</p>
+            <p className="text-base mr-1">
+              {currentUser?.displayName || "Unknown Name"}
+            </p>
             <Image
               src="/icons/edit_text.svg"
               alt="Edit text button"
@@ -65,11 +78,14 @@ const Profile: React.FC<ProfileProps> = ({ closeProfileFunc, isOpen }) => {
               priority
             />
           </div>
-          <p className="text-xs text-gray-400">serac@ai.com</p>
+          <p className="text-xs text-gray-400">
+            {" "}
+            {currentUser?.email || "Unknown Email"}
+          </p>
         </div>
         {/** Functional editors */}
         <div className="flex flex-col mt-10 flex-grow">
-          <div className="flex flex-row text-gray-700 items-center">
+          <div className="flex flex-row text-gray-700 items-center hover:bg-gray-100 hover:cursor-pointer">
             <div className="w-[24px] h-[24px] bg-[#FF9500] rounded-full flex justify-center items-center">
               <Image
                 src="/icons/share_with_friend_btn.svg"
@@ -95,7 +111,10 @@ const Profile: React.FC<ProfileProps> = ({ closeProfileFunc, isOpen }) => {
               priority
             />
           </div>
-          <div className="flex flex-row mt-3 text-gray-500">
+          <div
+            className="flex flex-row mt-3 text-gray-500 hover:bg-gray-100 hover:cursor-pointer"
+            onClick={handlSignOutClick}
+          >
             <Image
               src="/icons/logout_btn.svg"
               alt="Logout button"
@@ -105,7 +124,7 @@ const Profile: React.FC<ProfileProps> = ({ closeProfileFunc, isOpen }) => {
             />
             <p className="ml-1">Log out</p>
           </div>
-          <div className="flex flex-row mt-3 text-gray-500">
+          <div className="flex flex-row mt-3 text-gray-500 hover:bg-gray-100 hover:cursor-pointer">
             <Image
               src="/icons/delete_btn.svg"
               alt="Delete button"

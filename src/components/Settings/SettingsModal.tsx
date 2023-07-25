@@ -3,17 +3,24 @@ import React from "react";
 
 interface SettingsModalProps {
   isOpen: boolean;
-  openProfileSetting: () => void;
+  openSettingFunc: () => void;
+  logoutCallBack: () => void;
 }
 
 // Displays setting modal in top-right corner once user click on Profile Avatar
 const SettingsModal: React.FC<SettingsModalProps> = ({
   isOpen,
-  openProfileSetting,
+  openSettingFunc: openProfileSetting,
+  logoutCallBack,
 }) => {
-  const { currentUser } = useAuth();
-
   if (!isOpen) return null;
+
+  const { currentUser, handleSignOut } = useAuth();
+
+  const handlSignOutClick = () => {
+    handleSignOut();
+    logoutCallBack();
+  };
 
   return (
     <div className="flex flex-col absolute top-0 right-0 mt-20 mr-1 w-72 bg-white border border-gray-300 p-2 rounded-lg shadow-md">
@@ -70,7 +77,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           <p className="ml-1">WhatsApp</p>
         </div>
       </div>
-      <div className="p-3 border-t border-gray-200 hover:bg-gray-100 hover:cursor-pointer">
+      <div
+        className="p-3 border-t border-gray-200 hover:bg-gray-100 hover:cursor-pointer"
+        onClick={handlSignOutClick}
+      >
         <p>Sign Out</p>
       </div>
     </div>

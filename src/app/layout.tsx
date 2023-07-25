@@ -34,16 +34,25 @@ export default function RootLayout({
     setShowLoginModal(!showLoginModal);
   };
 
+  // On/Off Setting Modal
   const toggleSettingsModal = () => {
     setShowSettingsModal(!showSettingModal);
   };
 
-  const openProfileSetting = () => {
+  // Open once user click to avatar on Header
+  const openSettingModal = () => {
     setShowProfileModal(true);
   };
 
-  const closeProfileSetting = () => {
+  // Called once your click to the exit button
+  const closeProfileModal = () => {
     setShowProfileModal(false);
+  };
+
+  // Called once user click logout from menu or profile page
+  const logoutCallBack = () => {
+    closeProfileModal();
+    toggleSettingsModal();
   };
 
   return (
@@ -64,11 +73,13 @@ export default function RootLayout({
             <LoginModal isOpen={showLoginModal} onClose={toggleLoginModal} />
             <SettingsModal
               isOpen={showSettingModal}
-              openProfileSetting={openProfileSetting}
+              openSettingFunc={openSettingModal}
+              logoutCallBack={logoutCallBack}
             />
             <Profile
               isOpen={showProfileModal}
-              closeProfileFunc={closeProfileSetting}
+              closeProfileFunc={closeProfileModal}
+              logoutCallBack={logoutCallBack}
             />
           </AuthProvider>
         </Provider>
