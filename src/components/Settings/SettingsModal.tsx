@@ -13,9 +13,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   openSettingFunc: openProfileSetting,
   logoutCallBack,
 }) => {
-  if (!isOpen) return null;
-
   const { currentUser, handleSignOut } = useAuth();
+  
+  if (!isOpen) return null;
 
   const handlSignOutClick = () => {
     handleSignOut();

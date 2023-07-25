@@ -19,9 +19,9 @@ const Profile: React.FC<ProfileProps> = ({
   logoutCallBack,
   closeProfileFunc,
 }) => {
-  if (!isOpen) return null;
-
   const { currentUser, handleSignOut } = useAuth();
+  
+  if (!isOpen) return null;
 
   const handlSignOutClick = () => {
     handleSignOut();
