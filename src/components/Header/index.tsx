@@ -13,9 +13,13 @@ const navigation = [
 
 interface HeaderProps {
   handleClickLogin: () => void;
+  toggleDisplaySettingMenu: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ handleClickLogin }) => {
+const Header: React.FC<HeaderProps> = ({
+  handleClickLogin,
+  toggleDisplaySettingMenu,
+}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { currentUser } = useAuth();
 
@@ -75,7 +79,10 @@ const Header: React.FC<HeaderProps> = ({ handleClickLogin }) => {
               <Image src={"/icons/discord.svg"} width={20} height={20} alt="" />
             </Link>
             {currentUser ? (
-              <button className="flex items-center gap-4">
+              <button
+                className="flex items-center gap-4"
+                onClick={toggleDisplaySettingMenu}
+              >
                 <img
                   className="rounded-sm w-8 aspect-square"
                   alt="avatar"
