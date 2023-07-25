@@ -1,7 +1,7 @@
 "use client";
 import "./globals.css";
 // import type { Metadata } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Inter } from "next/font/google";
 import { Header } from "@/components";
 import classNames from "classnames";
@@ -10,6 +10,7 @@ import { AuthProvider } from "@/contexts/auth_context";
 import LoginModal from "@/components/Auth/LoginModal";
 import SettingsModal from "@/components/Settings/SettingsModal";
 import Profile from "@/components/Auth/Profile";
+import Gleap from "gleap";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -54,6 +55,10 @@ export default function RootLayout({
     closeProfileModal();
     toggleSettingsModal();
   };
+
+  useEffect(() => {
+    Gleap.initialize(process.env.NEXT_PUBLIC_GLEAP_API_KEY || "");
+  }, []);
 
   return (
     <html lang="en">
