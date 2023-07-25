@@ -31,7 +31,7 @@ const MobileDownload = () => {
         >
           <div className="flex box-border h-11 rounded-md bg-gray-300 p-2 items-center hover:bg-gray-200 focus:bg-gray-600">
             <Image
-              src="/icons/apple_logo.svg"
+              src="/icons/social_icon_apple.svg"
               alt={""}
               width={26}
               height={26}
