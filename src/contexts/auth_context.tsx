@@ -6,19 +6,26 @@ import {
   useEffect,
 } from "react";
 import { firebaseApp } from "@/utils/firebase";
-import { GoogleAuthProvider, User, getAuth, onAuthStateChanged, signInWithPopup } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  User,
+  getAuth,
+  onAuthStateChanged,
+  signInWithPopup,
+} from "firebase/auth";
 
 interface AuthContextType {
   currentUser: User | undefined;
   handleSignInWithGoogle: (onComplete: () => void) => Promise<void>;
+  handleSignOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 /**
  * Authentication Context profider
- * @param param0 
- * @returns 
+ * @param param0
+ * @returns
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | undefined>();
@@ -47,14 +54,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       });
     } catch (error) {
-      console.error('Error signing in with Google:', error);
+      console.error("Error signing in with Google:", error);
     } finally {
-      onComplete()
+      onComplete();
+    }
+  }
+
+  // Sign out account
+  async function handleSignOut() {
+    try {
+      const currentAuth = getAuth(firebaseApp);
+      await currentAuth.signOut();
+      setCurrentUser(undefined);
+    } catch (error) {
+      console.error("Error signing out:", error);
     }
   }
 
   return (
-    <AuthContext.Provider value={{ currentUser, handleSignInWithGoogle }}>
+    <AuthContext.Provider
+      value={{ currentUser, handleSignInWithGoogle, handleSignOut }}
+    >
       {children}
     </AuthContext.Provider>
   );
