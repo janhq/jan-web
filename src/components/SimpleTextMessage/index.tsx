@@ -17,7 +17,7 @@ export const SimpleTextMessage: React.FC<Props> = ({
 
   return (
     <div className="flex items-start gap-2">
-      <Image src={avatarUrl} width={32} height={32} alt="" />
+      <Image className="rounded-full" src={avatarUrl} width={32} height={32} alt="" />
       <div className="flex flex-col gap-1 w-full">
         <div className="flex gap-1 justify-start items-baseline">
           <div className="text-[#1B1B1B] text-[13px] font-extrabold leading-[15.2px]">

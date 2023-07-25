@@ -3,15 +3,23 @@ import RandomButton from "@/components/RandomButton";
 import SendButton from "@/components/SendButton";
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "../../models/RootStore";
+import { useAuth } from "@/contexts/auth_context";
+import { DefaultUser } from "../../models/User";
 
 type Props = {
+  prefillPrompt: string;
   callback: (value: number) => void;
 };
 
-export const InputToolbar: React.FC<Props> = ({ callback }) => {
+export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const { historyStore } = useStore();
-  const [text, setText] = useState("");
+  const { currentUser } = useAuth();
+  const [text, setText] = useState(prefillPrompt);
+
+  useEffect(() => {
+    setText(prefillPrompt);
+  }, [prefillPrompt]);
 
   const handleMessageChange = (event: any) => {
     setText(event.target.value);
@@ -26,16 +34,23 @@ export const InputToolbar: React.FC<Props> = ({ callback }) => {
       callback(textAreaRef.current.offsetHeight);
     }
   };
+
   useEffect(() => {
     resizeTextArea();
   }, [text]);
+
   const onEnhanceClick = () => {};
 
   const onRandomClick = () => {};
 
   const onSubmitClick = () => {
     if (text.length === 0) return;
-    historyStore.sendMessageOnActiveConversation(text);
+    historyStore.sendMessage(
+      text,
+      currentUser?.uid ?? DefaultUser.id,
+      currentUser?.displayName ?? DefaultUser.displayName,
+      currentUser?.photoURL ?? DefaultUser.avatarUrl
+    );
     setText("");
   };
 

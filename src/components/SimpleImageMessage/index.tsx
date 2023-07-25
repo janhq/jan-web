@@ -2,20 +2,22 @@
 import Image from "next/image";
 
 type Props = {
-  avatarUrl: string;
+  avatarUrl?: string;
   senderName: string;
-  time: string;
-  text: string;
-  imageUrl: string;
+  text?: string;
+  createdAt: number;
+  imageUrls: string[];
 };
 
 export const SimpleImageMessage: React.FC<Props> = ({
+  avatarUrl = "",
   senderName,
-  avatarUrl,
-  imageUrl,
+  imageUrls,
   text,
-  time,
+  createdAt,
 }) => {
+  const displayDate = new Date(createdAt).toLocaleString();
+
   return (
     <div className="flex items-start gap-2">
       <Image src={avatarUrl} width={32} height={32} alt="" />
@@ -24,17 +26,19 @@ export const SimpleImageMessage: React.FC<Props> = ({
           <div className="text-[#1B1B1B] text-[13px] font-extrabold leading-[15.2px]">
             {senderName}
           </div>
-          <div className="text-[11px] leading-[13.2px] font-medium">{time}</div>
+          <div className="text-[11px] leading-[13.2px] font-medium">
+            {displayDate}
+          </div>
         </div>
-        <div className="leading-[20px] text-[14px]">{text}</div>
+        {text && <div className="leading-[20px] text-[14px]">{text}</div>}
         <div className="flex items-center gap-3">
           <img
             src={
               process.env.NEXT_PUBLIC_ENV === "development"
-                ? `${process.env.NEXT_PUBLIC_DEV_BUCKET_URL}/${imageUrl
+                ? `${process.env.NEXT_PUBLIC_DEV_BUCKET_URL}/${imageUrls[0]
                     .split("/")
                     .pop()}`
-                : imageUrl
+                : imageUrls[0]
             }
             alt=""
             className="w-72 aspect-square rounded-lg"

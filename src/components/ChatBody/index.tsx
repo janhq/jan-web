@@ -3,6 +3,8 @@ import React, { useLayoutEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import { useStore } from "../../models/RootStore";
 import { observer } from "mobx-react-lite";
+import { MessageType } from "../../models/ChatMessage";
+import { SimpleImageMessage } from "../SimpleImageMessage";
 
 type Props = {
   chatHeight: number;
@@ -43,15 +45,39 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
               {historyStore
                 .getActiveMessages()
                 .map(
-                  ({ senderAvatarUrl, senderName, createdAt, text }, index) => (
-                    <SimpleTextMessage
-                      key={index}
-                      avatarUrl={senderAvatarUrl}
-                      senderName={senderName}
-                      createdAt={createdAt}
-                      text={text}
-                    />
-                  )
+                  (
+                    {
+                      senderAvatarUrl,
+                      senderName,
+                      createdAt,
+                      text,
+                      messageType,
+                      imageUrls,
+                    },
+                    index
+                  ) => {
+                    if (messageType === MessageType.Image) {
+                      return (
+                        <SimpleImageMessage
+                          key={index}
+                          avatarUrl={senderAvatarUrl}
+                          senderName={senderName}
+                          createdAt={createdAt}
+                          imageUrls={imageUrls ?? []}
+                        />
+                      );
+                    } else if (messageType === MessageType.Text) {
+                      return (
+                        <SimpleTextMessage
+                          key={index}
+                          avatarUrl={senderAvatarUrl}
+                          senderName={senderName}
+                          createdAt={createdAt}
+                          text={text}
+                        />
+                      );
+                    }
+                  }
                 )}
             </div>
           </InfiniteScroll>

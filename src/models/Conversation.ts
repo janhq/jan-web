@@ -1,8 +1,8 @@
-import { types } from "mobx-state-tree";
+import { Instance, types } from "mobx-state-tree";
 import { AiModel } from "./AiModel";
-import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
+import { ChatMessage } from "./ChatMessage";
 import { User } from "./User";
-import { v4 as uuidv4 } from "uuid";
+import { withSetPropAction } from "../helpers/withSetPropAction";
 
 export const Conversation = types
   .model("Conversation", {
@@ -30,45 +30,30 @@ export const Conversation = types
      * Indicates whether the model is still processing the user's input
      */
     isWaitingForModelResponse: types.optional(types.boolean, false),
-  })
-  .actions((self) => ({
-    sendUserTextMessage(
-      userId: string,
-      userName: string,
-      text: string,
-      avatarUrl?: string
-    ) {
-      self.chatMessages.push(
-        ChatMessage.create({
-          id: uuidv4(),
-          messageType: MessageType.Text,
-          conversationId: self.id,
-          messageSenderType: MessageSenderType.User,
-          senderUid: userId,
-          senderName: userName,
-          senderAvatarUrl: avatarUrl,
-          text: text,
-        })
-      );
-    },
 
-    sendAiResponseTextMessage(
-      modelName: string,
-      modelTitle: string,
-      modelAvatarUrl: string,
-      text: string
-    ) {
-      self.chatMessages.push(
-        ChatMessage.create({
-          id: uuidv4(),
-          messageType: MessageType.Text,
-          conversationId: self.id,
-          messageSenderType: MessageSenderType.Ai,
-          senderUid: modelName,
-          senderName: modelTitle,
-          senderAvatarUrl: modelAvatarUrl,
-          text: text,
-        })
-      );
+    /**
+     * Indicates whether the conversation is created by the user
+     */
+    createdAt: types.number,
+
+    /**
+     * Time the last message is sent
+     */
+    updatedAt: types.maybe(types.number),
+
+    /**
+     * Last image url sent by the model if any
+     */
+    lastImageUrl: types.maybe(types.string),
+
+    /**
+     * Last text sent by the user if any
+     */
+    lastUserText: types.maybe(types.string),
+  })
+  .actions(withSetPropAction)
+  .actions((self) => ({
+    addMessage(message: Instance<typeof ChatMessage>) {
+      self.chatMessages.push(message);
     },
   }));

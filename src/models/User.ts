@@ -5,3 +5,9 @@ export const User = types.model("User", {
   displayName: types.optional(types.string, "Anonymous"),
   avatarUrl: types.maybe(types.string),
 });
+
+export const DefaultUser = {
+  id: "0",
+  displayName: "Anonymous",
+  avatarUrl: undefined,
+};

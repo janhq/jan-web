@@ -5,11 +5,18 @@ interface IOverviewPanelProps {
   technicalVersion?: string;
   technicalURL?: string;
   samples?: string[];
+  onPromptClick?: (prompt: string) => void;
 }
 const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
   const [read, setRead] = useState<boolean>(true);
 
-  const { samples, description, technicalVersion, technicalURL } = props;
+  const {
+    samples = [],
+    description,
+    technicalVersion,
+    technicalURL,
+    onPromptClick,
+  } = props;
 
   return (
     <div className="w-[350px] flex flex-col gap-6">
@@ -43,14 +50,13 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
         <h2 className="font-bold">Try it yourself</h2>
         <ul className="border-[1px] border-[#D1D5DB] rounded-[12px]">
           {samples?.map((item, index) => (
-            <li
+            <button
+              onClick={() => onPromptClick?.(item)}
               key={index}
-              className="text-[14px] leading-[20px] flex p-[12px] gap-[10px] border-b-[1px] border-[#E5E7EB] hover:text-blue-400 last:border-b-[0px]"
+              className="text-[14px] text-gray-500 leading-[20px] flex gap-[10px] border-b-[1px] border-[#E5E7EB] hover:text-blue-400 last:border-b-[0px] text-left p-3"
             >
-              <a href="#" className="p-2">
-                {item}
-              </a>
-            </li>
+              {item}
+            </button>
           ))}
         </ul>
       </div>

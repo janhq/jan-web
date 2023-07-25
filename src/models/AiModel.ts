@@ -7,6 +7,7 @@ export enum AiModelType {
 
 export const AiModel = types.model("AiModel", {
   name: types.string,
+  modelId: types.string,
   title: types.string,
   aiModelType: types.enumeration(Object.values(AiModelType)),
   description: types.optional(types.string, ""),

@@ -27,12 +27,19 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showModelDetail, setShowModelDetail] = useState(false);
+  const [prefillPrompt, setPrefillPrompt] = useState("");
   const { historyStore } = useStore();
 
   const showBodyChat = historyStore.activeConversationId != null;
   const showHistoryList = historyStore.conversations.length > 0;
   const [heightNav, setHeightNav] = useState(0);
   const [heightChat, setHeightChat] = useState(0);
+
+  const onSuggestPromptClick = (prompt: string) => {
+    if (prompt !== prefillPrompt) {
+      setPrefillPrompt(prompt);
+    }
+  };
 
   useLayoutEffect(() => {
     setHeightNav(ref.current?.offsetHeight ?? 0);
@@ -162,7 +169,10 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
           <main className="py-5 w-full h-full">
             <div className="flex flex-col h-full px-1 sm:px-2 lg:px-3">
               <ChatBody chatHeight={heightChat} />
-              <InputToolbar callback={(value) => setHeightChat(value)} />
+              <InputToolbar
+                callback={(value) => setHeightChat(value)}
+                prefillPrompt={prefillPrompt}
+              />
             </div>
           </main>
         </div>
@@ -172,7 +182,10 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
         </div>
       )}
       <div>
-        <ModelDetail hidden={showModelDetail} />
+        <ModelDetail
+          hidden={showModelDetail}
+          onPromptClick={onSuggestPromptClick}
+        />
       </div>
     </div>
   );
