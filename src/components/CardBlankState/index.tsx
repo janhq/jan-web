@@ -1,6 +1,5 @@
 import { Product } from "@/models/Product";
 import { useStore } from "@/models/RootStore";
-import Image from "next/image";
 import { useAuth } from "../../contexts/auth_context";
 import { DefaultUser } from "../../models/User";
 
@@ -32,7 +31,7 @@ export const CardBlankState: React.FC<Props> = ({ product }) => {
     >
       <div className="gap-6 flex items-center">
         <div className="w-[40px] h-[40px]">
-          <Image
+          <img
             className="max-w-none rounded-3xl"
             src={product.decoration.images[0]}
             width={40}

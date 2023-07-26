@@ -48,6 +48,7 @@ export interface StreamMessageOptions {
   model: string;
   max_tokens: Number;
   messages: MessageContent[];
+  onOpen?: () => void;
   onUpdate?: (message: string, chunk: string) => void;
   onFinish: (message: string) => void;
   onError?: (err: Error) => void;

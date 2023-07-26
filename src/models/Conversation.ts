@@ -49,7 +49,7 @@ export const Conversation = types
     /**
      * Last text sent by the user if any
      */
-    lastUserText: types.maybe(types.string),
+    lastTextMessage: types.maybe(types.string),
   })
   .actions(withSetPropAction)
   .actions((self) => ({

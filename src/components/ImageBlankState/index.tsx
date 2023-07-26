@@ -1,6 +1,5 @@
 import { Product } from "@/models/Product";
 import { useStore } from "@/models/RootStore";
-import Image from "next/image";
 import { useAuth } from "../../contexts/auth_context";
 import { DefaultUser } from "../../models/User";
 
@@ -28,7 +27,7 @@ export const ImageBlankState: React.FC<Props> = ({ product }) => {
       className="flex flex-col gap-2 p-2 rounded-[8px] bg-white overflow-hidden"
       onClick={onClick}
     >
-      <Image
+      <img
         className="w-[140px] h-[140px] object-cover"
         src={imageUrl}
         width={140}

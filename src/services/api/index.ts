@@ -204,6 +204,7 @@ export class Api {
             }
             return finish();
           }
+          options.onOpen?.();
         },
         onmessage(msg) {
           if (msg.data === "[DONE]") {
