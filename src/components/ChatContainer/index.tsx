@@ -17,7 +17,8 @@ import { useStore } from "../../models/RootStore";
 import { ChatBlankState } from "@/components/ChatBlankState";
 import { observer } from "mobx-react-lite";
 import { HistoryEmpty } from "../HistoryEmpty";
-import Gleap from 'gleap'
+import Gleap from "gleap";
+import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
 
 interface IChatContainerProps {
   products: Product[];
@@ -25,9 +26,7 @@ interface IChatContainerProps {
 
 const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
   const ref = useRef<HTMLDivElement>(null);
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [showModelDetail, setShowModelDetail] = useState(false);
   const [prefillPrompt, setPrefillPrompt] = useState("");
   const { historyStore } = useStore();
 
@@ -45,6 +44,14 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
       Gleap.showFeedbackButton(true);
     }
   }, [conversation]);
+  const [open, setOpen] = useState(false);
+
+  const onConfirmDelete = () => {
+    setPrefillPrompt("");
+    historyStore.closeModelDetail();
+    historyStore.deleteActiveConversation();
+    setOpen(false);
+  };
 
   const onSuggestPromptClick = (prompt: string) => {
     if (prompt !== prefillPrompt) {
@@ -58,6 +65,11 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
 
   return (
     <div className="flex flex-row flex-1 w-full">
+      <ConfirmDeleteConversationModal
+        open={open}
+        setOpen={setOpen}
+        onConfirmDelete={onConfirmDelete}
+      />
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog
           as="div"
@@ -169,15 +181,12 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
 
             <div className="flex justify-between flex-1 gap-x-4 self-stretch lg:gap-x-6">
               <UserToolbar />
-              <ModelMenu
-                showModelDetail={showModelDetail}
-                onModelInfoClick={() => setShowModelDetail(!showModelDetail)}
-              />
+              <ModelMenu onDeleteClick={() => setOpen(true)} />
             </div>
           </div>
 
           {/* Your content */}
-          <main className="py-5 w-full h-full">
+          <main className="py-3 w-full h-full">
             <div className="flex flex-col h-full px-1 sm:px-2 lg:px-3">
               <ChatBody chatHeight={heightChat} />
               <InputToolbar
@@ -193,10 +202,7 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
         </div>
       )}
       <div>
-        <ModelDetail
-          hidden={showModelDetail}
-          onPromptClick={onSuggestPromptClick}
-        />
+        <ModelDetail onPromptClick={onSuggestPromptClick} />
       </div>
     </div>
   );

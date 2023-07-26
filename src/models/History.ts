@@ -12,8 +12,13 @@ export const History = types
   .model("History", {
     conversations: types.optional(types.array(Conversation), []),
     activeConversationId: types.maybe(types.string),
+    showModelDetail: types.optional(types.boolean, false),
   })
   .views((self) => ({
+    get shouldShowModelDetail() {
+      return self.showModelDetail;
+    },
+
     getActiveConversation() {
       if (self.activeConversationId) {
         return self.conversations.find(
@@ -36,6 +41,19 @@ export const History = types
     },
   }))
   .actions((self) => ({
+    // Model detail
+    toggleModelDetail() {
+      self.showModelDetail = !self.showModelDetail;
+    },
+
+    closeModelDetail() {
+      if (self.showModelDetail) {
+        self.showModelDetail = false;
+      }
+    },
+  }))
+  .actions((self) => ({
+    // Conversations
     createConversationWithModel(
       product: Product,
       userId: string,

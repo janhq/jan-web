@@ -66,15 +66,20 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
       <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-[16px]">
         <h2 className="font-bold">Try it yourself</h2>
         <ul className="border-[1px] border-[#D1D5DB] rounded-[12px]">
-          {samples?.map((item, index) => (
-            <button
-              onClick={() => onPromptClick?.(item)}
-              key={index}
-              className="text-[14px] text-gray-500 leading-[20px] flex gap-[10px] border-b-[1px] border-[#E5E7EB] hover:text-blue-400 last:border-b-[0px] text-left p-3"
-            >
-              {item}
-            </button>
-          ))}
+          {samples?.map((item, index) => {
+            const showBorder = index === samples.length - 1 ? false : true;
+            return (
+              <button
+                onClick={() => onPromptClick?.(item)}
+                key={index}
+                className={`text-sm text-gray-500 leading-[20px] flex gap-[10px] border-b-[${
+                  showBorder ? "1" : "0"
+                }px] border-[#E5E7EB] hover:text-blue-400 text-left p-3 w-full`}
+              >
+                {item}
+              </button>
+            );
+          })}
         </ul>
       </div>
     </div>

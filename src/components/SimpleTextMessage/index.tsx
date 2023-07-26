@@ -1,3 +1,6 @@
+import { create } from "domain";
+import { useCallback } from "react";
+
 type Props = {
   avatarUrl?: string;
   senderName: string;
@@ -11,7 +14,20 @@ export const SimpleTextMessage: React.FC<Props> = ({
   createdAt,
   text = "",
 }) => {
-  const displayDate = new Date(createdAt).toLocaleString();
+  const isToday = useCallback(() => {
+    const today = new Date();
+    return (
+      today.setHours(0, 0, 0, 0) == new Date(createdAt).setHours(0, 0, 0, 0)
+    );
+  }, [createdAt]);
+
+  let displayDate = new Date(createdAt).toLocaleString();
+  if (isToday()) {
+    displayDate = new Date(createdAt).toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
 
   return (
     <div className="flex items-start gap-2">
@@ -27,7 +43,7 @@ export const SimpleTextMessage: React.FC<Props> = ({
           <div className="text-[#1B1B1B] text-[13px] font-extrabold leading-[15.2px]">
             {senderName}
           </div>
-          <div className="text-[11px] leading-[13.2px] font-medium">
+          <div className="text-[11px] leading-[13.2px] font-medium text-gray-400 ml-2">
             {displayDate}
           </div>
         </div>

@@ -18,6 +18,8 @@ const HistoryItem: React.FC<Props> = observer(
     };
 
     const conversation = historyStore.getConversationById(conversationId);
+    const isSelected = historyStore.activeConversationId === conversationId;
+    const backgroundColor = isSelected ? "bg-gray-100" : "bg-white";
 
     let rightImageUrl: string | undefined;
     if (conversation && conversation.isWaitingForModelResponse) {
@@ -31,7 +33,7 @@ const HistoryItem: React.FC<Props> = observer(
 
     return (
       <button
-        className="flex flex-row items-center gap-2 w-full rounded-[8px] pt-2 pb-2"
+        className={`flex flex-row items-center gap-2 w-full rounded-[8px] p-2 ${backgroundColor}`}
         onClick={onClick}
       >
         <img

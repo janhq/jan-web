@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useStore } from "../../models/RootStore";
 import { useAuth } from "@/contexts/auth_context";
 import { DefaultUser } from "../../models/User";
+import { AiModelType } from "../../models/AiModel";
 
 type Props = {
   prefillPrompt: string;
@@ -16,6 +17,10 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
   const { historyStore } = useStore();
   const { currentUser } = useAuth();
   const [text, setText] = useState(prefillPrompt);
+
+  const shouldShowEnhanceButton =
+    historyStore.getActiveConversation()?.aiModel.aiModelType ===
+      AiModelType.GenerativeArt ?? false;
 
   useEffect(() => {
     setText(prefillPrompt);
@@ -99,8 +104,12 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
             className="absolute inset-x-0 bottom-0 flex justify-between py-2 pl-3 pr-2 rounded-b-lg"
           >
             <div className="flex justify-end items-center space-x-1 w-full pr-3">
-              <EnhanceButton onClick={onEnhanceClick} />
-              <RandomButton onClick={onRandomClick} />
+              {shouldShowEnhanceButton ? (
+                <>
+                  <EnhanceButton onClick={onEnhanceClick} />
+                  <RandomButton onClick={onRandomClick} />
+                </>
+              ) : undefined}
             </div>
             <div className="flex-shrink-0">
               <SendButton
