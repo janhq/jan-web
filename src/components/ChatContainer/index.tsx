@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { Fragment, useLayoutEffect, useRef, useState } from "react";
+import { Fragment, useLayoutEffect, useRef, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ChatBody } from "@/components/ChatBody";
@@ -17,6 +17,7 @@ import { useStore } from "../../models/RootStore";
 import { ChatBlankState } from "@/components/ChatBlankState";
 import { observer } from "mobx-react-lite";
 import { HistoryEmpty } from "../HistoryEmpty";
+import Gleap from 'gleap'
 
 interface IChatContainerProps {
   products: Product[];
@@ -34,6 +35,16 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
   const showHistoryList = historyStore.conversations.length > 0;
   const [heightNav, setHeightNav] = useState(0);
   const [heightChat, setHeightChat] = useState(0);
+
+  const conversation = historyStore.getActiveConversation();
+
+  useEffect(() => {
+    if (conversation) {
+      Gleap.showFeedbackButton(false);
+    } else {
+      Gleap.showFeedbackButton(true);
+    }
+  }, [conversation]);
 
   const onSuggestPromptClick = (prompt: string) => {
     if (prompt !== prefillPrompt) {
