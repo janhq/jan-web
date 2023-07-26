@@ -18,7 +18,7 @@ const Slider: FC<ISliderProps> = (props) => {
   return (
     <div className="w-full flex overflow-auto">
       <Slide
-        title={props.product.decoration.title}
+        title={props.product?.decoration.title}
         description={
           props.product.decoration.subTitle ||
           props.product.decoration.description
