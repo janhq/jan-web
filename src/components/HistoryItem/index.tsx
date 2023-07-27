@@ -2,6 +2,7 @@ import { AiModelType } from "@/models/AiModel";
 import { useStore } from "@/models/RootStore";
 import { observer } from "mobx-react-lite";
 import React from "react";
+import JanImage from "../JanImage";
 
 type Props = {
   conversationId: string;
@@ -50,12 +51,11 @@ const HistoryItem: React.FC<Props> = observer(
           </span>
         </div>
         {rightImageUrl != null ? (
-          <img
+          <JanImage
+            imageUrl={rightImageUrl ?? ""}
             className="rounded-[4px]"
-            src={rightImageUrl ?? ""}
             width={44}
             height={44}
-            alt=""
           />
         ) : undefined}
       </button>

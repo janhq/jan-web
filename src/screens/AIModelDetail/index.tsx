@@ -11,7 +11,7 @@ interface AIModelDetailProps {
   product: Product;
 }
 
-export const AIModelDetail: React.FC<AIModelDetailProps> = (props) => {
+export const AIModelDetail: React.FC<AIModelDetailProps> = ({ product }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [tab, setTab] = useState<"overview" | "api">("overview");
   const [inAIModel, setInAIModel] = useState(0);
@@ -27,7 +27,7 @@ export const AIModelDetail: React.FC<AIModelDetailProps> = (props) => {
   }, []);
   return (
     <div className="container mx-auto">
-      <ModelDetailHeader />
+      <ModelDetailHeader modelTitle={product.decoration.title} />
       <div className="flex justify-between mt-2 gap-4">
         <div className="flex flex-col">
           <div className="flex items-center gap-2 w-[350px]">
@@ -56,23 +56,23 @@ export const AIModelDetail: React.FC<AIModelDetailProps> = (props) => {
             {tab === "overview" ? (
               <OverviewPane
                 inAIModel={inAIModel}
-                description={props.product.decoration.description}
+                description={product.decoration.description}
                 samples={
-                  props.product.decoration.samples?.length > 0
-                    ? props.product.decoration.samples
+                  product.decoration.samples?.length > 0
+                    ? product.decoration.samples
                         ?.map((e) => e.prompt)
                         .filter((e): e is string => !!e)
-                    : props.product.action.suggestedPrompts
+                    : product.action.suggestedPrompts
                 }
-                technicalURL={props.product.decoration.technicalURL}
-                technicalVersion={props.product.decoration.technicalVersion}
+                technicalURL={product.decoration.technicalURL}
+                technicalVersion={product.decoration.technicalVersion}
               />
             ) : (
               <ApiPane />
             )}
           </div>
         </div>
-        <SampleImage image={props.product.decoration.images[0]} />
+        <SampleImage image={product.decoration.images[0]} />
       </div>
     </div>
   );
