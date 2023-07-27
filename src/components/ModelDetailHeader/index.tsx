@@ -1,7 +1,11 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-export const ModelDetailHeader: React.FC = () => {
+type Props = {
+  modelTitle: string;
+};
+
+export const ModelDetailHeader: React.FC<Props> = ({ modelTitle }) => {
   const router = useRouter();
 
   const handleClick = () => {
@@ -26,7 +30,7 @@ export const ModelDetailHeader: React.FC = () => {
           </button>
         </span>
         <h2 className="font-bold text-[32px] leading-[52px] text-black">
-          Dreamshaper
+          {modelTitle}
         </h2>
       </div>
       <button className="bg-[#1A56DB] py-[10px] px-5 gap-2 rounded-[8px] text-[14px] leading-[21px] font-medium text-white">
