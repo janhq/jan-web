@@ -6,11 +6,11 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "@/models/RootStore";
 
 type Props = {
-  hidden: boolean;
   onPromptClick?: (prompt: string) => void;
 };
 
-const ModelDetail: FC<Props> = observer(({ hidden, onPromptClick }) => {
+const ModelDetail: FC<Props> = observer(({ onPromptClick }) => {
+  const { historyStore } = useStore();
   const [tab, setTab] = useState<"overview" | "api">("overview");
   const conversation = useStore().historyStore.getActiveConversation();
   const title = conversation?.aiModel.title ?? "";
@@ -26,8 +26,8 @@ const ModelDetail: FC<Props> = observer(({ hidden, onPromptClick }) => {
   return (
     <div
       className={`${
-        hidden ? "w-full" : "hidden"
-      } flex flex-col gap-[20px] h-full p-5 border-l-[1px] border-[#E5E7EB]`}
+        historyStore.shouldShowModelDetail ? "w-full" : "hidden"
+      } flex flex-col gap-5 h-full px-5 pt-5 pb-3 border-l-[1px] border-[#E5E7EB]`}
     >
       <div className="flex gap-3 items-center">
         <img

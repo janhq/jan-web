@@ -6,7 +6,7 @@ const DOWNLOAD_ANDROID = "https://apps.apple.com/vn/app/jan/id6449664703";
 
 const MobileDownload = () => {
   return (
-    <div className="flex items-center flex-col box-border rounded-lg border-2 border-gray-200 p-4">
+    <div className="flex items-center flex-col box-border rounded-lg border border-gray-200 p-4 bg-[#F9FAFB] mb-3">
       {/** Jan logo */}
       <Image
         src="/icons/janai_logo.svg"
@@ -69,4 +69,4 @@ const MobileDownload = () => {
   );
 };
 
-export default MobileDownload;
+export default React.memo(MobileDownload);
