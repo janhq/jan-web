@@ -14,7 +14,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   logoutCallBack,
 }) => {
   const { currentUser, handleSignOut } = useAuth();
-  
+
   if (!isOpen) return null;
 
   const handlSignOutClick = () => {
@@ -23,7 +23,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   return (
-    <div className="flex flex-col absolute top-0 right-0 mt-20 mr-1 w-72 bg-white border border-gray-300 p-2 rounded-lg shadow-md">
+    <div className="flex flex-col absolute top-0 right-0 mt-20 mr-1 w-60 mr-4 bg-white border border-gray-300 p-2 rounded-lg shadow-md">
       <div
         className="flex flex-col p-3 hover:bg-gray-100 hover:cursor-pointer"
         onClick={openProfileSetting}
@@ -35,37 +35,53 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           {currentUser?.email || "Unknown Email"}
         </p>
       </div>
-      <div className="p-3 border-t border-gray-200 hover:bg-gray-100 hover:cursor-pointer">
+      <div className="p-3 border-t border-gray-200 text-gray-500 hover:bg-gray-100 hover:cursor-pointer">
         <p>Account Settings</p>
       </div>
-      <div className="flex flex-row p-3 border-t border-gray-200 hover:bg-gray-100 hover:cursor-pointer">
+      <div className="flex flex-row p-3 border-t border-gray-200 text-gray-500 hover:bg-gray-100 hover:cursor-pointer">
         <img
           src="/icons/arrow-circle-down.svg"
           alt="Download icon"
           width="16"
           height="16"
         />
-        <p className="ml-1">Get the App</p>
+        <p className="ml-1 text-gray-500">
+          <a
+            href={process.env.NEXT_PUBLIC_DOWNLOAD_APP_IOS || ""}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Get the App
+          </a>
+        </p>
       </div>
-      <div className="p-3 border-t border-gray-200">
-        <p className="-mt-2 text-sm text-gray-500">JOIN OUR COMMUNITIES</p>
-        <div className="flex flex-row mt-2 hover:bg-gray-100 hover:cursor-pointer">
+      <div className="border-t border-gray-200">
+        <p className="pl-2 mt-1 text-sm text-gray-600">JOIN OUR COMMUNITIES</p>
+        <div className="flex flex-row pl-2 pt-2 pb-2 hover:bg-gray-100 hover:cursor-pointer">
           <img
             src="/icons/discord-icon.svg"
             alt="Discord icon"
             width="16"
             height="16"
           />
-          <p className="ml-1">Discord</p>
+          <p className="ml-1 text-gray-500">
+            <a
+              href={process.env.NEXT_PUBLIC_DISCORD_INVITATION_URL || ""}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Discord
+            </a>
+          </p>
         </div>
-        <div className="flex flex-row mt-2 hover:bg-gray-100 hover:cursor-pointer">
+        {/* <div className="flex flex-row mt-2 hover:bg-gray-100 hover:cursor-pointer">
           <img
             src="/icons/telegram-icon.svg"
             alt="Telegram icon"
             width="16"
             height="16"
           />
-          <p className="ml-1">Telegram</p>
+          <p className="ml-1 text-gray-500">Telegram</p>
         </div>
         <div className="flex flex-row mt-2 hover:bg-gray-100 hover:cursor-pointer">
           <img
@@ -74,11 +90,31 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             width="16"
             height="16"
           />
-          <p className="ml-1">WhatsApp</p>
+          <p className="ml-1 text-gray-500">WhatsApp</p>
+        </div> */}
+      </div>
+      <div className="border-t border-gray-200 text-gray-500">
+        <div className="pl-2 pt-2 pb-2 hover:bg-gray-100 hover:cursor-pointer">
+          <a
+            href={process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || ""}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Privacy
+          </a>
+        </div>
+        <div className="pl-2 pt-2 pb-2 hover:bg-gray-100 hover:cursor-pointer">
+          <a
+            href={process.env.NEXT_PUBLIC_SUPPORT_URL || ""}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Support
+          </a>
         </div>
       </div>
       <div
-        className="p-3 border-t border-gray-200 hover:bg-gray-100 hover:cursor-pointer"
+        className="pt-3 pb-1 pl-3 border-t border-gray-200 text-gray-500 hover:bg-gray-100 hover:cursor-pointer"
         onClick={handlSignOutClick}
       >
         <p>Sign Out</p>

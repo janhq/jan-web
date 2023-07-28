@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
+import copy from "copy-to-clipboard";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { useAuth } from "@/contexts/auth_context";
 
 interface ProfileProps {
@@ -20,8 +24,20 @@ const Profile: React.FC<ProfileProps> = ({
   closeProfileFunc,
 }) => {
   const { currentUser, handleSignOut } = useAuth();
-  
+  const sharingURLTextRef = useRef<HTMLInputElement>(null);
+
   if (!isOpen) return null;
+
+  const copyToClipboard = () => {
+    try {
+      let copyText = sharingURLTextRef.current?.placeholder || "";
+      console.log();
+      let isCopy = copy(copyText);
+      if (isCopy) {
+        toast.info("URL is copied to Clipboard");
+      }
+    } catch (error) {}
+  };
 
   const handlSignOutClick = () => {
     handleSignOut();
@@ -30,6 +46,17 @@ const Profile: React.FC<ProfileProps> = ({
 
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 bg-opacity-50 flex justify-center items-center bg-black z-50">
+      <ToastContainer
+        position="bottom-center"
+        autoClose={500}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="relative flex justify-center items-center flex-col w-[283px] h-[430px] bg-white p-2 rounded-lg shadow-2xl">
         {/* Exit button */}
         <Image
@@ -46,7 +73,7 @@ const Profile: React.FC<ProfileProps> = ({
           <div className="relative">
             <div
               className="relative rounded-full overflow-hidden"
-              style={{ width: "75px", height: "75px" }}
+              style={{ width: "60px", height: "60px" }}
             >
               <img
                 src={currentUser?.photoURL || "/icons/app_icon.svg"}
@@ -79,7 +106,6 @@ const Profile: React.FC<ProfileProps> = ({
             />
           </div>
           <p className="text-xs text-gray-400">
-            {" "}
             {currentUser?.email || "Unknown Email"}
           </p>
         </div>
@@ -99,16 +125,20 @@ const Profile: React.FC<ProfileProps> = ({
           </div>
           <div className="flex flex-row justify-between mt-3">
             <input
+              ref={sharingURLTextRef}
               type="text"
               className="bg-gray-100 px-4 py-1 rounded placeholder-gray-500 text-gray-900 border border-gray-300 mr-1"
               placeholder="https://jan.ai"
+              disabled
             />
             <Image
-              src="/icons/copy_clipboard.svg"
+              className="hover:bg-gray-100 hover:cursor-pointer"
+              src="/icons/copy.svg"
               alt="Coppy button"
               width={28}
               height={28}
               priority
+              onClick={copyToClipboard}
             />
           </div>
           <div
@@ -116,7 +146,7 @@ const Profile: React.FC<ProfileProps> = ({
             onClick={handlSignOutClick}
           >
             <Image
-              src="/icons/logout_btn.svg"
+              src="/icons/unicorn_exit.svg"
               alt="Logout button"
               width={20}
               height={20}
@@ -126,7 +156,7 @@ const Profile: React.FC<ProfileProps> = ({
           </div>
           <div className="flex flex-row mt-3 text-gray-500 hover:bg-gray-100 hover:cursor-pointer">
             <Image
-              src="/icons/delete_btn.svg"
+              src="/icons/trash_bin.svg"
               alt="Delete button"
               width={20}
               height={20}
@@ -136,10 +166,26 @@ const Profile: React.FC<ProfileProps> = ({
           </div>
         </div>
         {/** Bottom section */}
-        <div className="flex flex-row justify-between pl-4 pr-4 text-gray-500 items-center">
-          <p>Privacy</p>
+        <div className="flex flex-row justify-between pl-4 pr-4 items-center hover:cursor-pointer">
+          <p className="text-gray-500 hover:text-gray-800">
+            <a
+              href={process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Privacy
+            </a>
+          </p>
           <p className="text-center font-bold text-2xl pb-3 ml-2 mr-2">.</p>
-          <p>Support</p>
+          <p className="text-gray-500 hover:text-gray-800">
+            <a
+              href={process.env.NEXT_PUBLIC_SUPPORT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Support
+            </a>
+          </p>
         </div>
       </div>
     </div>

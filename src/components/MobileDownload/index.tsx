@@ -1,9 +1,6 @@
 import React from "react";
 import Image from "next/image";
 
-const DOWNLOAD_IOS = "https://apps.apple.com/vn/app/jan/id6449664703";
-const DOWNLOAD_ANDROID = "https://apps.apple.com/vn/app/jan/id6449664703";
-
 const MobileDownload = () => {
   return (
     <div className="flex items-center flex-col box-border rounded-lg border border-gray-200 p-4 bg-[#F9FAFB] mb-3">
@@ -24,14 +21,14 @@ const MobileDownload = () => {
       {/** Buttons */}
       <div className="flex w-full mt-4 justify-between">
         <a
-          href={DOWNLOAD_IOS}
+          href={process.env.NEXT_PUBLIC_DOWNLOAD_APP_IOS || ""}
           target="_blank"
           rel="noopener noreferrer"
           className="w-[48%]"
         >
           <div className="flex box-border h-11 rounded-md bg-gray-300 p-2 items-center hover:bg-gray-200 focus:bg-gray-600">
             <Image
-              src="/icons/apple_logo.svg"
+              src="/icons/social_icon_apple.svg"
               alt={""}
               width={26}
               height={26}
@@ -45,7 +42,7 @@ const MobileDownload = () => {
         </a>
 
         <a
-          href={DOWNLOAD_ANDROID}
+          href={process.env.NEXT_PUBLIC_DOWNLOAD_APP_IOS || ""}
           target="_blank"
           rel="noopener noreferrer"
           className="w-[48%]"
