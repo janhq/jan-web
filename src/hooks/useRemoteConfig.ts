@@ -13,10 +13,14 @@ export enum RemoteConfigKeys {
 }
 
 export const useRemoteConfig = () => {
-  const remoteConfig = getRemoteConfig(firebaseApp);
+  if (typeof window !== "undefined") {
+    const remoteConfig = getRemoteConfig(firebaseApp);
 
-  const getConfig = (key: RemoteConfigKeys): boolean => {
-    return getBoolean(remoteConfig, key);
-  };
-  return { getConfig };
+    const getConfig = (key: RemoteConfigKeys): boolean => {
+      return getBoolean(remoteConfig, key);
+    };
+    return { getConfig };
+  } else {
+    return { getConfig: () => false };
+  }
 };

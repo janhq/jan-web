@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
@@ -92,12 +92,6 @@ const Header: React.FC<HeaderProps> = ({
               </button>
             ) : (
               <div className="flex justify-center">
-                {/* <button
-                  className="w-24 h-8 bg-gray-500 hover:bg-gray-600 text-white rounded-md mr-2"
-                  onClick={handleClickLogin}
-                >
-                  Sign up
-                </button> */}
                 <button
                   className="w-24 h-8 bg-black hover:bg-gray-700 text-white rounded-md"
                   onClick={handleClickLogin}
