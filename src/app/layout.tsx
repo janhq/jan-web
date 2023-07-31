@@ -1,11 +1,11 @@
 "use client";
 import "./globals.css";
 // import type { Metadata } from "next";
-import { useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Inter } from "next/font/google";
 import { Header } from "@/components";
 import classNames from "classnames";
-import { Provider, initializeStore } from "../models/RootStore";
+import { Provider, RootInstance, initializeStore } from "../models/RootStore";
 import { AuthProvider } from "@/contexts/auth_context";
 import LoginModal from "@/components/Auth/LoginModal";
 import SettingsModal from "@/components/Settings/SettingsModal";
@@ -26,7 +26,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const store = initializeStore();
+  const store = useRef<RootInstance>(initializeStore());
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSettingModal, setShowSettingsModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -68,26 +68,28 @@ export default function RootLayout({
           "flex flex-col w-full h-full min-h-screen"
         )}
       >
-        <Provider value={store}>
-          <AuthProvider>
-            <Header
-              handleClickLogin={toggleLoginModal}
-              toggleDisplaySettingMenu={toggleSettingsModal}
-            />
-            {children}
-            <LoginModal isOpen={showLoginModal} onClose={toggleLoginModal} />
-            <SettingsModal
-              isOpen={showSettingModal}
-              openSettingFunc={openSettingModal}
-              logoutCallBack={logoutCallBack}
-            />
-            <Profile
-              isOpen={showProfileModal}
-              closeProfileFunc={closeProfileModal}
-              logoutCallBack={logoutCallBack}
-            />
-          </AuthProvider>
-        </Provider>
+        {store && (
+          <Provider value={store.current}>
+            <AuthProvider>
+              <Header
+                handleClickLogin={toggleLoginModal}
+                toggleDisplaySettingMenu={toggleSettingsModal}
+              />
+              {children}
+              <LoginModal isOpen={showLoginModal} onClose={toggleLoginModal} />
+              <SettingsModal
+                isOpen={showSettingModal}
+                openSettingFunc={openSettingModal}
+                logoutCallBack={logoutCallBack}
+              />
+              <Profile
+                isOpen={showProfileModal}
+                closeProfileFunc={closeProfileModal}
+                logoutCallBack={logoutCallBack}
+              />
+            </AuthProvider>
+          </Provider>
+        )}
       </body>
     </html>
   );

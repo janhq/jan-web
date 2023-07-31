@@ -18,10 +18,9 @@ export const RootStore = types
     },
   }));
 
-let _store: any = null;
 
-export function initializeStore() {
-  _store = RootStore.create();
+export function initializeStore(): RootInstance {
+  const _store: RootInstance = RootStore.create({});
 
   return _store;
 }
