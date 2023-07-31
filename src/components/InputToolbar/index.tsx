@@ -1,11 +1,11 @@
-import EnhanceButton from "@/components/EnhanceButton";
-import RandomButton from "@/components/RandomButton";
 import SendButton from "@/components/SendButton";
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "../../models/RootStore";
 import { useAuth } from "@/contexts/auth_context";
 import { DefaultUser } from "../../models/User";
 import { AiModelType } from "../../models/AiModel";
+import { api } from "@/services/api";
+import ActionButton from "@/components/ActionButton";
 
 type Props = {
   prefillPrompt: string;
@@ -17,6 +17,7 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
   const { historyStore } = useStore();
   const { currentUser } = useAuth();
   const [text, setText] = useState(prefillPrompt);
+  const [promptGenerating, setPromptGenerating] = useState(false);
 
   const shouldShowEnhanceButton =
     historyStore.getActiveConversation()?.aiModel.aiModelType ===
@@ -44,9 +45,30 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
     resizeTextArea();
   }, [text]);
 
-  const onEnhanceClick = () => {};
+  const onEnhanceClick = () => {
+    setPromptGenerating(true);
+    api
+      .magicPrompt(text)
+      .then((res) => {
+        if (res.kind === "ok") setText(text + res.data.text);
+      })
+      .finally(() => {
+        setPromptGenerating(false);
+      });
+  };
 
-  const onRandomClick = () => {};
+  const onRandomClick = () => {
+    setPromptGenerating(true);
+    api
+      .magicPrompt("")
+      .then((res) => {
+        if (res.kind === "ok" && res.data.text.trim() !== "")
+          setText(res.data.text);
+      })
+      .finally(() => {
+        setPromptGenerating(false);
+      });
+  };
 
   const onSubmitClick = () => {
     if (text.length === 0) return;
@@ -106,8 +128,20 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
             <div className="flex justify-end items-center space-x-1 w-full pr-3">
               {shouldShowEnhanceButton ? (
                 <>
-                  <EnhanceButton onClick={onEnhanceClick} />
-                  <RandomButton onClick={onRandomClick} />
+                  {text !== "" && !promptGenerating && (
+                    <ActionButton
+                      icon={"/icons/ic_enhance.svg"}
+                      title={"Enhance"}
+                      isLoading={promptGenerating}
+                      onClick={onEnhanceClick}
+                    />
+                  )}
+                  <ActionButton
+                    icon={"/icons/ic_random.svg"}
+                    title={"Random"}
+                    isLoading={promptGenerating}
+                    onClick={onRandomClick}
+                  />
                 </>
               ) : undefined}
             </div>
