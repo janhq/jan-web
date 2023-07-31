@@ -9,7 +9,7 @@ type Props = {
 };
 
 const ShortcutList: React.FC<Props> = observer(({ products }) => {
-  const [expand, setExpand] = React.useState<boolean>(false);
+  const [expand, setExpand] = React.useState<boolean>(true);
 
   return (
     <div className="flex flex-col w-full">
