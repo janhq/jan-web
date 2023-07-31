@@ -19,6 +19,7 @@ import { observer } from "mobx-react-lite";
 import { HistoryEmpty } from "../HistoryEmpty";
 import Gleap from "gleap";
 import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
+import { RemoteConfigKeys, useRemoteConfig } from "@/hooks/useRemoteConfig";
 
 interface IChatContainerProps {
   products: Product[];
@@ -34,6 +35,13 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
   const showHistoryList = historyStore.conversations.length > 0;
   const [heightNav, setHeightNav] = useState(0);
   const [heightChat, setHeightChat] = useState(0);
+  const { getConfig } = useRemoteConfig();
+
+  const products = getConfig(RemoteConfigKeys.ENABLE_OFFLINE_MODEL)
+    ? props.products
+    : props.products.filter(
+        (e) => e.action?.params?.models[0]?.offline !== true
+      );
 
   const conversation = historyStore.getActiveConversation();
 
@@ -154,7 +162,7 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
             ref={ref}
             style={heightNav > 0 ? { maxHeight: `${heightNav}px` } : {}}
           >
-            <ShortcutList products={props.products} />
+            <ShortcutList products={products} />
             {showHistoryList ? <HistoryList /> : <HistoryEmpty />}
           </div>
           <MobileDownload />
@@ -198,7 +206,7 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
         </div>
       ) : (
         <div className="flex-1 flex flex-col w-full">
-          <ChatBlankState products={props.products} />
+          <ChatBlankState products={products} />
         </div>
       )}
       <div>
