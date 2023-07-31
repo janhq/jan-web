@@ -15,17 +15,17 @@ const JanImage: React.FC<Props> = ({
   width,
   height,
 }) => {
-  const url = imageUrl.startsWith("https")
-    ? `${process.env.NEXT_PUBLIC_DEV_BUCKET_URL}/${imageUrl.split("/").pop()}`
-    : imageUrl;
+  const [attempt, setAttempt] = React.useState(0);
 
   return (
     <img
       width={width}
       height={height}
-      src={url}
+      src={imageUrl}
       alt={alt}
       className={className}
+      key={attempt}
+      onError={() => setAttempt(attempt + 1)}
     />
   );
 };
