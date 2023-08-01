@@ -13,6 +13,7 @@ import {
   onAuthStateChanged,
   signInWithPopup,
 } from "firebase/auth";
+import useGetUserConversations from "../hooks/useGetUserConversations";
 
 interface AuthContextType {
   currentUser: User | undefined;
@@ -29,11 +30,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | undefined>();
+  const { getUserConversations } = useGetUserConversations();
 
   useEffect(() => {
     const currentAuth = getAuth(firebaseApp);
     const unsubscribe = onAuthStateChanged(currentAuth, (user) => {
       if (user) {
+        getUserConversations(user);
         setCurrentUser(user);
       } else {
         setCurrentUser(undefined);

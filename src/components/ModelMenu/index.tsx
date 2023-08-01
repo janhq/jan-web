@@ -19,7 +19,7 @@ const ModelMenu: React.FC<Props> = observer(({ onDeleteClick }) => {
       <button onClick={onModelInfoClick}>
         <Image
           src={
-            historyStore.shouldShowModelDetail
+            historyStore.showModelDetail
               ? "/icons/unicorn_info-circle-fill.svg"
               : "/icons/unicorn_info-circle.svg"
           }

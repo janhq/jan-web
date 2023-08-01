@@ -71,7 +71,7 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
   };
 
   const onSubmitClick = () => {
-    if (text.length === 0) return;
+    if (text.trim().length === 0) return;
     historyStore.sendMessage(
       text,
       currentUser?.uid ?? DefaultUser.id,
@@ -79,6 +79,15 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
       currentUser?.photoURL ?? DefaultUser.avatarUrl
     );
     setText("");
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      if (!event.shiftKey) {
+        event.preventDefault();
+        onSubmitClick();
+      }
+    }
   };
 
   let shouldDisableSubmitButton = false;
@@ -99,6 +108,7 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
             </label>
             <textarea
               ref={textAreaRef}
+              onKeyDown={handleKeyDown}
               value={text}
               onChange={handleMessageChange}
               rows={2}

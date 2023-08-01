@@ -1,25 +1,18 @@
 import { Product } from "@/models/Product";
-import { useStore } from "@/models/RootStore";
 import React from "react";
-import { useAuth } from "../../contexts/auth_context";
-import { DefaultUser } from "../../models/User";
+import useCreateConversation from "../../hooks/useCreateConversation";
 
 type Props = {
   product: Product;
 };
 
 const ShortcutItem: React.FC<Props> = ({ product }) => {
-  const { historyStore } = useStore();
-  const { currentUser } = useAuth();
+  const { requestCreateConvo } = useCreateConversation();
   const { decoration } = product;
   const avatarUrl = decoration.images.length > 0 ? decoration.images[0] : "";
 
   const onClickHandler = () => {
-    historyStore.createConversationWithModel(
-      product,
-      currentUser?.uid ?? DefaultUser.id,
-      currentUser?.displayName ?? DefaultUser.displayName
-    );
+    requestCreateConvo(product);
   };
 
   return (
