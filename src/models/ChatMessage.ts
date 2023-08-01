@@ -20,7 +20,6 @@ export const ChatMessage = types
     messageType: types.enumeration(Object.values(MessageType)),
     messageSenderType: types.enumeration(Object.values(MessageSenderType)),
     senderUid: types.string,
-
     senderName: types.string,
     senderAvatarUrl: types.maybe(types.string),
     text: types.maybe(types.string),

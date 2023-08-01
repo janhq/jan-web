@@ -26,7 +26,7 @@ const ModelDetail: FC<Props> = observer(({ onPromptClick }) => {
   return (
     <div
       className={`${
-        historyStore.shouldShowModelDetail ? "w-full" : "hidden"
+        historyStore.showModelDetail ? "w-full" : "hidden"
       } flex flex-col gap-5 h-full px-5 pt-5 pb-3 border-l-[1px] border-[#E5E7EB]`}
     >
       <div className="flex gap-3 items-center">

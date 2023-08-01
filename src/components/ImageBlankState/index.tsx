@@ -1,22 +1,15 @@
 import { Product } from "@/models/Product";
-import { useStore } from "@/models/RootStore";
-import { useAuth } from "../../contexts/auth_context";
-import { DefaultUser } from "../../models/User";
+import useCreateConversation from "../../hooks/useCreateConversation";
 
 type Props = {
   product: Product;
 };
 
 export const ImageBlankState: React.FC<Props> = ({ product }) => {
-  const { historyStore } = useStore();
-  const { currentUser } = useAuth();
+  const { requestCreateConvo } = useCreateConversation();
 
   const onClick = () => {
-    historyStore.createConversationWithModel(
-      product,
-      currentUser?.uid ?? DefaultUser.id,
-      currentUser?.displayName ?? DefaultUser.displayName
-    );
+    requestCreateConvo(product);
   };
 
   const imageUrl =

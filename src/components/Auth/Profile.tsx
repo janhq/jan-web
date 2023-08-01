@@ -3,8 +3,8 @@ import Image from "next/image";
 import copy from "copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import { useAuth } from "@/contexts/auth_context";
+import { useStore } from "../../models/RootStore";
 
 interface ProfileProps {
   // Parent component can inject a function to close this modal once the close button is clicked
@@ -23,6 +23,7 @@ const Profile: React.FC<ProfileProps> = ({
   logoutCallBack,
   closeProfileFunc,
 }) => {
+  const { historyStore } = useStore();
   const { currentUser, handleSignOut } = useAuth();
   const sharingURLTextRef = useRef<HTMLInputElement>(null);
 
@@ -39,8 +40,9 @@ const Profile: React.FC<ProfileProps> = ({
     } catch (error) {}
   };
 
-  const handlSignOutClick = () => {
+  const onSignOutClick = () => {
     handleSignOut();
+    historyStore.clearAllConversations();
     logoutCallBack();
   };
 
@@ -143,7 +145,7 @@ const Profile: React.FC<ProfileProps> = ({
           </div>
           <div
             className="flex flex-row mt-3 text-gray-500 hover:bg-gray-100 hover:cursor-pointer"
-            onClick={handlSignOutClick}
+            onClick={onSignOutClick}
           >
             <Image
               src="/icons/unicorn_exit.svg"
