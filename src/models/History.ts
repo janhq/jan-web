@@ -3,11 +3,11 @@ import { Conversation } from "./Conversation";
 import { AiModel, AiModelType } from "./AiModel";
 import { User } from "./User";
 import { Product } from "./Product";
-import { v4 as uuidv4 } from "uuid";
 import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
 import { api } from "../services/api";
 import { Role } from "../services/api/api.types";
 import { MessageResponse } from "@/services/api/models/message.response";
+import { MESSAGE_PER_PAGE } from "../utils/const";
 
 export const History = types
   .model("History", {
@@ -38,15 +38,41 @@ export const History = types
       }
       return [];
     },
+
+    getConversationById(conversationId: string) {
+      return self.conversations.find((c) => c.id === conversationId);
+    },
   }))
   .actions((self) => {
-    const fetchMessages = flow(function* (convoId: string) {
-      const result = yield api.getConversationMessages(convoId, 10, 0); // TODO passing in the limit and offset
+    const fetchConversationMessages = flow(function* (convoId: string) {
+      const convo = self.getConversationById(convoId);
+      if (!convo) {
+        console.error("Could not get convo", convoId);
+        return;
+      }
+
+      if (!convo.hasMore) {
+        console.info("Already load all messages of convo", convoId);
+        return;
+      }
+
+      const result = yield api.getConversationMessages(
+        convoId,
+        MESSAGE_PER_PAGE,
+        convo.offset
+      );
 
       if (result.kind !== "ok") {
         console.error(`Error`, JSON.stringify(result));
         return;
       }
+
+      if (result.messages.length < MESSAGE_PER_PAGE) {
+        convo.setHasMore(false);
+      }
+
+      convo.offset += result.messages.length;
+
       const messages: Instance<typeof ChatMessage>[] = [];
       result.messages.forEach((m: MessageResponse) => {
         const createdAt = new Date(m.created_at).getTime();
@@ -81,7 +107,7 @@ export const History = types
       self.getActiveConversation()?.pushMessages(messages);
     });
 
-    return { fetchMessages };
+    return { fetchConversationMessages };
   })
   .actions((self) => ({
     // Model detail
@@ -96,8 +122,13 @@ export const History = types
     },
   }))
   .actions((self) => {
-    const getConversationMessages = flow(function* (convoId: string) {
-      const result = yield api.getConversationMessages(convoId, 10, 0);
+    const fetchMoreMessages = flow(function* () {
+      const activeId = self.activeConversationId;
+      if (!activeId) {
+        console.error("No active conversation found");
+        return;
+      }
+      yield self.fetchConversationMessages(activeId);
     });
 
     const deleteConversationById = flow(function* (convoId: string) {
@@ -115,14 +146,14 @@ export const History = types
     });
 
     return {
-      getConversationMessages,
+      fetchMoreMessages,
       deleteConversationById,
     };
   })
   .actions((self) => {
     const setActiveConversationId = flow(function* (convoId: string) {
       self.activeConversationId = convoId;
-      yield self.fetchMessages(convoId);
+      yield self.fetchConversationMessages(convoId);
     });
 
     return { setActiveConversationId };
@@ -143,10 +174,6 @@ export const History = types
       if (self.activeConversationId) {
         self.deleteConversationById(self.activeConversationId);
       }
-    },
-
-    getConversationById(conversationId: string) {
-      return self.conversations.find((c) => c.id === conversationId);
     },
   }))
   .actions((self) => {
@@ -197,6 +224,7 @@ export const History = types
         createdAt: Date.now(),
       });
 
+      let timeoutId: NodeJS.Timeout | undefined = undefined;
       api.streamMessageChat({
         stream: true,
         model: modelName,
@@ -212,29 +240,27 @@ export const History = types
 
           // we don't need to wait for the response to be finished, it will
           // make the chat feels laggy
-          api
-            .updateChatMessage(aiResponseMessage)
-            .then((result) => {
-              console.log(`Update chat message ok`, result);
-            })
-            .catch((error) => {
+          if (timeoutId) {
+            // optimize to reduce invoking api
+            clearTimeout(timeoutId);
+          }
+          timeoutId = setTimeout(() => {
+            api.updateChatMessage(aiResponseMessage).catch((error) => {
               console.error(`Update chat message error`, error);
             });
+          }, 100);
         },
         onFinish: (message: string) => {
           conversation.setProp("updatedAt", Date.now());
-          conversation.setProp("isWaitingForModelResponse", false);
           conversation.setProp("lastTextMessage", message);
+          conversation.setWaitingForModelResponse(false);
           aiResponseMessage.setProp("text", message);
 
-          api
-            .updateChatMessage(aiResponseMessage)
-            .then((result) => {
-              console.log(`Update chat message on finish ok`, result);
-            })
-            .catch((error) => {
+          setTimeout(() => {
+            api.updateChatMessage(aiResponseMessage).catch((error) => {
               console.error(`Update chat message on finish error`, error);
             });
+          }, 1000);
         },
         onError: (err: Error) => {
           console.error("error", err);
@@ -251,7 +277,7 @@ export const History = types
 
       if (data.kind !== "ok") {
         console.error(`Error`, JSON.stringify(data));
-        conversation.setProp("isWaitingForModelResponse", false);
+        conversation.setWaitingForModelResponse(false);
         return;
       }
 
@@ -293,7 +319,7 @@ export const History = types
         conversation.setProp("updatedAt", Date.now());
         conversation.setProp("lastImageUrl", data.outputs[0]);
       }
-      conversation.setProp("isWaitingForModelResponse", false);
+      conversation.setWaitingForModelResponse(false);
     });
 
     return {
@@ -414,9 +440,26 @@ export const History = types
         return;
       }
 
-      // adding user message
+      const createMessageResult = yield api.createNewTextChatMessage(
+        conversation.id,
+        MessageSenderType.User,
+        userId,
+        displayName,
+        avatarUrl ?? "",
+        message
+      );
+
+      if (createMessageResult.kind !== "ok") {
+        // TODO: display error
+        console.error(
+          "Error creating user message",
+          JSON.stringify(createMessageResult)
+        );
+        return;
+      }
+
       const userMesssage = ChatMessage.create({
-        id: uuidv4(),
+        id: createMessageResult.messageId,
         conversationId: self.activeConversationId,
         messageType: MessageType.Text,
         messageSenderType: MessageSenderType.User,
@@ -427,18 +470,8 @@ export const History = types
         createdAt: Date.now(),
       });
       conversation.addMessage(userMesssage);
-      conversation.setProp("isWaitingForModelResponse", true);
       conversation.setProp("lastTextMessage", message);
-      conversation.setProp("isFresh", false);
-
-      const createUserMessageResult = yield api.createNewTextChatMessage(
-        conversation.id,
-        userMesssage.messageSenderType,
-        userMesssage.senderUid,
-        userMesssage.senderName,
-        userMesssage.senderAvatarUrl ?? "",
-        userMesssage.text ?? ""
-      );
+      conversation.setWaitingForModelResponse(true);
 
       if (conversation.aiModel.aiModelType === AiModelType.LLM) {
         yield self.sendTextToTextMessage(conversation);
