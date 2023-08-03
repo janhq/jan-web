@@ -29,37 +29,8 @@ const Header: React.FC<HeaderProps> = ({
         className="mx-auto flex items-center justify-between p-6 lg:px-8"
         aria-label="Global"
       >
-        <div className="flex space-x-5 items-center">
-          <Link href="/" className="flex items-center space-x-3">
-            <Image
-              className="h-8 w-auto"
-              src="/icons/app_icon.svg"
-              alt=""
-              width={32}
-              height={32}
-            />
-            <span className="font-bold">Jan</span>
-          </Link>
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className="text-sm font-base leading-6 text-gray-900"
-            >
-              <div className="flex items-center">
-                <Image
-                  src={item.icon}
-                  alt={"nav"}
-                  width={16}
-                  height={16}
-                  className="m-2"
-                />
-                <span>{item.name}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-        <div className="flex lg:hidden">
+        <div className="flex flex-1" />
+        <div className="flex md:hidden">
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"

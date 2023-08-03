@@ -1,41 +1,42 @@
 "use client";
 import Image from "next/image";
-import { Fragment, useLayoutEffect, useRef, useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ChatBody } from "@/components/ChatBody";
 import { InputToolbar } from "@/components/InputToolbar";
 import { UserToolbar } from "@/components/UserToolbar";
-import ShortcutList from "@/components/ShortcutList";
-import HistoryList from "@/components/HistoryList";
-import SearchBar from "@/components/SearchBar";
 import ModelMenu from "@/components/ModelMenu";
 import ModelDetail from "@/components/ModelDetail";
 import { Product } from "@/models/Product";
-import MobileDownload from "@/components/MobileDownload";
 import { useStore } from "../../models/RootStore";
 import { ChatBlankState } from "@/components/ChatBlankState";
 import { observer } from "mobx-react-lite";
-import { HistoryEmpty } from "../HistoryEmpty";
 import Gleap from "gleap";
 import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
 import { RemoteConfigKeys, useRemoteConfig } from "@/hooks/useRemoteConfig";
+import ConversationSideBar from "../ConversationSideBar";
+import Header from "../Header";
+import LoginModal from "../Auth/LoginModal";
+import Profile from "../Auth/Profile";
+import SettingsModal from "../Settings/SettingsModal";
 
 interface IChatContainerProps {
   products: Product[];
 }
 
 const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
-  const ref = useRef<HTMLDivElement>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [prefillPrompt, setPrefillPrompt] = useState("");
   const { historyStore } = useStore();
-
   const showBodyChat = historyStore.activeConversationId != null;
-  const showHistoryList = historyStore.conversations.length > 0;
-  const [heightNav, setHeightNav] = useState(0);
   const [heightChat, setHeightChat] = useState(0);
+
   const { getConfig } = useRemoteConfig();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSettingModal, setShowSettingsModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const products = getConfig(RemoteConfigKeys.ENABLE_OFFLINE_MODEL)
     ? props.products
@@ -52,7 +53,31 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
       Gleap.showFeedbackButton(true);
     }
   }, [conversation]);
-  const [open, setOpen] = useState(false);
+
+  const toggleLoginModal = () => {
+    setShowLoginModal(!showLoginModal);
+  };
+
+  // On/Off Setting Modal
+  const toggleSettingsModal = () => {
+    setShowSettingsModal(!showSettingModal);
+  };
+
+  // Open once user click to avatar on Header
+  const openSettingModal = () => {
+    setShowProfileModal(true);
+  };
+
+  // Called once your click to the exit button
+  const closeProfileModal = () => {
+    setShowProfileModal(false);
+  };
+
+  // Called once user click logout from menu or profile page
+  const logoutCallBack = () => {
+    closeProfileModal();
+    toggleSettingsModal();
+  };
 
   const onConfirmDelete = () => {
     setPrefillPrompt("");
@@ -66,10 +91,6 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
       setPrefillPrompt(prompt);
     }
   };
-
-  useLayoutEffect(() => {
-    setHeightNav(ref.current?.offsetHeight ?? 0);
-  }, [showHistoryList]);
 
   return (
     <div className="flex flex-row flex-1 w-full">
@@ -150,27 +171,26 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
         </Dialog>
       </Transition.Root>
 
-      {/* Static sidebar for desktop */}
-      <div className="hidden lg:inset-y-0 lg:flex lg:w-72 lg:flex-col overflow-hidden">
-        {/* Sidebar component, swap this element with another sidebar if you like */}
-        <div className="h-full flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 px-2">
-          <div className="flex flex-col h-16 shrink-0 items-center gap-[10px] pt-1">
-            <SearchBar />
-          </div>
-          <div
-            className="flex flex-col flex-auto overflow-x-hidden h-full scroll"
-            ref={ref}
-            style={heightNav > 0 ? { maxHeight: `${heightNav}px` } : {}}
-          >
-            <ShortcutList products={products} />
-            {showHistoryList ? <HistoryList /> : <HistoryEmpty />}
-          </div>
-          <MobileDownload />
-        </div>
-      </div>
+      <ConversationSideBar />
+
+      <LoginModal isOpen={showLoginModal} onClose={toggleLoginModal} />
+      <SettingsModal
+        isOpen={showSettingModal}
+        openSettingFunc={openSettingModal}
+        logoutCallBack={logoutCallBack}
+      />
+      <Profile
+        isOpen={showProfileModal}
+        closeProfileFunc={closeProfileModal}
+        logoutCallBack={logoutCallBack}
+      />
 
       {showBodyChat ? (
         <div className="flex-1 flex flex-col w-full">
+          <Header
+            handleClickLogin={toggleLoginModal}
+            toggleDisplaySettingMenu={toggleSettingsModal}
+          />
           <div className="flex h-16 w-full shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
             <button
               type="button"

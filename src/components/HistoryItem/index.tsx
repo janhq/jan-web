@@ -34,7 +34,7 @@ const HistoryItem: React.FC<Props> = observer(
 
     return (
       <button
-        className={`flex flex-row items-center gap-2 w-full rounded-[8px] p-2 ${backgroundColor}`}
+        className={`flex flex-row items-center gap-2 rounded-[8px] p-2 ${backgroundColor} mx-1`}
         onClick={onClick}
       >
         <img

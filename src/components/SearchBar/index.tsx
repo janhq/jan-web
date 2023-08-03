@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const SearchBar: React.FC = () => {
   return (
-    <div className="relative mt-3 flex items-center w-full">
+    <div className="relative flex items-center w-full">
       <div className="absolute top-0 left-2 h-full flex items-center">
         <Image src={"/icons/search.svg"} width={16} height={16} alt="" />
       </div>
