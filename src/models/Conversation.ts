@@ -17,6 +17,12 @@ export const Conversation = types
     aiModel: AiModel,
 
     /**
+     * Indicates whether the conversation is still fresh. Fresh
+     * means the conversation is created by greeting by the AI.
+     */
+    isFresh: types.optional(types.boolean, true),
+
+    /**
      * Conversation's messages, should ordered by time (createdAt)
      */
     chatMessages: types.optional(types.array(ChatMessage), []),
@@ -29,7 +35,7 @@ export const Conversation = types
     /**
      * Indicates whether the model is still processing the user's input
      */
-    isWaitingForModelResponse: types.optional(types.boolean, false),
+    isWaitingForModelResponse: types.optional(types.boolean, false), // TODO: move this to volatile
 
     /**
      * Indicates whether the conversation is created by the user
@@ -55,5 +61,12 @@ export const Conversation = types
   .actions((self) => ({
     addMessage(message: Instance<typeof ChatMessage>) {
       self.chatMessages.push(message);
+    },
+
+    pushMessages(messages: Instance<typeof ChatMessage>[]) {
+      const filteredMessages = messages.filter((m) => {
+        return !self.chatMessages.find((cm) => cm.id !== m.id);
+      });
+      self.chatMessages.push(...filteredMessages);
     },
   }));
