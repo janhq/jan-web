@@ -8,10 +8,11 @@ type Props = {
   conversationId: string;
   avatarUrl: string;
   name: string;
+  updatedAt?: number;
 };
 
 const HistoryItem: React.FC<Props> = observer(
-  ({ conversationId, avatarUrl, name }) => {
+  ({ conversationId, avatarUrl, name, updatedAt }) => {
     const { historyStore } = useStore();
 
     const onClick = () => {
@@ -27,7 +28,9 @@ const HistoryItem: React.FC<Props> = observer(
       rightImageUrl = "/icons/loading.svg";
     } else if (
       conversation &&
-      conversation.aiModel.aiModelType === AiModelType.GenerativeArt
+      conversation.aiModel.aiModelType === AiModelType.GenerativeArt &&
+      conversation.lastImageUrl &&
+      conversation.lastImageUrl.trim().startsWith("https://")
     ) {
       rightImageUrl = conversation.lastImageUrl;
     }
@@ -45,8 +48,10 @@ const HistoryItem: React.FC<Props> = observer(
           alt=""
         />
         <div className="flex flex-col text-[14px] leading-[20px] w-full">
-          <span className="text-[#111928] text-left">{name}</span>
-          <span className="text-[#9CA3AF] hidden-text text-left">
+          <div className="flex flex-row items-center justify-between">
+            <span className="text-gray-900 text-left">{name}</span>
+          </div>
+          <span className="text-gray-400 hidden-text text-left">
             {conversation?.lastTextMessage}
           </span>
         </div>

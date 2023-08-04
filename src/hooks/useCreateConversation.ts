@@ -16,7 +16,8 @@ const useCreateConversation = () => {
 
     // search if any fresh convo with particular product id
     const convo = historyStore.conversations.find(
-      (convo) => convo.isFresh && convo.aiModel.modelId === modelId
+      (convo) =>
+        convo.aiModel.modelId === modelId && convo.chatMessages.length <= 1
     );
 
     if (convo) {

@@ -1,10 +1,11 @@
-import { SimpleTextMessage } from "@/components/SimpleTextMessage";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import { useStore } from "../../models/RootStore";
 import { observer } from "mobx-react-lite";
-import { MessageType } from "../../models/ChatMessage";
-import { SimpleImageMessage } from "../SimpleImageMessage";
+import { ChatMessage, MessageType } from "../../models/ChatMessage";
+import SimpleImageMessage from "../SimpleImageMessage";
+import SimpleTextMessage from "../SimpleTextMessage";
+import { Instance } from "mobx-state-tree";
 
 type Props = {
   chatHeight: number;
@@ -16,7 +17,10 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
   const refSmooth = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
   const [heightContent, setHeightContent] = useState(0);
+
   const refContent = useRef<HTMLDivElement>(null);
+  const convo = historyStore.getActiveConversation();
+  const hasMore = convo?.hasMore ?? false;
 
   useLayoutEffect(() => {
     if (chatHeight > 60 && ref.current?.offsetHeight) {
@@ -36,7 +40,9 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
     }
   });
 
-  const loadFunc = () => {};
+  const loadFunc = () => {
+    historyStore.fetchMoreMessages();
+  };
 
   const loader = (
     <div key="loader" className="loader">
@@ -54,10 +60,9 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
           }}
         >
           <InfiniteScroll
-            pageStart={0}
+            isReverse={true}
             loadMore={loadFunc}
-            hasMore={false}
-            loader={loader}
+            hasMore={hasMore}
           >
             <div
               className={`flex flex-col justify-end gap-8 py-2`}
@@ -65,42 +70,8 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
             >
               {historyStore
                 .getActiveMessages()
-                .map(
-                  (
-                    {
-                      senderAvatarUrl,
-                      senderName,
-                      createdAt,
-                      text,
-                      messageType,
-                      imageUrls,
-                    },
-                    index
-                  ) => {
-                    if (messageType === MessageType.Image) {
-                      return (
-                        <SimpleImageMessage
-                          key={index}
-                          avatarUrl={senderAvatarUrl}
-                          senderName={senderName}
-                          createdAt={createdAt}
-                          imageUrls={imageUrls ?? []}
-                        />
-                      );
-                    } else if (messageType === MessageType.Text) {
-                      return (
-                        <SimpleTextMessage
-                          key={index}
-                          avatarUrl={senderAvatarUrl}
-                          senderName={senderName}
-                          createdAt={createdAt}
-                          text={text}
-                        />
-                      );
-                    }
-                  }
-                )}
-              <div ref={refSmooth}></div>
+                .map((message, index) => renderItem(index, message))}
+              <div ref={refSmooth} />
             </div>
           </InfiniteScroll>
         </div>
@@ -108,3 +79,42 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
     </div>
   );
 });
+
+const renderItem = (
+  index: number,
+  {
+    messageType,
+    senderAvatarUrl,
+    senderName,
+    createdAt,
+    imageUrls,
+    text,
+  }: Instance<typeof ChatMessage>
+) => {
+  switch (messageType) {
+    case MessageType.Image:
+      return (
+        <SimpleImageMessage
+          key={index}
+          avatarUrl={senderAvatarUrl}
+          senderName={senderName}
+          createdAt={createdAt}
+          imageUrls={imageUrls ?? []}
+        />
+      );
+    case MessageType.Text:
+      return (
+        <SimpleTextMessage
+          key={index}
+          avatarUrl={senderAvatarUrl}
+          senderName={senderName}
+          createdAt={createdAt}
+          text={text}
+        />
+      );
+    case MessageType.WaitingResponse:
+      return null;
+    default:
+      return null;
+  }
+};

@@ -90,20 +90,18 @@ const useGetUserConversations = () => {
           avatarUrl: firebaseUser?.photoURL ?? DefaultUser.avatarUrl,
         };
 
-        const test = Conversation.create({
+        const conversation = Conversation.create({
           id: convo.id!!,
           aiModel: correspondingAiModel,
-          isFresh: false, // TODO: NamH later
           chatMessages: [],
           user: user,
-          isWaitingForModelResponse: false,
           createdAt: new Date(convo.created_at).getTime(),
           updatedAt: new Date(convo.updated_at).getTime(),
           lastImageUrl: convo.last_image_url,
           lastTextMessage: convo.last_text_message,
         });
 
-        finalConvo.push(test);
+        finalConvo.push(conversation);
       }
     });
 

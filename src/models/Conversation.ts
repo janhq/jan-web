@@ -1,8 +1,9 @@
-import { Instance, types } from "mobx-state-tree";
+import { Instance, castToSnapshot, types } from "mobx-state-tree";
 import { AiModel } from "./AiModel";
 import { ChatMessage } from "./ChatMessage";
 import { User } from "./User";
 import { withSetPropAction } from "../helpers/withSetPropAction";
+import { mergeAndRemoveDuplicates } from "../utils/message";
 
 export const Conversation = types
   .model("Conversation", {
@@ -17,12 +18,6 @@ export const Conversation = types
     aiModel: AiModel,
 
     /**
-     * Indicates whether the conversation is still fresh. Fresh
-     * means the conversation is created by greeting by the AI.
-     */
-    isFresh: types.optional(types.boolean, true),
-
-    /**
      * Conversation's messages, should ordered by time (createdAt)
      */
     chatMessages: types.optional(types.array(ChatMessage), []),
@@ -31,11 +26,6 @@ export const Conversation = types
      * User who initiate the chat with the above AI model
      */
     user: User,
-
-    /**
-     * Indicates whether the model is still processing the user's input
-     */
-    isWaitingForModelResponse: types.optional(types.boolean, false), // TODO: move this to volatile
 
     /**
      * Indicates whether the conversation is created by the user
@@ -57,6 +47,11 @@ export const Conversation = types
      */
     lastTextMessage: types.maybe(types.string),
   })
+  .volatile(() => ({
+    offset: 0,
+    hasMore: true,
+    isWaitingForModelResponse: false,
+  }))
   .actions(withSetPropAction)
   .actions((self) => ({
     addMessage(message: Instance<typeof ChatMessage>) {
@@ -64,9 +59,19 @@ export const Conversation = types
     },
 
     pushMessages(messages: Instance<typeof ChatMessage>[]) {
-      const filteredMessages = messages.filter((m) => {
-        return !self.chatMessages.find((cm) => cm.id !== m.id);
-      });
-      self.chatMessages.push(...filteredMessages);
+      const mergedMessages = mergeAndRemoveDuplicates(
+        self.chatMessages,
+        messages
+      );
+
+      self.chatMessages = castToSnapshot(mergedMessages);
+    },
+
+    setHasMore(hasMore: boolean) {
+      self.hasMore = hasMore;
+    },
+
+    setWaitingForModelResponse(isWaitingForModelResponse: boolean) {
+      self.isWaitingForModelResponse = isWaitingForModelResponse;
     },
   }));
