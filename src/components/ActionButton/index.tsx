@@ -15,7 +15,7 @@ const ActionButton: React.FC<Props> = (props) => {
         <button
           type="button"
           className={classNames(
-            "rounded-[12px] flex items-center h-[40px] gap-1 bg-[#F3F4F6] px-2 text-xs font-normal text-gray-900 shadow-sm",
+            "rounded-xl flex items-center h-[40px] gap-1 bg-[#F3F4F6] px-2 text-xs font-normal text-gray-900 shadow-sm",
             !props.isLoading && "hover:bg-indigo-100"
           )}
           onClick={props.onClick}
@@ -25,7 +25,7 @@ const ActionButton: React.FC<Props> = (props) => {
         </button>
       )}
       {props.isLoading && (
-        <div className='w-[80px] flex flex-row justify-center items-center'>
+        <div className="w-[80px] flex flex-row justify-center items-center">
           <Image
             src="/icons/loading.svg"
             width={32}

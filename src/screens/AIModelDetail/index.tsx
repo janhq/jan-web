@@ -1,6 +1,6 @@
 "use client";
 
-import ApiPane from "@/components/ApiPane";
+import DescriptionPane from "@/components/DescriptionPane";
 import { ModelDetailHeader } from "@/components/ModelDetailHeader";
 import { SampleImage } from "@/screens/AIModelDetail/components/SampleImage";
 import OverviewPane from "@/screens/AIModelDetail/components/OverviewPane";
@@ -68,7 +68,7 @@ export const AIModelDetail: React.FC<AIModelDetailProps> = ({ product }) => {
                 technicalVersion={product.decoration.technicalVersion}
               />
             ) : (
-              <ApiPane />
+              <DescriptionPane />
             )}
           </div>
         </div>

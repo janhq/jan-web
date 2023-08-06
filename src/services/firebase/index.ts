@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import firebaseConfigs from "./firebase_configs.json";
-import { getAuth, signInAnonymously, User } from "firebase/auth";
+import { getAuth, User } from "firebase/auth";
 
 // Initialize firebase with configrurations
 const app = initializeApp(firebaseConfigs);
@@ -22,9 +22,7 @@ async function getFirebaseToken() {
     return user.getIdToken();
   }
 
-  // If user is not signed in, perform anonymous sign-in and return the token
-  const credential = await signInAnonymously(firebaseAuth);
-  return credential.user.getIdToken();
+  return undefined;
 }
 
 export { firebaseAuth, getCurrentUser, getFirebaseToken };

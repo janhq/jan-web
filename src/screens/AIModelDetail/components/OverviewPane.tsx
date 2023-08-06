@@ -8,6 +8,7 @@ interface IOverviewPanelProps {
   onPromptClick?: (prompt: string) => void;
   inAIModel?: number;
 }
+
 const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
   const ref = useRef<HTMLDivElement>(null);
   const [read, setRead] = useState<boolean>(true);
@@ -33,7 +34,7 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
 
   return (
     <div
-      className="w-[350px] flex flex-auto flex-col gap-6 overflow-x-hidden"
+      className="w-full flex flex-auto flex-col gap-6 overflow-x-hidden"
       ref={ref}
       style={!inAIModel ? { height: `${height}px` } : { height: "100%" }}
     >
@@ -51,7 +52,7 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
           </button>
         </span>
       </div>
-      <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-[16px]">
+      <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-base">
         <div className="flex flex-col gap-1">
           <span className="text-[#6B7280] ">Model Version</span>
           <span className="font-semibold">{technicalVersion}</span>
@@ -63,7 +64,7 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
           </a>
         </div>
       </div>
-      <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-[16px]">
+      <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-base">
         <h2 className="font-bold">Try it yourself</h2>
         <ul className="border-[1px] border-[#D1D5DB] rounded-[12px]">
           {samples?.map((item, index) => {

@@ -1,40 +1,32 @@
 "use client";
 import Image from "next/image";
-import { Fragment, useLayoutEffect, useRef, useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ChatBody } from "@/components/ChatBody";
 import { InputToolbar } from "@/components/InputToolbar";
 import { UserToolbar } from "@/components/UserToolbar";
-import ShortcutList from "@/components/ShortcutList";
-import HistoryList from "@/components/HistoryList";
-import SearchBar from "@/components/SearchBar";
 import ModelMenu from "@/components/ModelMenu";
-import ModelDetail from "@/components/ModelDetail";
 import { Product } from "@/models/Product";
-import MobileDownload from "@/components/MobileDownload";
 import { useStore } from "../../models/RootStore";
-import { ChatBlankState } from "@/components/ChatBlankState";
 import { observer } from "mobx-react-lite";
-import { HistoryEmpty } from "../HistoryEmpty";
 import Gleap from "gleap";
 import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
 import { RemoteConfigKeys, useRemoteConfig } from "@/hooks/useRemoteConfig";
+import { ModelDetailSideBar } from "../ModelDetailSideBar";
+import NewChatBlankState from "../NewChatBlankState";
 
 interface IChatContainerProps {
   products: Product[];
 }
 
 const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
-  const ref = useRef<HTMLDivElement>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [prefillPrompt, setPrefillPrompt] = useState("");
   const { historyStore } = useStore();
 
   const showBodyChat = historyStore.activeConversationId != null;
-  const showHistoryList = historyStore.conversations.length > 0;
-  const [heightNav, setHeightNav] = useState(0);
-  const [heightChat, setHeightChat] = useState(0);
+
   const { getConfig } = useRemoteConfig();
 
   const products = getConfig(RemoteConfigKeys.ENABLE_OFFLINE_MODEL)
@@ -67,12 +59,8 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
     }
   };
 
-  useLayoutEffect(() => {
-    setHeightNav(ref.current?.offsetHeight ?? 0);
-  }, [showHistoryList]);
-
   return (
-    <div className="flex flex-row flex-1 w-full">
+    <div className="flex flex-1 h-full">
       <ConfirmDeleteConversationModal
         open={open}
         setOpen={setOpen}
@@ -150,28 +138,9 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
         </Dialog>
       </Transition.Root>
 
-      {/* Static sidebar for desktop */}
-      <div className="hidden lg:inset-y-0 lg:flex lg:w-72 lg:flex-col overflow-hidden">
-        {/* Sidebar component, swap this element with another sidebar if you like */}
-        <div className="h-full flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 px-2">
-          <div className="flex flex-col h-16 shrink-0 items-center gap-[10px] pt-1">
-            <SearchBar />
-          </div>
-          <div
-            className="flex flex-col flex-auto overflow-x-hidden h-full scroll"
-            ref={ref}
-            style={heightNav > 0 ? { maxHeight: `${heightNav}px` } : {}}
-          >
-            <ShortcutList products={products} />
-            {showHistoryList ? <HistoryList /> : <HistoryEmpty />}
-          </div>
-          <MobileDownload />
-        </div>
-      </div>
-
       {showBodyChat ? (
         <div className="flex-1 flex flex-col w-full">
-          <div className="flex h-16 w-full shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+          <div className="flex w-full px-3 py-1 border-b border-gray-200 bg-white shadow-sm sm:px-3 lg:px-3">
             <button
               type="button"
               className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
@@ -183,35 +152,29 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
 
             {/* Separator */}
             <div
-              className="h-6 w-px bg-gray-200 lg:hidden"
+              className="h-full w-px bg-gray-200 lg:hidden"
               aria-hidden="true"
             />
 
-            <div className="flex justify-between flex-1 gap-x-4 self-stretch lg:gap-x-6">
+            <div className="flex justify-between self-stretch flex-1">
               <UserToolbar />
               <ModelMenu onDeleteClick={() => setOpen(true)} />
             </div>
           </div>
-
-          {/* Your content */}
-          <main className="py-3 w-full h-full">
+          <main className="w-full h-full">
             <div className="flex flex-col h-full px-1 sm:px-2 lg:px-3">
-              <ChatBody chatHeight={heightChat} />
-              <InputToolbar
-                callback={(value) => setHeightChat(value)}
-                prefillPrompt={prefillPrompt}
-              />
+              <ChatBody />
+              <InputToolbar prefillPrompt={prefillPrompt} />
             </div>
           </main>
         </div>
       ) : (
         <div className="flex-1 flex flex-col w-full">
-          <ChatBlankState products={products} />
+          <NewChatBlankState />
         </div>
       )}
-      <div>
-        <ModelDetail onPromptClick={onSuggestPromptClick} />
-      </div>
+
+      <ModelDetailSideBar onPromptClick={onSuggestPromptClick} />
     </div>
   );
 });

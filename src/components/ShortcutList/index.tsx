@@ -17,7 +17,7 @@ const ShortcutList: React.FC<Props> = observer(({ products }) => {
         onClick={() => setExpand(!expand)}
         className="flex w-full justify-between items-center pb-3"
       >
-        <h2 className="text-[#9CA3AF] font-bold text-[12px] leading-[12px]">
+        <h2 className="text-[#9CA3AF] font-bold text-xs leading-[12px]">
           SHORTCUTS
         </h2>
         <Image

@@ -26,14 +26,14 @@ const SimpleImageMessage: React.FC<Props> = ({
     />
     <div className="flex flex-col gap-1">
       <div className="flex gap-1 justify-start items-baseline">
-        <div className="text-[#1B1B1B] text-[13px] font-extrabold leading-[15.2px]">
+        <div className="text-[#1B1B1B] text-xs font-extrabold leading-[15.2px]">
           {senderName}
         </div>
         <div className="text-[11px] leading-[13.2px] font-medium text-gray-400 ml-2">
           {displayDate(createdAt)}
         </div>
       </div>
-      {text && <div className="leading-[20px] text-[14px]">{text}</div>}
+      {text && <div className="leading-[20px] text-sm">{text}</div>}
       <div className="flex items-center gap-3">
         <JanImage
           imageUrl={imageUrls[0]}

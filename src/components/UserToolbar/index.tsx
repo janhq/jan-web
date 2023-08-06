@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/models/RootStore";
 
@@ -18,15 +17,9 @@ export const UserToolbar: React.FC = observer(() => {
         height={36}
         alt=""
       />
-      <span className="flex gap-[2px] leading-[24px] text-[16px] font-semibold">
+      <span className="flex gap-[2px] leading-6 text-base font-semibold">
         {title}
       </span>
-      <Image
-        src="/icons/unicorn_angle-down.svg"
-        width={24}
-        height={24}
-        alt=""
-      />
     </div>
   );
 });

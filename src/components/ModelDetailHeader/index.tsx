@@ -15,7 +15,7 @@ export const ModelDetailHeader: React.FC<Props> = ({ modelTitle }) => {
   return (
     <div className="flex items-center justify-between mt-[60px]">
       <div className="flex flex-col">
-        <span className="relative text-[#9CA3AF] text-[16px] font-bold leading-[19.36px]">
+        <span className="relative text-[#9CA3AF] text-base font-bold leading-[19.36px]">
           AIs
           <button
             onClick={handleClick}
@@ -33,7 +33,7 @@ export const ModelDetailHeader: React.FC<Props> = ({ modelTitle }) => {
           {modelTitle}
         </h2>
       </div>
-      <button className="bg-[#1A56DB] py-[10px] px-5 gap-2 rounded-[8px] text-[14px] leading-[21px] font-medium text-white">
+      <button className="bg-[#1A56DB] py-[10px] px-5 gap-2 rounded-[8px] text-sm leading-[21px] font-medium text-white">
         Use
       </button>
     </div>

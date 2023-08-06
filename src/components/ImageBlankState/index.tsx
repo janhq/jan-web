@@ -28,7 +28,7 @@ export const ImageBlankState: React.FC<Props> = ({ product }) => {
         alt=""
       />
 
-      <h2 className="font-bold text-[14px] leading-[20px]">
+      <h2 className="font-bold text-sm leading-[20px]">
         {product.decoration.title}
       </h2>
     </button>

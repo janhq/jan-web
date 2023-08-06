@@ -16,6 +16,7 @@ export const History = types
   })
   .volatile(() => ({
     showModelDetail: false,
+    showAdvancedPrompt: false,
   }))
   .views((self) => ({
     getActiveConversation() {
@@ -113,6 +114,10 @@ export const History = types
     // Model detail
     toggleModelDetail() {
       self.showModelDetail = !self.showModelDetail;
+    },
+
+    toggleAdvancedPrompt() {
+      self.showAdvancedPrompt = !self.showAdvancedPrompt;
     },
 
     closeModelDetail() {
