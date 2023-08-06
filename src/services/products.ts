@@ -81,4 +81,4 @@ const fetchProducts = async (): Promise<Product[]> => {
   return products;
 };
 
-export { fetchDiscoverShortcuts, fetchProducts };
+export { fetchDiscoverShortcuts, fetchProducts, fetchShortcuts, fetchDiscover };

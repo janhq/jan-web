@@ -1,8 +1,7 @@
 "use client";
 
-import ApiPane from "@/components/ApiPane";
+import DescriptionPane from "@/components/DescriptionPane";
 import { ModelDetailHeader } from "@/components/ModelDetailHeader";
-import { SampleImage } from "@/screens/AIModelDetail/components/SampleImage";
 import OverviewPane from "@/screens/AIModelDetail/components/OverviewPane";
 import { useLayoutEffect, useRef, useState } from "react";
 import { ProductsProps } from "@/services/products";
@@ -28,19 +27,40 @@ const AIModelDetail: React.FC<AIModelDetailProps> = (props) => {
   }, [product]);
 
   return (
-    <div className="container mx-auto">
+    <>
       {product && (
-        <div>
+        <div className="container mx-auto">
           <ModelDetailHeader
-            modelTitle={product.decoration.title}
-            productId={product.name}
+            modelTitle={product.decoration.title || ""}
+            productId={product.name || ""}
           />
-          <div className="flex justify-between mt-2 mb-12 gap-8">
-            <div className="flex flex-col flex-1">
-              <div className="mt-3 h-full flex-1" ref={ref}>
+          <div className="flex justify-between mt-2 gap-4">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2 w-[350px]">
+                <button
+                  onClick={() => onTabClick("overview")}
+                  className={`flex items-center border-b-[1px] justify-center rounded-[4px] py-[6px] px-3 gap-2 relative ${
+                    tab === "overview"
+                      ? "before:absolute before:contents[''] before:w-full before:h-[1px] before:bg-[#111928] before:bottom-0 before:left-0"
+                      : "border-transparent"
+                  }`}
+                >
+                  Overview
+                </button>
+                <button
+                  onClick={() => onTabClick("api")}
+                  className={`flex items-center justify-center rounded-[4px] py-[6px] border-b-[1px] px-3 gap-2 relative ${
+                    tab === "api"
+                      ? "before:absolute before:contents[''] before:w-full before:h-[1px] before:bg-[#111928] before:bottom-0 before:left-0"
+                      : "border-transparent"
+                  }`}
+                >
+                  API
+                </button>
+              </div>
+              <div className="mt-3 h-full" ref={ref}>
                 {tab === "overview" ? (
                   <OverviewPane
-                    productId={product.name}
                     inAIModel={inAIModel}
                     description={product.decoration.description}
                     samples={
@@ -52,22 +72,16 @@ const AIModelDetail: React.FC<AIModelDetailProps> = (props) => {
                     }
                     technicalURL={product.decoration.technicalURL}
                     technicalVersion={product.decoration.technicalVersion}
-                    technicalDescription={
-                      product.decoration.technicalDescription
-                    }
                   />
                 ) : (
-                  <ApiPane />
+                  <DescriptionPane />
                 )}
               </div>
-            </div>
-            <div className="overflow-hidden">
-              <SampleImage image={product.decoration.images[0]} />
             </div>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

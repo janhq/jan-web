@@ -1,18 +1,19 @@
 import SendButton from "@/components/SendButton";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useStore } from "../../models/RootStore";
 import { useAuth } from "@/contexts/authContext";
 import { DefaultUser } from "../../models/User";
 import { AiModelType } from "../../models/AiModel";
 import { api } from "@/services/api";
 import ActionButton from "@/components/ActionButton";
+import Image from "next/image";
+import { observer } from "mobx-react-lite";
 
 type Props = {
   prefillPrompt: string;
-  callback: (value: number) => void;
 };
 
-export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
+export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const { historyStore } = useStore();
   const [text, setText] = useState(prefillPrompt);
@@ -36,8 +37,6 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
       textAreaRef.current.style.height =
         textAreaRef.current.scrollHeight + "px";
       textAreaRef.current.style.maxHeight = "200px";
-
-      callback(textAreaRef.current.offsetHeight);
     }
   };
 
@@ -103,73 +102,74 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
   if (text.length === 0) {
     shouldDisableSubmitButton = true;
   }
+  const onAdvancedPrompt = useCallback(() => {
+    historyStore.toggleAdvancedPrompt();
+  }, []);
 
   return (
-    <div className="flex items-start space-x-4">
-      <div className="min-w-0 flex-1">
-        <div className="relative">
-          <div className="overflow-hidden rounded-lg shadow-sm ring-1 ring-inset ring-gray-300">
-            <label htmlFor="comment" className="sr-only">
-              Add your comment
-            </label>
-            <textarea
-              ref={textAreaRef}
-              onKeyDown={handleKeyDown}
-              value={text}
-              onChange={handleMessageChange}
-              rows={2}
-              name="comment"
-              id="comment"
-              className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6"
-              placeholder="Add your comment..."
-            />
-
-            {/* Spacer element to match the height of the toolbar */}
-            <div className="py-2" aria-hidden="true">
-              {/* Matches height of button in toolbar (1px border + 36px content height) */}
-              <div className="py-px">
-                <div className="h-9" />
-              </div>
-            </div>
-          </div>
-
-          <div
-            style={{
-              backgroundColor: "#F8F8F8",
-              borderWidth: 1,
-              borderColor: "#D1D5DB",
-            }}
-            className="absolute inset-x-0 bottom-0 flex justify-between py-2 pl-3 pr-2 rounded-b-lg"
-          >
-            <div className="flex justify-end items-center space-x-1 w-full pr-3">
-              {shouldShowEnhanceButton ? (
-                <>
-                  {text !== "" && !promptGenerating && (
-                    <ActionButton
-                      icon={"/icons/ic_enhance.svg"}
-                      title={"Enhance"}
-                      isLoading={promptGenerating}
-                      onClick={onEnhanceClick}
-                    />
-                  )}
-                  <ActionButton
-                    icon={"/icons/ic_random.svg"}
-                    title={"Random"}
-                    isLoading={promptGenerating}
-                    onClick={onRandomClick}
-                  />
-                </>
-              ) : undefined}
-            </div>
-            <div className="flex-shrink-0">
-              <SendButton
-                onClick={onSubmitClick}
-                disabled={shouldDisableSubmitButton}
+    <div
+      className={`${
+        historyStore.showAdvancedPrompt ? "hidden" : "block"
+      } mb-3 flex-none w-full shadow-sm ring-1 ring-inset ring-gray-300 rounded-lg`}
+    >
+      <div className="overflow-hidden">
+        <label htmlFor="comment" className="sr-only">
+          Add your comment
+        </label>
+        <textarea
+          ref={textAreaRef}
+          onKeyDown={handleKeyDown}
+          value={text}
+          onChange={handleMessageChange}
+          rows={2}
+          name="comment"
+          id="comment"
+          className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+          placeholder="Add your comment..."
+        />
+      </div>
+      <div
+        style={{
+          backgroundColor: "#F8F8F8",
+          borderWidth: 1,
+          borderColor: "#D1D5DB",
+        }}
+        className="flex justify-between py-2 pl-3 pr-2 rounded-b-lg"
+      >
+        <button
+          onClick={onAdvancedPrompt}
+          className="flex items-center gap-1 py-[1px]"
+        >
+          <Image src={"/icons/ic_setting.svg"} width={20} height={20} alt="" />
+          <span className="text-sm leading-5 text-gray-600">Advanced</span>
+        </button>
+        <div className="flex justify-end items-center space-x-1 w-full pr-3">
+          {shouldShowEnhanceButton ? (
+            <>
+              {text !== "" && !promptGenerating && (
+                <ActionButton
+                  icon={"/icons/ic_enhance.svg"}
+                  title={"Enhance"}
+                  isLoading={promptGenerating}
+                  onClick={onEnhanceClick}
+                />
+              )}
+              <ActionButton
+                icon={"/icons/ic_random.svg"}
+                title={"Random"}
+                isLoading={promptGenerating}
+                onClick={onRandomClick}
               />
-            </div>
-          </div>
+            </>
+          ) : undefined}
+        </div>
+        <div className="flex-shrink-0">
+          <SendButton
+            onClick={onSubmitClick}
+            disabled={shouldDisableSubmitButton}
+          />
         </div>
       </div>
     </div>
   );
-};
+});

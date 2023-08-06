@@ -36,6 +36,18 @@ const ModelMenu: React.FC<Props> = observer(({ onDeleteClick, onCreateConvClick 
       <button onClick={onDeleteClick}>
         <Image src="/icons/unicorn_trash.svg" width={24} height={24} alt="" />
       </button>
+      <button onClick={onModelInfoClick}>
+        <Image
+          src={
+            historyStore.showModelDetail
+              ? "/icons/ic_sidebar_fill.svg"
+              : "/icons/ic_sidebar.svg"
+          }
+          width={24}
+          height={24}
+          alt=""
+        />
+      </button>
     </div>
   );
 });
