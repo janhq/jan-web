@@ -33,7 +33,7 @@ export const CardBlankState: React.FC<Props> = ({ product }) => {
           />
         </div>
         <div className="flex flex-col">
-          <h2 className="text-[14px] leading-[20px] font-bold text-[#111928] text-left">
+          <h2 className="text-sm leading-[20px] font-bold text-[#111928] text-left">
             {product.decoration.title}
           </h2>
           <span className="text-[12px] leading-[18px] text-[#9CA3AF] break-all text-left">

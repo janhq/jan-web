@@ -3,6 +3,7 @@ import { useStore } from "@/models/RootStore";
 import { observer } from "mobx-react-lite";
 import React from "react";
 import JanImage from "../JanImage";
+import { displayDate } from "@/utils/datetime";
 
 type Props = {
   conversationId: string;
@@ -14,7 +15,7 @@ type Props = {
 const HistoryItem: React.FC<Props> = observer(
   ({ conversationId, avatarUrl, name, updatedAt }) => {
     const { historyStore } = useStore();
-
+    const send = true; // TODO store this in mobx
     const onClick = () => {
       historyStore.setActiveConversationId(conversationId);
     };
@@ -46,22 +47,35 @@ const HistoryItem: React.FC<Props> = observer(
           width={36}
           alt=""
         />
-        <div className="flex flex-col text-[14px] leading-[20px] w-full">
+        <div className="flex flex-col  text-sm leading-[20px] w-full">
           <div className="flex flex-row items-center justify-between">
             <span className="text-gray-900 text-left">{name}</span>
+            <span className="text-[11px] leading-[13px] tracking-[-0.4px] text-gray-400">
+              {updatedAt && displayDate(updatedAt)}
+            </span>
           </div>
-          <span className="text-gray-400 hidden-text text-left">
-            {conversation?.lastTextMessage}
-          </span>
+          <div className="flex items-center justify-between gap-1">
+            <div className="flex-1">
+              <span className="text-gray-400 hidden-text text-left">
+                {conversation?.lastTextMessage}
+              </span>
+            </div>
+            {send ? (
+              <>
+                {rightImageUrl != null ? (
+                  <JanImage
+                    imageUrl={rightImageUrl ?? ""}
+                    className="rounded"
+                    width={24}
+                    height={24}
+                  />
+                ) : undefined}
+              </>
+            ) : (
+              <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+            )}
+          </div>
         </div>
-        {rightImageUrl != null ? (
-          <JanImage
-            imageUrl={rightImageUrl ?? ""}
-            className="rounded-[4px]"
-            width={44}
-            height={44}
-          />
-        ) : undefined}
       </button>
     );
   }

@@ -44,7 +44,6 @@ const SimpleImageMessage: React.FC<Props> = ({
             {displayDate(createdAt)}
           </div>
         </div>
-        {/* {text && <div className="leading-[20px] text-[14px]">{text}</div>} */}
         <div className="flex items-center gap-3 flex-col">
           <JanImage
             imageUrl={imageUrls[0]}
@@ -73,6 +72,7 @@ const SimpleImageMessage: React.FC<Props> = ({
           </div>
         </div>
       </div>
+      {/* {text && <div className="leading-[20px] text-sm">{text}</div>} */}
     </div>
   );
 };

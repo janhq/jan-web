@@ -18,7 +18,7 @@ export const ModelDetailHeader: React.FC<Props> = ({ productId, modelTitle }) =>
   return (
     <div className="flex items-center justify-between mt-[60px]">
       <div className="flex flex-col">
-        <span className="relative text-[#9CA3AF] text-[16px] font-bold leading-[19.36px]">
+        <span className="relative text-[#9CA3AF] text-base font-bold leading-[19.36px]">
           AIs
           <button
             onClick={handleClick}

@@ -78,13 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Sign out account
   async function handleSignOut() {
-    try {
-      const currentAuth = getAuth(firebaseApp);
-      await currentAuth.signOut();
-      setCurrentUser(undefined);
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
+    return getAuth(firebaseApp).signOut();
   }
 
   return (

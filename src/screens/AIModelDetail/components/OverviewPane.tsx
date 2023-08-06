@@ -12,6 +12,7 @@ interface IOverviewPanelProps {
   onPromptClick?: (prompt: string) => void;
   inAIModel?: number;
 }
+
 const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
   const ref = useRef<HTMLDivElement>(null);
   const [read, setRead] = useState<boolean>(true);
@@ -39,10 +40,7 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
 
   return (
     <div
-      className={classNames(
-        props.productId ? "w-full" : "w-[350px]",
-        "flex flex-auto flex-col gap-6 overflow-x-hidden"
-      )}
+      className="w-full flex flex-auto flex-col gap-6 overflow-x-hidden"
       ref={ref}
       style={!inAIModel ? { height: `${height}px` } : { height: "100%" }}
     >
@@ -58,23 +56,7 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
           {read ? "read more" : "read less"}
         </button>
       </div>
-      <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-[16px]">
-        <div className="flex flex-col gap-1 items-start">
-          <h3 className="text-black font-bold">Technical Details</h3>
-          <p
-            className={`text-[#6B7280] ${
-              readMoreTechnical ? "hidden-text-model" : ""
-            }`}
-          >
-            {technicalDescription}
-          </p>
-          <button
-            onClick={() => setReadMoreTechnical(!readMoreTechnical)}
-            className="text-[#1F2A37] font-bold"
-          >
-            {readMoreTechnical ? "read more" : "read less"}
-          </button>
-        </div>
+      <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-base">
         <div className="flex flex-col gap-1">
           <span className="text-[#6B7280] ">Model Version</span>
           <span className="font-semibold">{technicalVersion}</span>
@@ -90,47 +72,25 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
           </a>
         </div>
       </div>
-      {samples.length > 0 && (
-        <div className="max-w-xl flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-[16px]">
-          <h2 className="font-bold">Try it yourself</h2>
-          <ul className="border-[1px] border-[#D1D5DB] rounded-[12px]">
-            {samples?.map((prompt, index) => {
-              const showBorder = index === samples.length - 1 ? false : true;
-              return (
-                <div key={prompt}>
-                  {props.productId ? (
-                    <Link
-                      href={{
-                        pathname: `/chat`,
-                        query: {
-                          productId: props.productId,
-                          prompt: prompt || undefined,
-                        },
-                      }}
-                      key={index}
-                      className={`text-sm text-gray-500 leading-[20px] flex gap-[10px] border-b-[${
-                        showBorder ? "1" : "0"
-                      }px] border-[#E5E7EB] hover:text-blue-400 text-left p-3 w-full`}
-                    >
-                      {prompt}
-                    </Link>
-                  ) : (
-                    <button
-                      onClick={() => onPromptClick?.(prompt)}
-                      key={index}
-                      className={`text-sm text-gray-500 leading-[20px] flex gap-[10px] border-b-[${
-                        showBorder ? "1" : "0"
-                      }px] border-[#E5E7EB] hover:text-blue-400 text-left p-3 w-full`}
-                    >
-                      {prompt}
-                    </button>
-                  )}
-                </div>
-              );
-            })}
-          </ul>
-        </div>
-      )}
+      <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-base">
+        <h2 className="font-bold">Try it yourself</h2>
+        <ul className="border-[1px] border-[#D1D5DB] rounded-[12px]">
+          {samples?.map((item, index) => {
+            const showBorder = index === samples.length - 1 ? false : true;
+            return (
+              <button
+                onClick={() => onPromptClick?.(item)}
+                key={index}
+                className={`text-sm text-gray-500 leading-[20px] flex gap-[10px] border-b-[${
+                  showBorder ? "1" : "0"
+                }px] border-[#E5E7EB] hover:text-blue-400 text-left p-3 w-full`}
+              >
+                {item}
+              </button>
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 };

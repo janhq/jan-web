@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 body {
+  font-family: "Inter", sans-serif;
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -11,6 +12,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  overflow: hidden;
 }
 
 .hidden-text {

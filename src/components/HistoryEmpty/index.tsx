@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
 
-export const HistoryEmpty: React.FC = () => {
+const HistoryEmpty: React.FC = () => {
   return (
     <div className="flex flex-col w-full h-full items-center justify-center gap-4">
       <Image
@@ -10,7 +11,7 @@ export const HistoryEmpty: React.FC = () => {
         height={50}
         alt=""
       />
-      <p className="text-[14px] leading-5 text-center text-[#9CA3AF]">
+      <p className="text-sm leading-5 text-center text-[#9CA3AF]">
         Jan allows you to use 100s of AIs on your mobile phone
       </p>
       <Link
@@ -22,3 +23,5 @@ export const HistoryEmpty: React.FC = () => {
     </div>
   );
 };
+
+export default React.memo(HistoryEmpty);
