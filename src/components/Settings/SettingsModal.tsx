@@ -89,7 +89,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           </div> */}
           <div className="border-t border-gray-200 text-gray-500">
             <div className="pl-3 pt-2 pb-2 hover:bg-gray-100 hover:cursor-pointer">
-              <Link href="/privacy" rel="noopener noreferrer">
+              <Link
+                href="/privacy"
+                onClick={() => setOpen(false)}
+                rel="noopener noreferrer"
+              >
                 Privacy
               </Link>
             </div>
@@ -98,6 +102,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
                 href={process.env.NEXT_PUBLIC_SUPPORT_URL || ""}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
               >
                 Support
               </a>
