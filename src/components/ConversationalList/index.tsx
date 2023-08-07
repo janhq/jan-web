@@ -19,7 +19,7 @@ const ConversationalList: React.FC<IConversational> = (props) => {
             key={index}
             name={item.name}
             image={item.decoration.images[0]}
-            title={item.decoration.title}
+            title={item.decoration?.title}
             description={
               item.decoration.subTitle || item.decoration.description
             }

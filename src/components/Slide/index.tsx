@@ -1,9 +1,11 @@
+import Link from "next/link";
 import { FC } from "react";
 
 interface ISlideprops {
+  productName?: string;
   image?: string;
   title?: string;
-  description?: string
+  description?: string;
 }
 const Slide: FC<ISlideprops> = (props) => {
   return (
@@ -17,13 +19,17 @@ const Slide: FC<ISlideprops> = (props) => {
         <div className="flex justify-between p-4">
           <div className="flex flex-col">
             <h2 className="font-bold">{props.title}</h2>
-            <span className="text-gray-300 text-xs">
-              {props.description}
-            </span>
+            <span className="text-gray-300 text-xs">{props.description}</span>
           </div>
-          <button className="gap-2 px-5 py-[10px] rounded-md bg-white text-black">
+          <Link
+            href={{
+              pathname: `/chat`,
+              query: { productName: props.productName },
+            }}
+            className="gap-2 px-5 py-[10px] rounded-md bg-white text-black"
+          >
             Try now
-          </button>
+          </Link>
         </div>
       </div>
     </div>

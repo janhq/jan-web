@@ -56,8 +56,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         </p>
       </div>
       <div className="border-t border-gray-200">
-        <p className="pl-2 mt-1 text-sm text-gray-600">JOIN OUR COMMUNITIES</p>
-        <div className="flex flex-row pl-2 pt-2 pb-2 hover:bg-gray-100 hover:cursor-pointer">
+        <p className="pl-3 mt-3 text-gray-500">Join Our Community</p>
+        <div className="flex flex-row pl-3 pt-3 pb-3 hover:bg-gray-100 hover:cursor-pointer">
           <img
             src="/icons/discord-icon.svg"
             alt="Discord icon"
@@ -94,7 +94,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
         </div> */}
       </div>
       <div className="border-t border-gray-200 text-gray-500">
-        <div className="pl-2 pt-2 pb-2 hover:bg-gray-100 hover:cursor-pointer">
+        <div className="pl-3 pt-2 pb-2 hover:bg-gray-100 hover:cursor-pointer">
           <a
             href={process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || ""}
             target="_blank"
@@ -103,7 +103,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             Privacy
           </a>
         </div>
-        <div className="pl-2 pt-2 pb-2 hover:bg-gray-100 hover:cursor-pointer">
+        <div className="pl-3 pt-2 pb-2 hover:bg-gray-100 hover:cursor-pointer">
           <a
             href={process.env.NEXT_PUBLIC_SUPPORT_URL || ""}
             target="_blank"
