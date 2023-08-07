@@ -10,8 +10,7 @@ export default function Footer() {
       </div>
       <div className="flex gap-4 my-6">
         <Link
-          href={process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || ""}
-          target="_blank_"
+          href="/privacy"
           className="cursor-pointer"
         >
           Privacy

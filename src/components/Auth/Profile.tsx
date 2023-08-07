@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "@/contexts/auth_context";
 import { useStore } from "../../models/RootStore";
+import Link from "next/link";
 
 interface ProfileProps {
   // Parent component can inject a function to close this modal once the close button is clicked
@@ -170,13 +171,9 @@ const Profile: React.FC<ProfileProps> = ({
         {/** Bottom section */}
         <div className="flex flex-row justify-between pl-4 pr-4 items-center hover:cursor-pointer">
           <p className="text-gray-500 hover:text-gray-800">
-            <a
-              href={process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Link href="/privacy" rel="noopener noreferrer">
               Privacy
-            </a>
+            </Link>
           </p>
           <p className="text-center font-bold text-2xl pb-3 ml-2 mr-2">.</p>
           <p className="text-gray-500 hover:text-gray-800">

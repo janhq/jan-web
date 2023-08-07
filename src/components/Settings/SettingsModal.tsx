@@ -1,4 +1,5 @@
 import { useAuth } from "@/contexts/auth_context";
+import Link from "next/link";
 import React from "react";
 
 interface SettingsModalProps {
@@ -95,13 +96,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
       </div>
       <div className="border-t border-gray-200 text-gray-500">
         <div className="pl-3 pt-2 pb-2 hover:bg-gray-100 hover:cursor-pointer">
-          <a
-            href={process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || ""}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <Link href="/privacy" rel="noopener noreferrer">
             Privacy
-          </a>
+          </Link>
         </div>
         <div className="pl-3 pt-2 pb-2 hover:bg-gray-100 hover:cursor-pointer">
           <a
