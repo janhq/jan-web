@@ -28,13 +28,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
 
   return (
     <Dialog
+      className="absolute inset-0 w-screen h-screen z-100"
       open={isOpen}
       onClose={() => {
         setOpen(false);
       }}
     >
-      <Dialog.Panel>
-        <div className="flex flex-col absolute top-0 right-0 mt-20 mr-1 w-60 bg-white border border-gray-300 p-2 rounded-lg shadow-md">
+      <div className="flex flex-col absolute top-0 right-0 mt-20 mr-1 w-60 bg-white border border-gray-300 p-2 rounded-lg shadow-md">
+        <Dialog.Panel>
           <div
             className="flex flex-col p-3 hover:bg-gray-100 hover:cursor-pointer"
             onClick={openProfileSetting}
@@ -108,8 +109,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           >
             <p>Sign Out</p>
           </div>
-        </div>
-      </Dialog.Panel>
+        </Dialog.Panel>
+      </div>
     </Dialog>
   );
 };
