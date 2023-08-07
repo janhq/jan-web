@@ -43,7 +43,7 @@ const ModelDetail: FC<Props> = observer(({ onPromptClick }) => {
       </div>
       <div className="flex-col gap-6 flex items-center flex-1">
         <div className="flex items-center justify-center gap-2 w-[350px]">
-          <button
+          {/* <button
             onClick={() => onTabClick("overview")}
             className={`w-1/2 flex items-center border-b-[1px] justify-center rounded-[4px] py-[6px] px-3 gap-2 relative ${
               tab === "overview"
@@ -74,7 +74,7 @@ const ModelDetail: FC<Props> = observer(({ onPromptClick }) => {
               alt=""
             />
             API
-          </button>
+          </button> */}
         </div>
         {tab === "overview" ? (
           <OverviewPane

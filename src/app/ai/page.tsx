@@ -7,17 +7,14 @@ import { api } from "@/services/api";
 import { Product, Section } from "@/models/Product";
 
 const AiPage: React.FC = async () => {
-  
   const discover = await api.getConfigurations("discover");
-  const categoryProducts: Product[] =
-    discover.kind === "ok"
+  const categoryProducts: Product[] = discover.kind === "ok"
       ? discover.configuration?.sections?.find(
           (section: Section) => section.name === "all_categories"
         )?.products
       : [];
 
-  const featured: Product[] =
-    discover.kind === "ok"
+  const featured: Product[] = discover.kind === "ok"
       ? discover.configuration?.sections?.find(
           (section: Section) => section.name === "featured"
         )?.products
@@ -42,7 +39,6 @@ const AiPage: React.FC = async () => {
           <h2 className="font-bold mt-3 mb-4 leading-[52px] text-[40px] text-gray-400">
             AIs
           </h2>
-          <AiSearch />
         </div>
         <div className="flex gap-20">
           <div className="w-[70%]">

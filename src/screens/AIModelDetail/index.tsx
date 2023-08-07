@@ -27,10 +27,13 @@ export const AIModelDetail: React.FC<AIModelDetailProps> = ({ product }) => {
   }, []);
   return (
     <div className="container mx-auto">
-      <ModelDetailHeader modelTitle={product.decoration.title} />
+      <ModelDetailHeader
+        modelTitle={product.decoration.title}
+        productName={product.name}
+      />
       <div className="flex justify-between mt-2 gap-4">
         <div className="flex flex-col">
-          <div className="flex items-center gap-2 w-[350px]">
+          {/* <div className="flex items-center gap-2 w-[350px]">
             <button
               onClick={() => onTabClick("overview")}
               className={`flex items-center border-b-[1px] justify-center rounded-[4px] py-[6px] px-3 gap-2 relative ${
@@ -51,7 +54,7 @@ export const AIModelDetail: React.FC<AIModelDetailProps> = ({ product }) => {
             >
               API
             </button>
-          </div>
+          </div> */}
           <div className="mt-3 h-full" ref={ref}>
             {tab === "overview" ? (
               <OverviewPane
@@ -72,7 +75,9 @@ export const AIModelDetail: React.FC<AIModelDetailProps> = ({ product }) => {
             )}
           </div>
         </div>
-        <SampleImage image={product.decoration.images[0]} />
+        <div className="rounded-lg overflow-hidden">
+          <SampleImage image={product.decoration.images[0]} />
+        </div>
       </div>
     </div>
   );

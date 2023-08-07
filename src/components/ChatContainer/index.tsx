@@ -20,16 +20,23 @@ import { HistoryEmpty } from "../HistoryEmpty";
 import Gleap from "gleap";
 import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
 import { RemoteConfigKeys, useRemoteConfig } from "@/hooks/useRemoteConfig";
+import { useRouter, useSearchParams } from "next/navigation";
+import useCreateConversation from "@/hooks/useCreateConversation";
 
 interface IChatContainerProps {
   products: Product[];
 }
 
 const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
+  const params = useSearchParams();
+  const router = useRouter();
+  const newConvProductName = params.get("productName");
+
   const ref = useRef<HTMLDivElement>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [prefillPrompt, setPrefillPrompt] = useState("");
   const { historyStore } = useStore();
+  const { requestCreateConvo } = useCreateConversation();
 
   const showBodyChat = historyStore.activeConversationId != null;
   const showHistoryList = historyStore.conversations.length > 0;
@@ -52,6 +59,20 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
       Gleap.showFeedbackButton(true);
     }
   }, [conversation]);
+
+  useEffect(() => {
+    const createConversationAndActive = async () => {
+      if (newConvProductName && newConvProductName !== "") {
+        const product = products.find((e) => e.name === newConvProductName);
+        if (product) {
+          await requestCreateConvo(product);
+          router.replace("/chat", undefined);
+        }
+      }
+    };
+    createConversationAndActive();
+  }, [newConvProductName, products, requestCreateConvo, router]);
+
   const [open, setOpen] = useState(false);
 
   const onConfirmDelete = () => {

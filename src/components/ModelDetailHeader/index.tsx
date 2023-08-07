@@ -1,11 +1,14 @@
+import { Product } from "@/models/Product";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 type Props = {
+  productName: string;
   modelTitle: string;
 };
 
-export const ModelDetailHeader: React.FC<Props> = ({ modelTitle }) => {
+export const ModelDetailHeader: React.FC<Props> = ({ productName, modelTitle }) => {
   const router = useRouter();
 
   const handleClick = () => {
@@ -33,9 +36,15 @@ export const ModelDetailHeader: React.FC<Props> = ({ modelTitle }) => {
           {modelTitle}
         </h2>
       </div>
-      <button className="bg-[#1A56DB] py-[10px] px-5 gap-2 rounded-[8px] text-[14px] leading-[21px] font-medium text-white">
+      <Link
+        href={{
+          pathname: `/chat`,
+          query: { productName },
+        }}
+        className="bg-[#1A56DB] py-[10px] px-5 gap-2 rounded-[8px] text-[14px] leading-[21px] font-medium text-white"
+      >
         Use
-      </button>
+      </Link>
     </div>
   );
 };
