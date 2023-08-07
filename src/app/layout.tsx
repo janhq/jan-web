@@ -79,6 +79,7 @@ export default function RootLayout({
               <LoginModal isOpen={showLoginModal} onClose={toggleLoginModal} />
               <SettingsModal
                 isOpen={showSettingModal}
+                setOpen={setShowSettingsModal}
                 openSettingFunc={openSettingModal}
                 logoutCallBack={logoutCallBack}
               />
