@@ -65,7 +65,7 @@ export default function RootLayout({
       <body
         className={classNames(
           inter.className,
-          "flex flex-col w-full h-full min-h-screen"
+          "flex flex-col w-full h-screen"
         )}
       >
         {store && (

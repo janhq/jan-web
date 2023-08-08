@@ -1,8 +1,5 @@
 "use client";
-import Image from "next/image";
-import { Fragment, useLayoutEffect, useRef, useState, useEffect } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useLayoutEffect, useRef, useState, useEffect } from "react";
 import { ChatBody } from "@/components/ChatBody";
 import { InputToolbar } from "@/components/InputToolbar";
 import { UserToolbar } from "@/components/UserToolbar";
@@ -33,7 +30,6 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
   const newConvProductName = params.get("productName");
 
   const ref = useRef<HTMLDivElement>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [prefillPrompt, setPrefillPrompt] = useState("");
   const { historyStore } = useStore();
   const { requestCreateConvo } = useCreateConversation();
@@ -93,44 +89,26 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
   }, [showHistoryList]);
 
   return (
-    <div className="flex flex-row flex-1 w-full">
-      <ConfirmDeleteConversationModal
-        open={open}
-        setOpen={setOpen}
-        onConfirmDelete={onConfirmDelete}
-      />
-
-      {/* Static sidebar for desktop */}
-      <div className="flex w-72 inset-y-0 flex-col overflow-hidden">
-        {/* Sidebar component, swap this element with another sidebar if you like */}
-        <div className="h-full flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 px-2">
-          <div className="flex flex-col h-16 shrink-0 items-center gap-[10px] pt-1">
-            <SearchBar />
-          </div>
-          <div
-            className="flex flex-col flex-auto overflow-x-hidden h-full scroll"
-            ref={ref}
-            style={heightNav > 0 ? { maxHeight: `${heightNav}px` } : {}}
-          >
-            <ShortcutList products={products} />
-            {showHistoryList ? <HistoryList /> : <HistoryEmpty />}
-          </div>
-          <MobileDownload />
+    <div className="flex flex-row flex-1 w-full overflow-y-hidden">
+      {/* Sidebar */}
+      <div className="flex w-72 flex-col gap-y-2 border-r border-gray-200 px-2">
+        <div className="flex flex-col h-16 shrink-0 items-center gap-[10px] pt-1">
+          <SearchBar />
         </div>
+        <div
+          className="flex-1 w-full h-full flex flex-col overflow-x-hidden overflow-y-scroll scroll"
+          ref={ref}
+          style={heightNav > 0 ? { maxHeight: `${heightNav}px` } : {}}
+        >
+          <ShortcutList products={products} />
+          {showHistoryList ? <HistoryList /> : <HistoryEmpty />}
+        </div>
+        <MobileDownload />
       </div>
 
       {showBodyChat ? (
         <div className="flex-1 flex flex-col w-full">
           <div className="flex h-16 w-full shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-            <button
-              type="button"
-              className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <span className="sr-only">Open sidebar</span>
-              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-            </button>
-
             {/* Separator */}
             <div
               className="h-6 w-px bg-gray-200 lg:hidden"
@@ -159,9 +137,15 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
           <ChatBlankState products={products} />
         </div>
       )}
-      <div>
+      <div className="h-auto w-auto">
         <ModelDetail onPromptClick={onSuggestPromptClick} />
       </div>
+
+      <ConfirmDeleteConversationModal
+        open={open}
+        setOpen={setOpen}
+        onConfirmDelete={onConfirmDelete}
+      />
     </div>
   );
 });
