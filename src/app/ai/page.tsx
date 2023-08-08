@@ -1,4 +1,4 @@
-import { AiSearch, Slider } from "@/components";
+import { Slider } from "@/components";
 import AiTypeList from "@/components/AiTypeList";
 import ConversationalList from "@/components/ConversationalList";
 import GenerateImageList from "@/components/GenerateImageList";
@@ -40,11 +40,11 @@ const AiPage: React.FC = async () => {
             AIs
           </h2>
         </div>
-        <div className="flex gap-20">
-          <div className="w-[70%]">
+        <div className="flex gap-20 w-full flex-1">
+          <div className="lg:w-[70%] w-full">
             <Slider product={featured[0]} />
           </div>
-          <div className="w-[30%]">
+          <div className="lg:block hidden w-[30%]">
             <AiTypeList
               conversationals={conversationals}
               generativeArts={generateImages}

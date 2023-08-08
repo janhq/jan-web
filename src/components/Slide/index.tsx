@@ -11,7 +11,7 @@ const Slide: FC<ISlideprops> = (props) => {
   return (
     <div className="w-full relative">
       <img
-        className="w-[1000px] aspect-video object-cover rounded-lg"
+        className="w-full aspect-video object-cover rounded-lg"
         src={props.image}
         alt=""
       />
