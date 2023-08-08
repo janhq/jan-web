@@ -50,7 +50,7 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
     api
       .magicPrompt(text)
       .then((res) => {
-        if (res.kind === "ok") setText(text + res.data.text);
+        if (res.kind === "ok") setText([text.trim(),res.data.text.trim()].join(" "));
       })
       .finally(() => {
         setPromptGenerating(false);
@@ -63,7 +63,7 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
       .magicPrompt("")
       .then((res) => {
         if (res.kind === "ok" && res.data.text.trim() !== "")
-          setText(res.data.text);
+          setText(res.data.text.trim());
       })
       .finally(() => {
         setPromptGenerating(false);
