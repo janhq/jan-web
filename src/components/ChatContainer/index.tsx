@@ -28,6 +28,7 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
   const params = useSearchParams();
   const router = useRouter();
   const newConvProductName = params.get("productName");
+  const [searchText, setSearchText] = useState("");
 
   const ref = useRef<HTMLDivElement>(null);
   const [prefillPrompt, setPrefillPrompt] = useState("");
@@ -84,6 +85,10 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
     }
   };
 
+  const onSearching = (text: string) => {
+    setSearchText(text);
+  };
+
   useLayoutEffect(() => {
     setHeightNav(ref.current?.offsetHeight ?? 0);
   }, [showHistoryList]);
@@ -93,15 +98,24 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
       {/* Sidebar */}
       <div className="flex w-72 flex-col gap-y-2 border-r border-gray-200 px-2">
         <div className="flex flex-col h-16 shrink-0 items-center gap-[10px] pt-1">
-          <SearchBar />
+          <SearchBar onTextChanged={onSearching} />
         </div>
         <div
           className="flex-1 w-full h-full flex flex-col overflow-x-hidden overflow-y-scroll scroll"
           ref={ref}
           style={heightNav > 0 ? { maxHeight: `${heightNav}px` } : {}}
         >
-          <ShortcutList products={products} />
-          {showHistoryList ? <HistoryList /> : <HistoryEmpty />}
+          <ShortcutList
+            products={products.filter(
+              (e) =>
+                searchText === "" ||
+                e.name.toLowerCase().includes(searchText.toLowerCase()) ||
+                e.decoration.title
+                  .toLowerCase()
+                  .includes(searchText.toLowerCase())
+            )}
+          />
+          {showHistoryList ? <HistoryList searchText={searchText}/> : <HistoryEmpty />}
         </div>
         <MobileDownload />
       </div>
