@@ -13,7 +13,7 @@ const ConversationalList: React.FC<IConversational> = (props) => {
         <Image src={"/icons/messicon.svg"} width={24} height={24} alt="" />
         <span className="font-bold text-gray-900">Conversational</span>
       </div>
-      <div className="flex gap-2 items-stretch mt-4">
+      <div className="flex gap-2 items-stretch mt-4 flex-wrap">
         {props.products.map((item, index) => (
           <ConversationalCard
             key={index}
