@@ -21,7 +21,7 @@ export const ImageBlankState: React.FC<Props> = ({ product }) => {
       onClick={onClick}
     >
       <img
-        className="w-[140px] h-[140px] object-cover"
+        className="w-[140px] h-[140px] object-cover rounded-md"
         src={imageUrl}
         width={140}
         height={140}

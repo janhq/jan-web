@@ -19,7 +19,7 @@ export const CardBlankState: React.FC<Props> = ({ product }) => {
 
   return (
     <button
-      className="flex gap-3 p-3 bg-white odd:rounded-t-[8px] even:rounded-b-[8px]"
+      className="flex gap-3 p-3 bg-white rounded-[8px]"
       onClick={onClick}
     >
       <div className="gap-6 flex items-center">
