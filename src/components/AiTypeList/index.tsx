@@ -16,18 +16,10 @@ const AiTypeList: React.FC<IAiTypeListProps> = (props) => {
       name: "Generative Art",
       props: "/icons/ic_generative_art.svg",
     },
-    {
-      name: "On-Device AI",
-      props: "/icons/ic_on_device_ai.svg",
-    },
-    {
-      name: "Prompt Library",
-      props: "/icons/ic_prompt_library.svg",
-    },
   ];
 
   return (
-    <div className="flex flex-col gap-[12px]">
+    <div className="flex flex-col gap-[12px] h-full ">
       {datas.map((item, index) => (
         <AiTypeCard imageUrl={item.props} key={index} name={item.name} />
       ))}
