@@ -41,10 +41,9 @@ const HistoryItem: React.FC<Props> = observer(
         onClick={onClick}
       >
         <img
-          className="rounded-full"
+          className="rounded-full aspect-square object-cover"
           src={avatarUrl}
           width={36}
-          height={36}
           alt=""
         />
         <div className="flex flex-col text-[14px] leading-[20px] w-full">
