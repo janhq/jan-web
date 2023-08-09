@@ -11,9 +11,8 @@ import LoginModal from "@/components/Auth/LoginModal";
 import SettingsModal from "@/components/Settings/SettingsModal";
 import Profile from "@/components/Auth/Profile";
 import Gleap from "gleap";
-import posthog from "posthog-js";
-import Tracking from "@/utils/posthog";
 import useTracking from "@/utils/posthog";
+import MobileShowcase from "@/screens/MobileShowcase";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,7 +32,6 @@ export default function RootLayout({
   const [showSettingModal, setShowSettingsModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const { initAnalytics } = useTracking();
-
 
   // On/Off Setting Modal
   const toggleSettingsModal = () => {
@@ -66,28 +64,29 @@ export default function RootLayout({
       <body
         className={classNames(inter.className, "flex flex-col w-full h-screen")}
       >
-        {store && (
-          <Provider value={store.current}>
-            <AuthProvider>
-              <Header
-                toggleDisplaySettingMenu={toggleSettingsModal}
-              />
-              {children}
-              <LoginModal />
-              <SettingsModal
-                isOpen={showSettingModal}
-                setOpen={setShowSettingsModal}
-                openSettingFunc={openSettingModal}
-                logoutCallBack={logoutCallBack}
-              />
-              <Profile
-                isOpen={showProfileModal}
-                closeProfileFunc={closeProfileModal}
-                logoutCallBack={logoutCallBack}
-              />
-            </AuthProvider>
-          </Provider>
-        )}
+        <div className="hidden md:flex flex-col w-full h-full">
+          {store && (
+            <Provider value={store.current}>
+              <AuthProvider>
+                <Header toggleDisplaySettingMenu={toggleSettingsModal} />
+                {children}
+                <LoginModal />
+                <SettingsModal
+                  isOpen={showSettingModal}
+                  setOpen={setShowSettingsModal}
+                  openSettingFunc={openSettingModal}
+                  logoutCallBack={logoutCallBack}
+                />
+                <Profile
+                  isOpen={showProfileModal}
+                  closeProfileFunc={closeProfileModal}
+                  logoutCallBack={logoutCallBack}
+                />
+              </AuthProvider>
+            </Provider>
+          )}
+        </div>
+        <MobileShowcase />
       </body>
     </html>
   );
