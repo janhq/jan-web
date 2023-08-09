@@ -1,5 +1,5 @@
 "use client";
-import { AiTypeList, Slider } from "@/components";
+import { Slider } from "@/components";
 import ConversationalList from "@/components/ConversationalList";
 import GenerateImageList from "@/components/GenerateImageList";
 import { ProductsProps, withProducts } from "@/hooks/withProducts";
@@ -14,16 +14,13 @@ const Discover: React.FC<ProductsProps> = (props) => {
           </h2>
         </div>
         <div className="flex gap-20 w-full flex-1">
-          <div className="lg:w-[70%] w-full">
+          <div className="w-full">
             {props.categories?.featured[0] && (
-              <Slider product={props.categories.featured[0]} />
+              <div className="gap-5 lg:columns-2 columns-1">
+                <Slider product={props.categories.featured[0]} />
+                <Slider product={props.categories.featured[1]} />
+              </div>
             )}
-          </div>
-          <div className="lg:block hidden w-[30%]">
-            <AiTypeList
-              conversationals={props.categories?.conversationals || []}
-              generativeArts={props.categories?.generativeArts || []}
-            />
           </div>
         </div>
       </div>
