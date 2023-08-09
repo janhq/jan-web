@@ -55,7 +55,7 @@ export const AIModelDetail: React.FC<AIModelDetailProps> = ({ product }) => {
               API
             </button>
           </div> */}
-          <div className="mt-3 h-full flex-1" ref={ref}>
+          <div className="mt-3 h-full flex-1 " ref={ref}>
             {tab === "overview" ? (
               <OverviewPane
                 inAIModel={inAIModel}
@@ -75,7 +75,7 @@ export const AIModelDetail: React.FC<AIModelDetailProps> = ({ product }) => {
             )}
           </div>
         </div>
-        <div className="rounded-lg overflow-hidden">
+        <div className="overflow-hidden">
           <SampleImage image={product.decoration.images[0]} />
         </div>
       </div>

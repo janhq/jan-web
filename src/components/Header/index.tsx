@@ -24,7 +24,7 @@ const Header: React.FC<HeaderProps> = ({
   const { currentUser } = useAuth();
 
   return (
-    <header className="text-sm bg-white border-b-[1px] border-gray-200 ">
+    <header className="text-sm bg-white border-b-[1px] border-gray-200">
       <nav
         className="mx-auto flex items-center justify-between p-6 lg:px-8"
         aria-label="Global"
