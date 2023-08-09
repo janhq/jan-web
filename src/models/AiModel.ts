@@ -14,5 +14,6 @@ export const AiModel = types.model("AiModel", {
   avatarUrl: types.maybeNull(types.string),
   modelVersion: types.maybeNull(types.string),
   modelUrl: types.maybeNull(types.string),
+  modelDescription: types.maybeNull(types.string),
   defaultPrompts: types.optional(types.array(types.string), []),
 });

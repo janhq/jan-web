@@ -68,6 +68,9 @@ const useGetUserConversations = () => {
         description: product.decoration.technicalDescription,
         modelUrl: product.decoration.technicalURL,
         modelVersion: product.decoration.technicalVersion,
+        modelDescription:
+          product.decoration.additionalDescription ||
+          product.decoration.technicalDescription,
         avatarUrl: product.decoration.images[0],
         defaultPrompts: cast(textPrompts),
       };

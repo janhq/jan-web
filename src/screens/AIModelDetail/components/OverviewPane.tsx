@@ -4,9 +4,10 @@ import { useLayoutEffect, useRef, useState } from "react";
 
 interface IOverviewPanelProps {
   productId?: string;
-  description?: string;
-  technicalVersion?: string;
-  technicalURL?: string;
+  description?: string | null;
+  technicalVersion?: string | null;
+  technicalDescription?: string | null;
+  technicalURL?: string | null;
   samples?: string[];
   onPromptClick?: (prompt: string) => void;
   inAIModel?: number;
@@ -14,6 +15,7 @@ interface IOverviewPanelProps {
 const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
   const ref = useRef<HTMLDivElement>(null);
   const [read, setRead] = useState<boolean>(true);
+  const [readMoreTechnical, setReadMoreTechnical] = useState<boolean>(true);
   const [height, setHeight] = useState<number>(0);
 
   const {
@@ -21,6 +23,7 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
     description,
     technicalVersion,
     technicalURL,
+    technicalDescription,
     onPromptClick,
     inAIModel,
   } = props;
@@ -59,12 +62,33 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
       </div>
       <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-[16px]">
         <div className="flex flex-col gap-1">
+          <h3 className="text-black font-bold">Technical Details</h3>
+          <p>
+            <p
+              className={`text-[#6B7280] ${
+                readMoreTechnical ? "hidden-text-model" : ""
+              }`}
+            >
+              {technicalDescription}
+            </p>
+            <button
+              onClick={() => setReadMoreTechnical(!readMoreTechnical)}
+              className="text-[#1F2A37] font-bold"
+            >
+              {readMoreTechnical ? "read more" : "read less"}
+            </button>
+          </p>
+        </div>
+        <div className="flex flex-col gap-1">
           <span className="text-[#6B7280] ">Model Version</span>
           <span className="font-semibold">{technicalVersion}</span>
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-[#6B7280]">Model URL</span>
-          <a className="text-[#1C64F2] break-all pr-10" href={technicalURL}>
+          <a
+            className="text-[#1C64F2] break-all pr-10"
+            href={technicalURL || "#"}
+          >
             {technicalURL}
           </a>
         </div>
