@@ -33,7 +33,7 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
 
   return (
     <div
-      className="w-[350px] flex flex-auto flex-col gap-6 overflow-x-hidden"
+      className="w-full flex flex-auto flex-col gap-6 overflow-x-hidden"
       ref={ref}
       style={!inAIModel ? { height: `${height}px` } : { height: "100%" }}
     >

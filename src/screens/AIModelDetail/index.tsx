@@ -31,8 +31,8 @@ export const AIModelDetail: React.FC<AIModelDetailProps> = ({ product }) => {
         modelTitle={product.decoration.title}
         productName={product.name}
       />
-      <div className="flex justify-between mt-2 gap-4">
-        <div className="flex flex-col">
+      <div className="flex justify-between mt-2 gap-8">
+        <div className="flex flex-col flex-1">
           {/* <div className="flex items-center gap-2 w-[350px]">
             <button
               onClick={() => onTabClick("overview")}
@@ -55,7 +55,7 @@ export const AIModelDetail: React.FC<AIModelDetailProps> = ({ product }) => {
               API
             </button>
           </div> */}
-          <div className="mt-3 h-full" ref={ref}>
+          <div className="mt-3 h-full flex-1" ref={ref}>
             {tab === "overview" ? (
               <OverviewPane
                 inAIModel={inAIModel}
