@@ -10,9 +10,9 @@ export const AiModel = types.model("AiModel", {
   modelId: types.string,
   title: types.string,
   aiModelType: types.enumeration(Object.values(AiModelType)),
-  description: types.optional(types.string, ""),
-  avatarUrl: types.optional(types.string, ""),
-  modelVersion: types.optional(types.string, ""),
-  modelUrl: types.maybe(types.string),
+  description: types.maybeNull(types.string),
+  avatarUrl: types.maybeNull(types.string),
+  modelVersion: types.maybeNull(types.string),
+  modelUrl: types.maybeNull(types.string),
   defaultPrompts: types.optional(types.array(types.string), []),
 });

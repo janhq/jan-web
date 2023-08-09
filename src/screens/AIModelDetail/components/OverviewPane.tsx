@@ -72,7 +72,7 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
       <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-[16px]">
         <h2 className="font-bold">Try it yourself</h2>
         <ul className="border-[1px] border-[#D1D5DB] rounded-[12px]">
-          {samples?.map((item, index) => {
+          {samples?.map((prompt, index) => {
             const showBorder = index === samples.length - 1 ? false : true;
             return (
               <>
@@ -80,24 +80,24 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
                   <Link
                     href={{
                       pathname: `/chat`,
-                      query: { productId: props.productId, prompt: item },
+                      query: { productId: props.productId, prompt: prompt || undefined }
                     }}
                     key={index}
                     className={`text-sm text-gray-500 leading-[20px] flex gap-[10px] border-b-[${
                       showBorder ? "1" : "0"
                     }px] border-[#E5E7EB] hover:text-blue-400 text-left p-3 w-full`}
                   >
-                    {item}
+                    {prompt}
                   </Link>
                 ) : (
                   <button
-                    onClick={() => onPromptClick?.(item)}
+                    onClick={() => onPromptClick?.(prompt)}
                     key={index}
                     className={`text-sm text-gray-500 leading-[20px] flex gap-[10px] border-b-[${
                       showBorder ? "1" : "0"
                     }px] border-[#E5E7EB] hover:text-blue-400 text-left p-3 w-full`}
                   >
-                    {item}
+                    {prompt}
                   </button>
                 )}
               </>
