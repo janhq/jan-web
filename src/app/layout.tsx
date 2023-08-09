@@ -11,6 +11,9 @@ import LoginModal from "@/components/Auth/LoginModal";
 import SettingsModal from "@/components/Settings/SettingsModal";
 import Profile from "@/components/Auth/Profile";
 import Gleap from "gleap";
+import posthog from "posthog-js";
+import Tracking from "@/utils/posthog";
+import useTracking from "@/utils/posthog";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +33,7 @@ export default function RootLayout({
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSettingModal, setShowSettingsModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const { initAnalytics } = useTracking();
 
   const toggleLoginModal = () => {
     setShowLoginModal(!showLoginModal);
@@ -58,15 +62,13 @@ export default function RootLayout({
 
   useEffect(() => {
     Gleap.initialize(process.env.NEXT_PUBLIC_GLEAP_API_KEY || "");
+    initAnalytics();
   }, []);
 
   return (
     <html lang="en">
       <body
-        className={classNames(
-          inter.className,
-          "flex flex-col w-full h-screen"
-        )}
+        className={classNames(inter.className, "flex flex-col w-full h-screen")}
       >
         {store && (
           <Provider value={store.current}>

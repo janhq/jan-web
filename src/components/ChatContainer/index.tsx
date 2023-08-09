@@ -19,13 +19,9 @@ import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
 import { RemoteConfigKeys, useRemoteConfig } from "@/hooks/useRemoteConfig";
 import { useRouter, useSearchParams } from "next/navigation";
 import useCreateConversation from "@/hooks/useCreateConversation";
+import { ProductsProps, withProducts } from "@/hooks/withProducts";
 
-interface IChatContainerProps {
-  shortcuts: Product[];
-  products: Product[];
-}
-
-const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
+const ChatContainer: React.FC<ProductsProps> = observer((props) => {
   const params = useSearchParams();
   const router = useRouter();
   const newConvProductName = params.get("productId");
@@ -45,10 +41,10 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
   const { getConfig } = useRemoteConfig();
 
   const shortcuts = getConfig(RemoteConfigKeys.ENABLE_OFFLINE_MODEL)
-    ? props.shortcuts
-    : props.shortcuts.filter(
+    ? props.shortcuts || []
+    : props.shortcuts?.filter(
         (e) => e.action?.params?.models[0]?.offline !== true
-      );
+      ) || [];
 
   const conversation = historyStore.getActiveConversation();
 
@@ -64,7 +60,7 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
     const createConversationAndActive = async () => {
       if (newConvProductName && newConvProductName !== "") {
         historyStore.setActiveConversationId(undefined);
-        const product = props.products.find(
+        const product = props.products?.find(
           (e) => e.name === newConvProductName
         );
         if (product) {
@@ -175,4 +171,4 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
   );
 });
 
-export default ChatContainer;
+export default withProducts(ChatContainer);
