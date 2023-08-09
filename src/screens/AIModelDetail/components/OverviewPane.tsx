@@ -1,8 +1,9 @@
+import classNames from "classnames";
 import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
 
 interface IOverviewPanelProps {
-  productId: string;
+  productId?: string;
   description?: string;
   technicalVersion?: string;
   technicalURL?: string;
@@ -35,7 +36,10 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
 
   return (
     <div
-      className="w-full flex flex-auto flex-col gap-6 overflow-x-hidden"
+      className={classNames(
+        props.productId ? "w-full" : "w-[350px]",
+        "flex flex-auto flex-col gap-6 overflow-x-hidden"
+      )}
       ref={ref}
       style={!inAIModel ? { height: `${height}px` } : { height: "100%" }}
     >
@@ -71,18 +75,32 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
           {samples?.map((item, index) => {
             const showBorder = index === samples.length - 1 ? false : true;
             return (
-              <Link
-                href={{
-                  pathname: `/chat`,
-                  query: { productId: props.productId, prompt: item },
-                }}
-                key={index}
-                className={`text-sm text-gray-500 leading-[20px] flex gap-[10px] border-b-[${
-                  showBorder ? "1" : "0"
-                }px] border-[#E5E7EB] hover:text-blue-400 text-left p-3 w-full`}
-              >
-                {item}
-              </Link>
+              <>
+                {props.productId ? (
+                  <Link
+                    href={{
+                      pathname: `/chat`,
+                      query: { productId: props.productId, prompt: item },
+                    }}
+                    key={index}
+                    className={`text-sm text-gray-500 leading-[20px] flex gap-[10px] border-b-[${
+                      showBorder ? "1" : "0"
+                    }px] border-[#E5E7EB] hover:text-blue-400 text-left p-3 w-full`}
+                  >
+                    {item}
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => onPromptClick?.(item)}
+                    key={index}
+                    className={`text-sm text-gray-500 leading-[20px] flex gap-[10px] border-b-[${
+                      showBorder ? "1" : "0"
+                    }px] border-[#E5E7EB] hover:text-blue-400 text-left p-3 w-full`}
+                  >
+                    {item}
+                  </button>
+                )}
+              </>
             );
           })}
         </ul>
