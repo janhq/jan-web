@@ -27,27 +27,46 @@ const MobileShowcase = () => {
           <span>& Android. Download the app today.</span>
         </p>
         <div className="flex justify-between items-center gap-3 mt-5">
-          <div className="bg-[#E5E7EB] rounded-[8px] gap-3 p-2 flex items-center">
-            <Image src={"/icons/apple.svg"} width={26} height={26} alt="" />
-            <div className="flex flex-col">
-              <span className="text-[8px] leading-[12px]">Download on the</span>
-              <h2 className="font-bold text-[12px] leading-[15px]">AppStore</h2>
+          <a
+            href={process.env.NEXT_PUBLIC_DOWNLOAD_APP_IOS || ""}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-[48%]"
+          >
+            <div className="flex box-border h-11 rounded-md bg-gray-300 p-2 items-center hover:bg-gray-200 focus:bg-gray-600">
+              <Image
+                src="/icons/social_icon_apple.svg"
+                alt={""}
+                width={26}
+                height={26}
+                style={{ objectFit: "contain" }}
+              />
+              <div className="ml-1">
+                <p className="text-[8px]">Download on the</p>
+                <p className="text-[10px] font-bold">AppStore</p>
+              </div>
             </div>
-          </div>
-          <div className="bg-[#E5E7EB] rounded-[8px] gap-3 p-2 flex items-center">
-            <Image
-              src={"/icons/googleplay.svg"}
-              width={26}
-              height={26}
-              alt=""
-            />
-            <div className="flex flex-col">
-              <span className="text-[8px] leading-[12px]">Download on the</span>
-              <h2 className="font-bold text-[12px] leading-[15px]">
-                Google Play
-              </h2>
+          </a>
+          <a
+            href={process.env.NEXT_PUBLIC_DOWNLOAD_APP_ANDROID || ""}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-[48%]"
+          >
+            <div className="flex box-border h-11 rounded-md bg-gray-300 p-2 items-center hover:bg-gray-200 focus:bg-gray-600">
+              <Image
+                src="/icons/google_play_logo.svg"
+                alt={""}
+                width={26}
+                height={26}
+                style={{ objectFit: "contain" }}
+              />
+              <div className="ml-1">
+                <p className="text-[8px]">Download on the</p>
+                <p className="text-[10px] font-bold">Google Play</p>
+              </div>
             </div>
-          </div>
+          </a>
         </div>
         <Link
           href={process.env.NEXT_PUBLIC_DISCORD_INVITATION_URL || ""}
