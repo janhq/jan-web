@@ -4,7 +4,7 @@ import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
-import { useAuth } from "@/contexts/auth_context";
+import { useAuth } from "@/contexts/authContext";
 
 const navigation = [
   { name: "Chat", icon: "/icons/chat.svg", href: "/chat" },
@@ -12,16 +12,12 @@ const navigation = [
 ];
 
 interface HeaderProps {
-  handleClickLogin: () => void;
   toggleDisplaySettingMenu: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({
-  handleClickLogin,
-  toggleDisplaySettingMenu,
-}) => {
+const Header: React.FC<HeaderProps> = ({ toggleDisplaySettingMenu }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { currentUser } = useAuth();
+  const { currentUser, setShowLogin } = useAuth();
 
   return (
     <header className="text-sm bg-white border-b-[1px] border-gray-200">
@@ -94,7 +90,7 @@ const Header: React.FC<HeaderProps> = ({
               <div className="flex justify-center">
                 <button
                   className="w-24 h-8 bg-black hover:bg-gray-700 text-white rounded-md"
-                  onClick={handleClickLogin}
+                  onClick={() => setShowLogin(true)}
                 >
                   Log in
                 </button>

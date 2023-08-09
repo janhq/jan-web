@@ -1,4 +1,4 @@
-import { useAuth } from "@/contexts/auth_context";
+import { useAuth } from "@/contexts/authContext";
 import { Dialog } from "@headlessui/react";
 import Link from "next/link";
 import React from "react";

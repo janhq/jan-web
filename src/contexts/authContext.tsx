@@ -17,8 +17,10 @@ import useGetUserConversations from "../hooks/useGetUserConversations";
 
 interface AuthContextType {
   currentUser: User | undefined;
+  showLogin: boolean;
   handleSignInWithGoogle: (onComplete: () => void) => Promise<void>;
   handleSignOut: () => Promise<void>;
+  setShowLogin: (show: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,6 +32,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | undefined>();
+  const [showLogin, setShowLogin] = useState<boolean>(false);
   const { getUserConversations } = useGetUserConversations();
 
   useEffect(() => {
@@ -76,7 +79,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, handleSignInWithGoogle, handleSignOut }}
+      value={{
+        currentUser,
+        showLogin,
+        handleSignInWithGoogle,
+        handleSignOut,
+        setShowLogin,
+      }}
     >
       {children}
     </AuthContext.Provider>
