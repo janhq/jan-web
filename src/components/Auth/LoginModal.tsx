@@ -1,33 +1,32 @@
 "use client";
 import React, { useRef } from "react";
 import Image from "next/image";
-import { useAuth } from "@/contexts/auth_context";
+import { useAuth } from "@/contexts/authContext";
 
-interface LoginModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+interface LoginModalProps {}
 
 /**
  * Modal of signing in with Google and other Authentication Provider
  * @returns
  */
-const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
+const LoginModal: React.FC<LoginModalProps> = () => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const { handleSignInWithGoogle } = useAuth();
+  const { showLogin, handleSignInWithGoogle, setShowLogin } = useAuth();
 
   const handleOutsideClick = (event: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-      onClose();
+      setShowLogin(false);
     }
   };
 
-  if (!isOpen) return null;
+  if (!showLogin) return null;
 
   // Handling sign in with Google & Firebase
   const signInWithGoole = async () => {
     try {
-      await handleSignInWithGoogle(onClose);
+      await handleSignInWithGoogle(() => {
+        setShowLogin(false);
+      });
     } catch (error) {
       console.log(error);
     }

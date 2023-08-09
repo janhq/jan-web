@@ -8,7 +8,6 @@ import HistoryList from "@/components/HistoryList";
 import SearchBar from "@/components/SearchBar";
 import ModelMenu from "@/components/ModelMenu";
 import ModelDetail from "@/components/ModelDetail";
-import { Product } from "@/models/Product";
 import MobileDownload from "@/components/MobileDownload";
 import { useStore } from "../../models/RootStore";
 import { ChatBlankState } from "@/components/ChatBlankState";
@@ -20,10 +19,12 @@ import { RemoteConfigKeys, useRemoteConfig } from "@/hooks/useRemoteConfig";
 import { useRouter, useSearchParams } from "next/navigation";
 import useCreateConversation from "@/hooks/useCreateConversation";
 import { ProductsProps, withProducts } from "@/hooks/withProducts";
+import { useAuth } from "@/contexts/authContext";
 
 const ChatContainer: React.FC<ProductsProps> = observer((props) => {
   const params = useSearchParams();
   const router = useRouter();
+  const { currentUser, setShowLogin } = useAuth();
   const newConvProductName = params.get("productId");
   const [searchText, setSearchText] = useState("");
   const ref = useRef<HTMLDivElement>(null);
@@ -55,6 +56,12 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
       Gleap.showFeedbackButton(true);
     }
   }, [conversation]);
+
+  useEffect(() => {
+    if (!currentUser || currentUser.isAnonymous) {
+      setShowLogin(true);
+    }
+  }, []);
 
   useEffect(() => {
     const createConversationAndActive = async () => {

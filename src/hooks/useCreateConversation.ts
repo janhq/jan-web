@@ -1,4 +1,4 @@
-import { useAuth } from "../contexts/auth_context";
+import { useAuth } from "../contexts/authContext";
 import { Product } from "../models/Product";
 import { useStore } from "../models/RootStore";
 import { DefaultUser } from "../models/User";

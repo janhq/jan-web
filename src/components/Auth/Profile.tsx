@@ -3,7 +3,7 @@ import Image from "next/image";
 import copy from "copy-to-clipboard";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAuth } from "@/contexts/auth_context";
+import { useAuth } from "@/contexts/authContext";
 import { useStore } from "../../models/RootStore";
 import Link from "next/link";
 

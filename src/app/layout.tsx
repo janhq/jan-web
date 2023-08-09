@@ -6,7 +6,7 @@ import { Inter } from "next/font/google";
 import { Header } from "@/components";
 import classNames from "classnames";
 import { Provider, RootInstance, initializeStore } from "../models/RootStore";
-import { AuthProvider } from "@/contexts/auth_context";
+import { AuthProvider } from "@/contexts/authContext";
 import LoginModal from "@/components/Auth/LoginModal";
 import SettingsModal from "@/components/Settings/SettingsModal";
 import Profile from "@/components/Auth/Profile";
@@ -30,14 +30,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const store = useRef<RootInstance>(initializeStore());
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSettingModal, setShowSettingsModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const { initAnalytics } = useTracking();
 
-  const toggleLoginModal = () => {
-    setShowLoginModal(!showLoginModal);
-  };
 
   // On/Off Setting Modal
   const toggleSettingsModal = () => {
@@ -74,11 +70,10 @@ export default function RootLayout({
           <Provider value={store.current}>
             <AuthProvider>
               <Header
-                handleClickLogin={toggleLoginModal}
                 toggleDisplaySettingMenu={toggleSettingsModal}
               />
               {children}
-              <LoginModal isOpen={showLoginModal} onClose={toggleLoginModal} />
+              <LoginModal />
               <SettingsModal
                 isOpen={showSettingModal}
                 setOpen={setShowSettingsModal}
