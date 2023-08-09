@@ -14,6 +14,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import useGetUserConversations from "../hooks/useGetUserConversations";
+import useTracking from "@/utils/posthog";
 
 interface AuthContextType {
   currentUser: User | undefined;
@@ -34,6 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [showLogin, setShowLogin] = useState<boolean>(false);
   const { getUserConversations } = useGetUserConversations();
+  const { identityUser } = useTracking();
 
   useEffect(() => {
     const currentAuth = getAuth(firebaseApp);
@@ -41,8 +43,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (user) {
         getUserConversations(user);
         setCurrentUser(user);
+        identityUser(user.email || user.displayName || user.uid);
       } else {
         setCurrentUser(undefined);
+        identityUser("");
       }
     });
     return unsubscribe;

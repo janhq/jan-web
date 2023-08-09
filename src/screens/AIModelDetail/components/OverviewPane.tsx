@@ -46,38 +46,34 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
       ref={ref}
       style={!inAIModel ? { height: `${height}px` } : { height: "100%" }}
     >
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 items-start">
         <h2 className="text-black font-bold">About this AI</h2>
-        <span>
-          <p className={`text-[#6B7280] ${read ? "hidden-text-model" : ""}`}>
-            {description}
-          </p>
-          <button
-            onClick={() => setRead(!read)}
-            className="text-[#1F2A37] font-bold"
-          >
-            {read ? "read more" : "read less"}
-          </button>
-        </span>
+        <p className={`text-[#6B7280] ${read ? "hidden-text-model" : ""}`}>
+          {description}
+        </p>
+        <button
+          onClick={() => setRead(!read)}
+          className="text-[#1F2A37] font-bold"
+        >
+          {read ? "read more" : "read less"}
+        </button>
       </div>
       <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-[16px]">
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 items-start">
           <h3 className="text-black font-bold">Technical Details</h3>
-          <p>
-            <p
-              className={`text-[#6B7280] ${
-                readMoreTechnical ? "hidden-text-model" : ""
-              }`}
-            >
-              {technicalDescription}
-            </p>
-            <button
-              onClick={() => setReadMoreTechnical(!readMoreTechnical)}
-              className="text-[#1F2A37] font-bold"
-            >
-              {readMoreTechnical ? "read more" : "read less"}
-            </button>
+          <p
+            className={`text-[#6B7280] ${
+              readMoreTechnical ? "hidden-text-model" : ""
+            }`}
+          >
+            {technicalDescription}
           </p>
+          <button
+            onClick={() => setReadMoreTechnical(!readMoreTechnical)}
+            className="text-[#1F2A37] font-bold"
+          >
+            {readMoreTechnical ? "read more" : "read less"}
+          </button>
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-[#6B7280] ">Model Version</span>
