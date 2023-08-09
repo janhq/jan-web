@@ -19,6 +19,7 @@ import useTracking from "@/utils/posthog";
 interface AuthContextType {
   currentUser: User | undefined;
   showLogin: boolean;
+  isReady: boolean;
   handleSignInWithGoogle: (onComplete: () => void) => Promise<void>;
   handleSignOut: () => Promise<void>;
   setShowLogin: (show: boolean) => void;
@@ -34,11 +35,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [showLogin, setShowLogin] = useState<boolean>(false);
+  const [isReady, setIsReady] = useState<boolean>(false);
   const { getUserConversations } = useGetUserConversations();
   const { identityUser } = useTracking();
 
   useEffect(() => {
     const currentAuth = getAuth(firebaseApp);
+    currentAuth.authStateReady().then(() => setIsReady(true));
     const unsubscribe = onAuthStateChanged(currentAuth, (user) => {
       if (user) {
         getUserConversations(user);
@@ -86,6 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         currentUser,
         showLogin,
+        isReady,
         handleSignInWithGoogle,
         handleSignOut,
         setShowLogin,
