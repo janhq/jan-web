@@ -19,6 +19,7 @@ const Discover: React.FC<ProductsProps> = (props) => {
               <div className="gap-5 lg:columns-2 columns-1">
                 <Slider product={props.categories.featured[0]} />
                 <Slider product={props.categories.featured[1]} />
+                
               </div>
             )}
           </div>
