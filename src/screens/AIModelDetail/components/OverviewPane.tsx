@@ -96,7 +96,7 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
             {samples?.map((prompt, index) => {
               const showBorder = index === samples.length - 1 ? false : true;
               return (
-                <>
+                <div key={prompt}>
                   {props.productId ? (
                     <Link
                       href={{
@@ -124,7 +124,7 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
                       {prompt}
                     </button>
                   )}
-                </>
+                </div>
               );
             })}
           </ul>
