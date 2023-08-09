@@ -98,14 +98,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
               </Link>
             </div>
             <div className="pl-3 pt-2 pb-2 hover:bg-gray-100 hover:cursor-pointer">
-              <a
-                href={process.env.NEXT_PUBLIC_SUPPORT_URL || ""}
-                target="_blank"
+              <Link
+                href="/support"
                 rel="noopener noreferrer"
                 onClick={() => setOpen(false)}
               >
                 Support
-              </a>
+              </Link>
             </div>
           </div>
           <div

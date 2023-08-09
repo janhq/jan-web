@@ -17,9 +17,8 @@ export default function Footer() {
         </Link>
         <span>&#8226;</span>
         <Link
-          href={process.env.NEXT_PUBLIC_SUPPORT_URL || ""}
+          href="/support"
           className="cursor-pointer"
-          target="_blank_"
         >
           Support
         </Link>
