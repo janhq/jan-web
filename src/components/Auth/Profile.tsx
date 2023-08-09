@@ -177,13 +177,12 @@ const Profile: React.FC<ProfileProps> = ({
           </p>
           <p className="text-center font-bold text-2xl pb-3 ml-2 mr-2">.</p>
           <p className="text-gray-500 hover:text-gray-800">
-            <a
-              href={process.env.NEXT_PUBLIC_SUPPORT_URL}
-              target="_blank"
+            <Link
+              href="/support"
               rel="noopener noreferrer"
             >
               Support
-            </a>
+            </Link>
           </p>
         </div>
       </div>

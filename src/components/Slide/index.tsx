@@ -26,7 +26,7 @@ const Slide: FC<ISlideprops> = (props) => {
               pathname: `/chat`,
               query: { productId: props.productId },
             }}
-            className="gap-2 px-5 py-[10px] rounded-md bg-white text-black"
+            className="flex w-40 items-center justify-center gap-2 px-5 py-[10px] rounded-md bg-white text-black"
           >
             Try now
           </Link>
