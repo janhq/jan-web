@@ -61,7 +61,7 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
     if (authReady && (!currentUser || currentUser.isAnonymous)) {
       setShowLogin(true);
     }
-  }, [authReady]);
+  }, [authReady, currentUser, setShowLogin]);
 
   useEffect(() => {
     const createConversationAndActive = async () => {
@@ -78,7 +78,7 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
       }
     };
     createConversationAndActive();
-  }, []);
+  }, [props.products]);
 
   const [open, setOpen] = useState(false);
 
