@@ -24,7 +24,7 @@ import { useAuth } from "@/contexts/authContext";
 const ChatContainer: React.FC<ProductsProps> = observer((props) => {
   const params = useSearchParams();
   const router = useRouter();
-  const { currentUser, setShowLogin } = useAuth();
+  const { currentUser, setShowLogin, isReady: authReady } = useAuth();
   const newConvProductName = params.get("productId");
   const [searchText, setSearchText] = useState("");
   const ref = useRef<HTMLDivElement>(null);
@@ -58,10 +58,10 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
   }, [conversation]);
 
   useEffect(() => {
-    if (!currentUser || currentUser.isAnonymous) {
+    if (authReady && (!currentUser || currentUser.isAnonymous)) {
       setShowLogin(true);
     }
-  }, []);
+  }, [authReady]);
 
   useEffect(() => {
     const createConversationAndActive = async () => {
