@@ -27,11 +27,13 @@ interface IChatContainerProps {
 const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
   const params = useSearchParams();
   const router = useRouter();
-  const newConvProductName = params.get("productName");
+  const newConvProductName = params.get("productId");
   const [searchText, setSearchText] = useState("");
-
   const ref = useRef<HTMLDivElement>(null);
-  const [prefillPrompt, setPrefillPrompt] = useState("");
+  const [prefillPrompt, setPrefillPrompt] = useState<string>(
+    params.get("prompt") || ""
+  );
+
   const { historyStore } = useStore();
   const { requestCreateConvo } = useCreateConversation();
 
@@ -60,15 +62,16 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
   useEffect(() => {
     const createConversationAndActive = async () => {
       if (newConvProductName && newConvProductName !== "") {
+        historyStore.setActiveConversationId(undefined);
         const product = products.find((e) => e.name === newConvProductName);
         if (product) {
           await requestCreateConvo(product);
-          router.replace("/chat", undefined);
+          router.replace(`/chat?prompt=${params.get("prompt")}`, undefined);
         }
       }
     };
     createConversationAndActive();
-  }, [newConvProductName, products, requestCreateConvo, router]);
+  }, []);
 
   const [open, setOpen] = useState(false);
 
@@ -115,7 +118,11 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
                   .includes(searchText.toLowerCase())
             )}
           />
-          {showHistoryList ? <HistoryList searchText={searchText}/> : <HistoryEmpty />}
+          {showHistoryList ? (
+            <HistoryList searchText={searchText} />
+          ) : (
+            <HistoryEmpty />
+          )}
         </div>
         <MobileDownload />
       </div>

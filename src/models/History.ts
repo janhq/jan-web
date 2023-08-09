@@ -151,9 +151,13 @@ export const History = types
     };
   })
   .actions((self) => {
-    const setActiveConversationId = flow(function* (convoId: string) {
+    const setActiveConversationId = flow(function* (
+      convoId: string | undefined
+    ) {
       self.activeConversationId = convoId;
-      yield self.fetchConversationMessages(convoId);
+      if (convoId) {
+        yield self.fetchConversationMessages(convoId);
+      }
     });
 
     return { setActiveConversationId };
