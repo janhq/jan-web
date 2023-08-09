@@ -21,12 +21,12 @@ export const UserToolbar: React.FC = observer(() => {
       <span className="flex gap-[2px] leading-[24px] text-[16px] font-semibold">
         {title}
       </span>
-      <Image
+      {/* <Image
         src="/icons/unicorn_angle-down.svg"
         width={24}
         height={24}
         alt=""
-      />
+      /> */}
     </div>
   );
 });
