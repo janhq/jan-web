@@ -21,6 +21,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import useCreateConversation from "@/hooks/useCreateConversation";
 
 interface IChatContainerProps {
+  shortcuts: Product[];
   products: Product[];
 }
 
@@ -43,9 +44,9 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
   const [heightChat, setHeightChat] = useState(0);
   const { getConfig } = useRemoteConfig();
 
-  const products = getConfig(RemoteConfigKeys.ENABLE_OFFLINE_MODEL)
-    ? props.products
-    : props.products.filter(
+  const shortcuts = getConfig(RemoteConfigKeys.ENABLE_OFFLINE_MODEL)
+    ? props.shortcuts
+    : props.shortcuts.filter(
         (e) => e.action?.params?.models[0]?.offline !== true
       );
 
@@ -63,10 +64,13 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
     const createConversationAndActive = async () => {
       if (newConvProductName && newConvProductName !== "") {
         historyStore.setActiveConversationId(undefined);
-        const product = products.find((e) => e.name === newConvProductName);
+        const product = props.products.find(
+          (e) => e.name === newConvProductName
+        );
         if (product) {
           await requestCreateConvo(product);
-          router.replace(`/chat?prompt=${params.get("prompt")}`, undefined);
+          if (params.get("prompt"))
+            router.replace(`/chat?prompt=${params.get("prompt")}`, undefined);
         }
       }
     };
@@ -109,7 +113,7 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
           style={heightNav > 0 ? { maxHeight: `${heightNav}px` } : {}}
         >
           <ShortcutList
-            products={products.filter(
+            products={shortcuts.filter(
               (e) =>
                 searchText === "" ||
                 e.name.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -155,7 +159,7 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
         </div>
       ) : (
         <div className="flex-1 flex flex-col w-full">
-          <ChatBlankState products={products} />
+          <ChatBlankState products={shortcuts} />
         </div>
       )}
       <div className="h-auto w-auto">
