@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FC } from "react";
 
 interface ISlideprops {
-  productName?: string;
+  productId?: string;
   image?: string;
   title?: string;
   description?: string;
@@ -24,7 +24,7 @@ const Slide: FC<ISlideprops> = (props) => {
           <Link
             href={{
               pathname: `/chat`,
-              query: { productName: props.productName },
+              query: { productId: props.productId },
             }}
             className="gap-2 px-5 py-[10px] rounded-md bg-white text-black"
           >

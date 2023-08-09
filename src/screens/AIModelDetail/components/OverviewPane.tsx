@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
 
 interface IOverviewPanelProps {
+  productId: string;
   description?: string;
   technicalVersion?: string;
   technicalURL?: string;
@@ -69,15 +71,18 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
           {samples?.map((item, index) => {
             const showBorder = index === samples.length - 1 ? false : true;
             return (
-              <button
-                onClick={() => onPromptClick?.(item)}
+              <Link
+                href={{
+                  pathname: `/chat`,
+                  query: { productId: props.productId, prompt: item },
+                }}
                 key={index}
                 className={`text-sm text-gray-500 leading-[20px] flex gap-[10px] border-b-[${
                   showBorder ? "1" : "0"
                 }px] border-[#E5E7EB] hover:text-blue-400 text-left p-3 w-full`}
               >
                 {item}
-              </button>
+              </Link>
             );
           })}
         </ul>

@@ -25,13 +25,14 @@ export const AIModelDetail: React.FC<AIModelDetailProps> = ({ product }) => {
     if (!ref.current) return;
     setInAIModel(ref.current.offsetHeight);
   }, []);
+
   return (
     <div className="container mx-auto">
       <ModelDetailHeader
         modelTitle={product.decoration.title}
-        productName={product.name}
+        productId={product.name}
       />
-      <div className="flex justify-between mt-2 gap-8">
+      <div className="flex justify-between mt-2 mb-12 gap-8">
         <div className="flex flex-col flex-1">
           {/* <div className="flex items-center gap-2 w-[350px]">
             <button
@@ -55,9 +56,10 @@ export const AIModelDetail: React.FC<AIModelDetailProps> = ({ product }) => {
               API
             </button>
           </div> */}
-          <div className="mt-3 h-full flex-1 " ref={ref}>
+          <div className="mt-3 h-full flex-1" ref={ref}>
             {tab === "overview" ? (
               <OverviewPane
+                productId={product.name}
                 inAIModel={inAIModel}
                 description={product.decoration.description}
                 samples={
