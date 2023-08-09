@@ -23,8 +23,12 @@ async function getFirebaseToken() {
   }
 
   // If user is not signed in, perform anonymous sign-in and return the token
-  const credential = await signInAnonymously(firebaseAuth);
-  return credential.user.getIdToken();
+  try {
+    const credential = await signInAnonymously(firebaseAuth);
+    return credential.user.getIdToken();
+  } catch {
+    return null;
+  }
 }
 
 export { firebaseAuth, getCurrentUser, getFirebaseToken };
