@@ -82,6 +82,7 @@ const ModelDetail: FC<Props> = observer(({ onPromptClick }) => {
             samples={conversation?.aiModel.defaultPrompts}
             technicalURL={conversation?.aiModel.modelUrl}
             technicalVersion={conversation?.aiModel.modelVersion}
+            technicalDescription={conversation?.aiModel.modelDescription || conversation?.aiModel.description}
             onPromptClick={onPromptClick}
           />
         ) : (

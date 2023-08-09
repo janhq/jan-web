@@ -73,6 +73,7 @@ const AIModelDetail: React.FC<AIModelDetailProps> = (props) => {
                     }
                     technicalURL={product.decoration.technicalURL}
                     technicalVersion={product.decoration.technicalVersion}
+                    technicalDescription={product.decoration.technicalDescription}
                   />
                 ) : (
                   <ApiPane />

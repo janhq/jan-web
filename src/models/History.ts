@@ -203,7 +203,7 @@ export const History = types
         MessageSenderType.Ai,
         conversation.aiModel.name,
         conversation.aiModel.title,
-        conversation.aiModel.avatarUrl,
+        conversation.aiModel.avatarUrl || "",
         ""
       );
 
@@ -223,7 +223,7 @@ export const History = types
         messageSenderType: MessageSenderType.Ai,
         senderUid: conversation.aiModel.name,
         senderName: conversation.aiModel.title,
-        senderAvatarUrl: conversation.aiModel.avatarUrl,
+        senderAvatarUrl: conversation.aiModel.avatarUrl || "",
         text: "",
         createdAt: Date.now(),
       });
@@ -296,7 +296,7 @@ export const History = types
           MessageSenderType.Ai,
           conversation.aiModel.name,
           conversation.aiModel.title,
-          conversation.aiModel.avatarUrl,
+          conversation.aiModel.avatarUrl || "",
           "",
           imageUrl
         );
@@ -314,7 +314,7 @@ export const History = types
           messageSenderType: MessageSenderType.Ai,
           senderUid: conversation.aiModel.name,
           senderName: conversation.aiModel.title,
-          senderAvatarUrl: conversation.aiModel.avatarUrl,
+          senderAvatarUrl: conversation.aiModel.avatarUrl || "",
           imageUrls: data.outputs,
           createdAt: Date.now(),
         });
@@ -393,7 +393,7 @@ export const History = types
           MessageSenderType.Ai,
           newAiModel.modelId,
           newAiModel.title,
-          newAiModel.avatarUrl,
+          newAiModel.avatarUrl || "",
           welcomeText
         );
 
@@ -413,7 +413,7 @@ export const History = types
           messageSenderType: MessageSenderType.Ai,
           senderUid: newAiModel.modelId,
           senderName: newAiModel.title,
-          senderAvatarUrl: newAiModel.avatarUrl,
+          senderAvatarUrl: newAiModel.avatarUrl || "",
           text: welcomeText,
           createdAt: Date.now(),
         });

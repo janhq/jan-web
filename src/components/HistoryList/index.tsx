@@ -17,14 +17,18 @@ const HistoryList: React.FC<IHistoryListProps> = observer((props) => {
         .filter(
           (e) =>
             props.searchText === "" ||
-            e.aiModel.title.toLowerCase().includes(props.searchText.toLowerCase()) ||
-            e.aiModel.description.toLowerCase().includes(props.searchText.toLowerCase())
+            e.aiModel.title
+              .toLowerCase()
+              .includes(props.searchText.toLowerCase()) ||
+            e.aiModel.description
+              ?.toLowerCase()
+              .includes(props.searchText.toLowerCase())
         )
         .map(({ id, aiModel, updatedAt }) => (
           <HistoryItem
             key={id}
             conversationId={id}
-            avatarUrl={aiModel.avatarUrl}
+            avatarUrl={aiModel.avatarUrl || ""}
             name={aiModel.title}
             updatedAt={updatedAt}
           />
