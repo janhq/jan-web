@@ -5,14 +5,16 @@ import { observer } from "mobx-react-lite";
 
 type Props = {
   onDeleteClick: () => void;
+  onCreateConvClick: () => void
 };
 
-const ModelMenu: React.FC<Props> = observer(({ onDeleteClick }) => {
+const ModelMenu: React.FC<Props> = observer(({ onDeleteClick, onCreateConvClick }) => {
   const { historyStore } = useStore();
 
   const onModelInfoClick = useCallback(() => {
     historyStore.toggleModelDetail();
   }, []);
+ 
 
   return (
     <div className="flex items-center gap-3">
@@ -28,7 +30,7 @@ const ModelMenu: React.FC<Props> = observer(({ onDeleteClick }) => {
           alt=""
         />
       </button>
-      <button>
+      <button onClick={onCreateConvClick}>
         <Image src="/icons/unicorn_plus.svg" width={24} height={24} alt="" />
       </button>
       <button onClick={onDeleteClick}>
