@@ -5,9 +5,17 @@ import { DefaultUser } from "../models/User";
 
 const useCreateConversation = () => {
   const { historyStore } = useStore();
-  const { currentUser } = useAuth();
+  const { currentUser, setShowLogin } = useAuth();
 
-  const requestCreateConvo = (product: Product, forceCreate: boolean = false) => {
+  const requestCreateConvo = (
+    product: Product,
+    forceCreate: boolean = false
+  ) => {
+    if (!currentUser || currentUser.isAnonymous) {
+      setShowLogin(true);
+      return;
+    }
+
     const modelId = product.action.params.models[0].name;
     if (!modelId) {
       console.error("No model id found");
