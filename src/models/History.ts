@@ -297,7 +297,7 @@ export const History = types
           conversation.aiModel.name,
           conversation.aiModel.title,
           conversation.aiModel.avatarUrl || "",
-          "",
+          message || "",
           imageUrl
         );
 
@@ -315,6 +315,7 @@ export const History = types
           senderUid: conversation.aiModel.name,
           senderName: conversation.aiModel.title,
           senderAvatarUrl: conversation.aiModel.avatarUrl || "",
+          text: message,
           imageUrls: data.outputs,
           createdAt: Date.now(),
         });
