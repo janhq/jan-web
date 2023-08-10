@@ -7,43 +7,24 @@ import { ChatBody } from "@/components/ChatBody";
 import { InputToolbar } from "@/components/InputToolbar";
 import { UserToolbar } from "@/components/UserToolbar";
 import ModelMenu from "@/components/ModelMenu";
-import { Product } from "@/models/Product";
 import { useStore } from "../../models/RootStore";
 import { observer } from "mobx-react-lite";
 import Gleap from "gleap";
 import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
-import { RemoteConfigKeys, useRemoteConfig } from "@/hooks/useRemoteConfig";
 import { ModelDetailSideBar } from "../ModelDetailSideBar";
 import NewChatBlankState from "../NewChatBlankState";
 
-interface IChatContainerProps {
-  products: Product[];
-}
-
-const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
+const ChatContainer: React.FC = observer(() => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [prefillPrompt, setPrefillPrompt] = useState("");
   const { historyStore } = useStore();
-
   const showBodyChat = historyStore.activeConversationId != null;
-
-  const { getConfig } = useRemoteConfig();
-
-  const products = getConfig(RemoteConfigKeys.ENABLE_OFFLINE_MODEL)
-    ? props.products
-    : props.products.filter(
-        (e) => e.action?.params?.models[0]?.offline !== true
-      );
-
   const conversation = historyStore.getActiveConversation();
 
   useEffect(() => {
-    if (conversation) {
-      Gleap.showFeedbackButton(false);
-    } else {
-      Gleap.showFeedbackButton(true);
-    }
+    Gleap.showFeedbackButton(conversation ? false : true);
   }, [conversation]);
+
   const [open, setOpen] = useState(false);
 
   const onConfirmDelete = () => {
@@ -140,7 +121,7 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
 
       {showBodyChat ? (
         <div className="flex-1 flex flex-col w-full">
-          <div className="flex w-full px-3 py-1 border-b border-gray-200 bg-white shadow-sm sm:px-3 lg:px-3">
+          <div className="flex w-full overflow-hidden flex-shrink-0 px-3 py-1 border-b dark:bg-gray-950 border-gray-200 bg-white shadow-sm sm:px-3 lg:px-3">
             <button
               type="button"
               className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
@@ -161,19 +142,16 @@ const ChatContainer: React.FC<IChatContainerProps> = observer((props) => {
               <ModelMenu onDeleteClick={() => setOpen(true)} />
             </div>
           </div>
-          <main className="w-full h-full">
+          <main className="w-full h-full overflow-hidden">
             <div className="flex flex-col h-full px-1 sm:px-2 lg:px-3">
-              <ChatBody />
+              <ChatBody onPromptSelected={onSuggestPromptClick} />
               <InputToolbar prefillPrompt={prefillPrompt} />
             </div>
           </main>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col w-full">
-          <NewChatBlankState />
-        </div>
+        <NewChatBlankState />
       )}
-
       <ModelDetailSideBar onPromptClick={onSuggestPromptClick} />
     </div>
   );

@@ -7,8 +7,14 @@ import SimpleImageMessage from "../SimpleImageMessage";
 import SimpleTextMessage from "../SimpleTextMessage";
 import { Instance } from "mobx-state-tree";
 import { GenerativeSampleContainer } from "../GenerativeSampleContainer";
+import { AiModelType } from "../../models/AiModel";
+import SampleLlmContainer from "../SampleLlmContainer";
 
-export const ChatBody: React.FC = observer(() => {
+type Props = {
+  onPromptSelected: (prompt: string) => void;
+};
+
+export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
   const { historyStore } = useStore();
@@ -38,36 +44,54 @@ export const ChatBody: React.FC = observer(() => {
     historyStore.fetchMoreMessages();
   };
 
-  // TODO: add condition to show default SampleContainer
-  const shouldShowDefaultSampleContainer = convo?.chatMessages.length === 0;
+  const messages = historyStore.getActiveMessages();
+
+  const shouldShowSampleContainer = messages.length === 0;
+
+  const shouldShowImageSampleContainer =
+    shouldShowSampleContainer &&
+    convo &&
+    convo.aiModel.aiModelType === AiModelType.GenerativeArt;
+
+  const model = convo?.aiModel;
 
   return (
-    <div
-      className={`flex-grow w-full flex flex-col justify-end h-fit relative`}
-      ref={ref}
-    >
-      <div
-        className="flex flex-col-reverse"
-        style={{
-          height: height + "px",
-          overflowX: "hidden",
-        }}
-      >
-        <InfiniteScroll isReverse={true} loadMore={loadFunc} hasMore={hasMore}>
-          <div
-            className={`flex flex-col justify-end gap-8 py-2`}
-            ref={refContent}
+    <div className="flex-grow flex flex-col h-fit overflow-x-hidden" ref={ref}>
+      {shouldShowSampleContainer && model ? (
+        shouldShowImageSampleContainer ? (
+          <GenerativeSampleContainer />
+        ) : (
+          <SampleLlmContainer
+            model={convo?.aiModel}
+            onPromptSelected={onPromptSelected}
+          />
+        )
+      ) : (
+        <div
+          className="flex flex-col-reverse"
+          style={{
+            height: height + "px",
+            overflowX: "hidden",
+          }}
+        >
+          <InfiniteScroll
+            isReverse={true}
+            loadMore={loadFunc}
+            hasMore={hasMore}
           >
-            {shouldShowDefaultSampleContainer && <GenerativeSampleContainer />}
-            {historyStore
-              .getActiveMessages()
-              .slice()
-              .sort((a, b) => a.createdAt - b.createdAt)
-              .map((message, index) => renderItem(index, message))}
-            <div ref={refSmooth} />
-          </div>
-        </InfiniteScroll>
-      </div>
+            <div
+              className={`flex flex-col justify-end gap-8 py-2`}
+              ref={refContent}
+            >
+              {messages
+                .slice()
+                .sort((a, b) => a.createdAt - b.createdAt)
+                .map((message, index) => renderItem(index, message))}
+              <div ref={refSmooth} />
+            </div>
+          </InfiniteScroll>
+        </div>
+      )}
     </div>
   );
 });

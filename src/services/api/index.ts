@@ -3,7 +3,6 @@ import {
   fetchEventSource,
   EventStreamContentType,
 } from "@microsoft/fetch-event-source";
-
 import { getFirebaseToken } from "../firebase";
 import type {
   ApiConfig,

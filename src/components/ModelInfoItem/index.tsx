@@ -8,7 +8,7 @@ type Props = {
 const ModelInfoItem: React.FC<Props> = ({ description, name }) => (
   <div className="flex flex-col flex-1">
     <span className="text-gray-500 font-normal text-sm">{name}</span>
-    <span className="text-black font-normal text-sm">{description}</span>
+    <span className="font-normal text-sm">{description}</span>
   </div>
 );
 

@@ -78,11 +78,11 @@ export const MenuHeader: React.FC<Props> = ({ onLogOutClick }) => {
           Sign Out
         </button>
         <hr />
-        <div className="flex gap-2 px-4 py-2 justify-center">
+        <div className="flex gap-2 px-4 py-2 justify-center items-center">
           <Link href={process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || ""}>
             <span className="text-[#6B7280] text-xs">Privacy</span>
           </Link>
-          <Image src={"/icons/ico_Ellipse.svg"} width={3} height={3} alt="" />
+          <div className="w-1 h-1 bg-[#D9D9D9] rounded-lg"/>
           <Link href={process.env.NEXT_PUBLIC_SUPPORT_URL || ""}>
             <span className="text-[#6B7280] text-xs">Support</span>
           </Link>

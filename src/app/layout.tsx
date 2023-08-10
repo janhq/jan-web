@@ -10,6 +10,7 @@ import { SidebarLeft } from "@/components/SidebarLeft";
 import { AdvancedPrompt } from "@/components/AdvancedPrompt";
 import Header from "@/components/Header";
 import { CompactSideBar } from "@/components/CompactSideBar";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,17 +36,21 @@ export default function RootLayout({
         {store && (
           <Provider value={store.current}>
             <AuthProvider>
-              <div className="flex w-full h-screen">
-                <div className="flex h-screen">
-                  <SidebarLeft />
-                  <CompactSideBar />
-                  <AdvancedPrompt />
+              <ThemeProvider enableSystem={true} attribute="class">
+                <div className="flex w-full h-screen">
+                  <div className="flex h-screen">
+                    <SidebarLeft />
+                    <CompactSideBar />
+                    <AdvancedPrompt />
+                  </div>
+                  <div className="flex flex-col flex-1 h-screen">
+                    <Header />
+                    <div className="w-full h-full flex-1 overflow-x-hidden">
+                      {children}
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-col flex-1">
-                  <Header />
-                  <div className="w-full h-full flex-1">{children}</div>
-                </div>
-              </div>
+              </ThemeProvider>
             </AuthProvider>
           </Provider>
         )}

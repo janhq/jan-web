@@ -1,39 +1,24 @@
+"use client";
+
 import { AiSearch, Slider } from "@/components";
 import AiTypeList from "@/components/AiTypeList";
 import ConversationalList from "@/components/ConversationalList";
 import GenerateImageList from "@/components/GenerateImageList";
 import Footer from "@/components/Footer";
-import { api } from "@/services/api";
-import { Product, Section } from "@/models/Product";
+import useGetProducts from "../../hooks/useGetProducts";
+import React, { useEffect } from "react";
 
-const AiPage: React.FC = async () => {
-  
-  const discover = await api.getConfigurations("discover");
-  const categoryProducts: Product[] =
-    discover.kind === "ok"
-      ? discover.configuration?.sections?.find(
-          (section: Section) => section.name === "all_categories"
-        )?.products
-      : [];
+const AiPage: React.FC = () => {
+  const {
+    fetchConfigurations,
+    featuredProducts,
+    conversationalProducts,
+    generateImageProducts,
+  } = useGetProducts();
 
-  const featured: Product[] =
-    discover.kind === "ok"
-      ? discover.configuration?.sections?.find(
-          (section: Section) => section.name === "featured"
-        )?.products
-      : [];
-
-  const conversationals: Product[] =
-    categoryProducts
-      ?.filter((e) => e.name === "conversational")
-      .flatMap((e) => e.action.params.products)
-      .filter((e): e is Product => !!e) || [];
-
-  const generateImages: Product[] =
-    categoryProducts
-      ?.filter((e) => e.name === "text_to_image")
-      .flatMap((e) => e.action.params.products)
-      .filter((e): e is Product => !!e) || [];
+  useEffect(() => {
+    fetchConfigurations();
+  }, []);
 
   return (
     <main className="container m-auto flex flex-col space-y-8">
@@ -46,18 +31,18 @@ const AiPage: React.FC = async () => {
         </div>
         <div className="flex gap-20">
           <div className="w-[70%]">
-            <Slider product={featured[0]} />
+            <Slider product={featuredProducts[0]} />
           </div>
           <div className="w-[30%]">
             <AiTypeList
-              conversationals={conversationals}
-              generativeArts={generateImages}
+              conversationals={conversationalProducts}
+              generativeArts={generateImageProducts}
             />
           </div>
         </div>
       </div>
-      <ConversationalList products={conversationals} />
-      <GenerateImageList products={generateImages} />
+      <ConversationalList products={conversationalProducts} />
+      <GenerateImageList products={generateImageProducts} />
       <Footer />
     </main>
   );

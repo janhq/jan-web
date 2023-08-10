@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import JanImage from "../JanImage";
 import { displayDate } from "@/utils/datetime";
+import Image from "next/image";
 
 type Props = {
   conversationId: string;
@@ -22,7 +23,9 @@ const HistoryItem: React.FC<Props> = observer(
 
     const conversation = historyStore.getConversationById(conversationId);
     const isSelected = historyStore.activeConversationId === conversationId;
-    const backgroundColor = isSelected ? "bg-gray-100" : "bg-white";
+    const backgroundColor = isSelected
+      ? "bg-gray-100 dark:bg-gray-700"
+      : "bg-white dark:bg-gray-500";
 
     let rightImageUrl: string | undefined;
     if (conversation && conversation.isWaitingForModelResponse) {
@@ -38,17 +41,17 @@ const HistoryItem: React.FC<Props> = observer(
 
     return (
       <button
-        className={`flex flex-row items-center gap-2 w-full rounded-[8px] p-2 ${backgroundColor}`}
+        className={`flex flex-row items-center gap-[10px] rounded-lg p-2 ${backgroundColor}`}
         onClick={onClick}
       >
-        <img
+        <Image
           className="rounded-full"
           src={avatarUrl}
           width={36}
           height={36}
           alt=""
         />
-        <div className="flex flex-col  text-sm leading-[20px] w-full">
+        <div className="flex flex-col justify-between text-sm leading-[20px] w-full">
           <div className="flex flex-row items-center justify-between">
             <span className="text-gray-900 text-left">{name}</span>
             <span className="text-[11px] leading-[13px] tracking-[-0.4px] text-gray-400">
@@ -58,7 +61,7 @@ const HistoryItem: React.FC<Props> = observer(
           <div className="flex items-center justify-between gap-1">
             <div className="flex-1">
               <span className="text-gray-400 hidden-text text-left">
-                {conversation?.lastTextMessage}
+                {conversation?.lastTextMessage || <br className="h-5 block" />}
               </span>
             </div>
             {send ? (

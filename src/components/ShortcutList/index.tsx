@@ -12,23 +12,25 @@ const ShortcutList: React.FC<Props> = observer(({ products }) => {
   const [expand, setExpand] = React.useState<boolean>(true);
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full px-3 pt-3">
       <button
         onClick={() => setExpand(!expand)}
-        className="flex w-full justify-between items-center pb-3"
+        className="flex justify-between items-center"
       >
         <h2 className="text-[#9CA3AF] font-bold text-xs leading-[12px]">
           SHORTCUTS
         </h2>
         <Image
-          className={`${expand ? "rotate-180" : "transition"}`}
-          src={"/icons/arrow-gray.svg"}
-          width={10.25}
-          height={6.25}
+          className={`${expand ? "" : "rotate-180"}`}
+          src={"/icons/unicorn_angle-up.svg"}
+          width={24}
+          height={24}
           alt=""
         />
       </button>
-      <div className={`flex flex-col gap-4 ${!expand ? "hidden " : "block"}`}>
+      <div
+        className={`flex flex-col gap-3 py-2 ${!expand ? "hidden " : "block"}`}
+      >
         {products.map((product, index) => (
           <ShortcutItem key={index} product={product} />
         ))}
