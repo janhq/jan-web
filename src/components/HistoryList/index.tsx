@@ -24,6 +24,7 @@ const HistoryList: React.FC<IHistoryListProps> = observer((props) => {
               ?.toLowerCase()
               .includes(props.searchText.toLowerCase())
         )
+        .sort((n1, n2) => (n2.updatedAt || 0) - (n1.updatedAt || 0))
         .map(({ id, aiModel, updatedAt }) => (
           <HistoryItem
             key={id}
