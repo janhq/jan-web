@@ -6,6 +6,8 @@ import { ChatMessage, MessageType } from "../../models/ChatMessage";
 import SimpleImageMessage from "../SimpleImageMessage";
 import SimpleTextMessage from "../SimpleTextMessage";
 import { Instance } from "mobx-state-tree";
+import Lottie from "react-lottie";
+import animationData from "/public/lotties/typing";
 
 type Props = {
   chatHeight: number;
@@ -21,6 +23,15 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
   const refContent = useRef<HTMLDivElement>(null);
   const convo = historyStore.getActiveConversation();
   const hasMore = !convo?.isFetching && (convo?.hasMore ?? false);
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
 
   useLayoutEffect(() => {
     if (chatHeight > 60 && ref.current?.offsetHeight) {
@@ -43,12 +54,6 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
   const loadFunc = () => {
     historyStore.fetchMoreMessages();
   };
-
-  const loader = (
-    <div key="loader" className="loader">
-      Loading ...
-    </div>
-  );
 
   return (
     <div className={`flex-1 w-full flex flex-col justify-end h-fit`} ref={ref}>
@@ -73,7 +78,14 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
               {historyStore
                 .getActiveMessages()
                 .map((message, index) => renderItem(index, message))}
-              <div ref={refSmooth} />
+              <div ref={refSmooth}>
+                {convo?.isWaitingForModelResponse && (
+                  <div className="w-[50px] h-[50px] flex flex-row items-start justify-start">
+                    <Lottie options={defaultOptions} height={50} width={50} />
+                  </div>
+                )}
+              </div>
+              {/* Typing */}
             </div>
           </InfiniteScroll>
         </div>

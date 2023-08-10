@@ -450,6 +450,7 @@ export const History = types
         );
         return;
       }
+      conversation.setWaitingForModelResponse(true);
 
       const createMessageResult = yield api.createNewTextChatMessage(
         conversation.id,
@@ -466,6 +467,7 @@ export const History = types
           "Error creating user message",
           JSON.stringify(createMessageResult)
         );
+        conversation.setWaitingForModelResponse(false);
         return;
       }
 
@@ -482,7 +484,6 @@ export const History = types
       });
       conversation.addMessage(userMesssage);
       conversation.setProp("lastTextMessage", message);
-      conversation.setWaitingForModelResponse(true);
 
       if (conversation.aiModel.aiModelType === AiModelType.LLM) {
         yield self.sendTextToTextMessage(conversation);
