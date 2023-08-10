@@ -50,11 +50,15 @@ export const History = types
         console.error("Could not get convo", convoId);
         return;
       }
+      if(convo?.isFetching) {
+        return
+      }
 
       if (!convo.hasMore) {
         console.info("Already load all messages of convo", convoId);
         return;
       }
+      convo.isFetching = true;
 
       const result = yield api.getConversationMessages(
         convoId,
@@ -63,6 +67,7 @@ export const History = types
       );
 
       if (result.kind !== "ok") {
+        convo.isFetching = false
         console.error(`Error`, JSON.stringify(result));
         return;
       }
@@ -103,8 +108,11 @@ export const History = types
           })
         );
       });
-
-      self.getActiveConversation()?.pushMessages(messages);
+      convo.setProp(
+        "chatMessages",
+        messages.reverse().concat(convo.chatMessages)
+      );
+      convo.isFetching = false
     });
 
     return { fetchConversationMessages };

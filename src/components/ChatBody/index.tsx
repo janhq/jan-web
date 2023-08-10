@@ -20,7 +20,7 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
 
   const refContent = useRef<HTMLDivElement>(null);
   const convo = historyStore.getActiveConversation();
-  const hasMore = convo?.hasMore ?? false;
+  const hasMore = !convo?.isFetching && (convo?.hasMore ?? false);
 
   useLayoutEffect(() => {
     if (chatHeight > 60 && ref.current?.offsetHeight) {
@@ -31,7 +31,7 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
   }, [chatHeight]);
 
   useEffect(() => {
-    refSmooth.current?.scrollIntoView({ behavior: "smooth" });
+    refSmooth.current?.scrollIntoView({ behavior: "instant" });
   }, [heightContent]);
 
   useLayoutEffect(() => {
@@ -64,6 +64,7 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
             loadMore={loadFunc}
             hasMore={hasMore}
             initialLoad={true}
+            useWindow={false}
           >
             <div
               className={`flex flex-col justify-end gap-8 py-2`}
