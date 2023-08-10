@@ -31,9 +31,9 @@ const SimpleTextMessage: React.FC<Props> = ({
           {displayDate(createdAt)}
         </div>
       </div>
-      <pre className="leading-[20px] text-sm whitespace-break-spaces">
+      <p className="leading-[20px] whitespace-break-spaces text-[14px] font-normal">
         {text}
-      </pre>
+      </p>
     </div>
   </div>
 );
