@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/models/RootStore";
 
@@ -12,10 +11,8 @@ export const UserToolbar: React.FC = observer(() => {
   return (
     <div className="flex items-center gap-3 p-1">
       <img
-        className="rounded-full"
+        className="rounded-full aspect-square w-8 h-8"
         src={avatarUrl}
-        width={36}
-        height={36}
         alt=""
       />
       <span className="flex gap-[2px] leading-[24px] text-[16px] font-semibold">

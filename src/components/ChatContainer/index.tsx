@@ -137,7 +137,7 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
 
       {showBodyChat ? (
         <div className="flex-1 flex flex-col w-full">
-          <div className="flex h-16 w-full shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+          <div className="flex h-16 w-full shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white shadow-sm sm:gap-x-6 px-2">
             {/* Separator */}
             <div
               className="h-6 w-px bg-gray-200 lg:hidden"
