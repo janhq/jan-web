@@ -6,25 +6,13 @@ import { AiModel, AiModelType } from "../models/AiModel";
 import { Conversation } from "../models/Conversation";
 import { DefaultUser, User } from "../models/User";
 import { User as FirebaseUser } from "firebase/auth";
+import { fetchProducts } from "@/services/products";
 
 const useGetUserConversations = () => {
   const { historyStore } = useStore();
 
-  const getProducts = async (): Promise<Product[]> => {
-    const discover = await api.getConfigurations("discover");
-    const categoryProducts: Product[] =
-      discover.kind === "ok"
-        ? discover.configuration?.sections?.find(
-            (section: Section) => section.name === "all_categories"
-          )?.products
-        : [];
-    const childProducts: Product[] = [];
-    categoryProducts.forEach((product) => {
-      if (product.action.params.products) {
-        childProducts.push(...product.action.params.products);
-      }
-    });
-    return childProducts;
+  const getProducts = (): Promise<Product[]> => {
+    return fetchProducts().then((products) => products || []);
   };
 
   const getUserConversations = async (firebaseUser: FirebaseUser) => {

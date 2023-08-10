@@ -1,11 +1,13 @@
 import AIModelDetail from "@/screens/AIModelDetail";
+import { fetchDiscoverShortcuts } from "@/services/products";
 
 interface IModelDetailProps {
   params: { slug: string };
 }
 
 const ModelDetail: React.FC<IModelDetailProps> = async ({ params }) => {
-  return <AIModelDetail slug={params.slug} />;
+  const props = await fetchDiscoverShortcuts();
+  return <AIModelDetail slug={params.slug} {...props} />;
 };
 
 export default ModelDetail;
