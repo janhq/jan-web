@@ -70,7 +70,7 @@ export const History = types
       if (result.messages.length < MESSAGE_PER_PAGE) {
         convo.setHasMore(false);
       }
-      
+
       convo.offset += result.messages.length;
 
       const messages: Instance<typeof ChatMessage>[] = [];
@@ -384,6 +384,7 @@ export const History = types
           avatarUrl,
         }),
         createdAt: Date.now(),
+        updatedAt: Date.now(),
       });
 
       const welcomeText = product.action.params.welcomeMessage;
@@ -418,8 +419,8 @@ export const History = types
           createdAt: Date.now(),
         });
         newConvo.addMessage(welcomeMsg);
+        newConvo.setProp("lastTextMessage", welcomeMsg.text);
       }
-
       self.conversations.push(newConvo);
       self.activeConversationId = newConvo.id;
     });

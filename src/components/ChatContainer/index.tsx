@@ -102,8 +102,10 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
     setSearchText(text);
   };
   const createNewConversation = async () => {
-    const product = props.products?.find((e) => e.name === newConvProductName);
-    if (product) await requestCreateConvo(product);
+    const product = props.products?.find(
+      (e) => e.name === historyStore.getActiveConversation()?.aiModel.name
+    );
+    if (product) await requestCreateConvo(product, true);
   };
 
   useLayoutEffect(() => {

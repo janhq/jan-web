@@ -7,7 +7,7 @@ const useCreateConversation = () => {
   const { historyStore } = useStore();
   const { currentUser } = useAuth();
 
-  const requestCreateConvo = (product: Product) => {
+  const requestCreateConvo = (product: Product, forceCreate: boolean = false) => {
     const modelId = product.action.params.models[0].name;
     if (!modelId) {
       console.error("No model id found");
@@ -20,7 +20,7 @@ const useCreateConversation = () => {
         convo.aiModel.modelId === modelId && convo.chatMessages.length <= 1
     );
 
-    if (convo) {
+    if (convo && !forceCreate) {
       historyStore.setActiveConversationId(convo.id);
       return;
     }
