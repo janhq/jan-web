@@ -165,9 +165,6 @@ export const History = types
   .actions((self) => ({
     setConversations(conversations: Instance<typeof Conversation>[]) {
       self.conversations = castToSnapshot(conversations);
-      if (conversations.length > 0) {
-        self.activeConversationId = conversations[0].id;
-      }
     },
 
     clearAllConversations() {

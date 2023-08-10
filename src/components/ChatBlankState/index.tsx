@@ -17,7 +17,7 @@ export const ChatBlankState: React.FC<Props> = ({ products }) => {
     .slice(0, 2);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full bg-[#D9D9D9]">
+    <div className="flex flex-col items-center justify-center w-full h-full bg-white">
       <div className="flex flex-col gap-6 w-[400px]">
         <div className="flex gap-2 flex-col">
           <TitleBlankState title="Get instant answers, find creative inspiration, and learn something new" />

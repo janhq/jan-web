@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/authContext";
 import SettingsModal from "../Settings/SettingsModal";
 import Profile from "../Auth/Profile";
+import { usePathname } from "next/navigation";
+import classNames from "classnames";
 
 const navigation = [
   { name: "Chat", icon: "/icons/chat.svg", href: "/chat" },
@@ -18,6 +20,7 @@ interface HeaderProps {}
 const Header: React.FC<HeaderProps> = ({}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { currentUser, setShowLogin } = useAuth();
+  const path = usePathname();
 
   const [showSettingModal, setShowSettingsModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -46,13 +49,13 @@ const Header: React.FC<HeaderProps> = ({}) => {
   return (
     <header className="text-sm bg-white border-b-[1px] border-gray-200">
       <nav
-        className="mx-auto flex items-center justify-between p-6 lg:px-8"
+        className="mx-auto flex items-center justify-between p-2 lg:px-5"
         aria-label="Global"
       >
         <div className="flex space-x-5 items-center">
           <Link href="/" className="flex items-center space-x-3">
             <Image
-              className="h-8 w-auto"
+              className="h-7 w-auto"
               src="/icons/app_icon.svg"
               alt=""
               width={32}
@@ -66,15 +69,13 @@ const Header: React.FC<HeaderProps> = ({}) => {
               href={item.href}
               className="text-sm font-base leading-6 text-gray-900"
             >
-              <div className="flex items-center">
-                <Image
-                  src={item.icon}
-                  alt={"nav"}
-                  width={16}
-                  height={16}
-                  className="m-2"
-                />
-                <span>{item.name}</span>
+              <div
+                className={classNames(
+                  "flex items-center",
+                  path === item.href ? "font-semibold" : "text-normal"
+                )}
+              >
+                {item.name}
               </div>
             </Link>
           ))}
@@ -92,11 +93,12 @@ const Header: React.FC<HeaderProps> = ({}) => {
         <div className="hidden lg:flex">
           <div className="flex items-center gap-5">
             <Link
-              className="flex gap-2 cursor-pointer"
+              className="flex gap-1 cursor-pointer items-center"
               href={process.env.NEXT_PUBLIC_DISCORD_INVITATION_URL || ""}
               target="_blank_"
             >
-              <Image src={"/icons/discord.svg"} width={20} height={20} alt="" />
+              <Image src={"/icons/discord.svg"} width={32} height={32} alt="" />
+              <span className="text-[#5865F2] font-medium">Discord</span>
             </Link>
             {currentUser ? (
               <button
@@ -160,7 +162,13 @@ const Header: React.FC<HeaderProps> = ({}) => {
                     href={item.href}
                     className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                   >
-                    {item.name}
+                    <span
+                      className={
+                        `/${path}` === item.href ? "font-bold" : "font-normal"
+                      }
+                    >
+                      {item.name}
+                    </span>
                   </a>
                 ))}
               </div>
