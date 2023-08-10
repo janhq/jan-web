@@ -48,6 +48,7 @@ export const Conversation = types
     lastTextMessage: types.maybe(types.string),
   })
   .volatile(() => ({
+    isFetching: false,
     offset: 0,
     hasMore: true,
     isWaitingForModelResponse: false,
