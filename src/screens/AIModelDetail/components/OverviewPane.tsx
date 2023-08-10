@@ -84,6 +84,7 @@ const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
           <a
             className="text-[#1C64F2] break-all pr-10"
             href={technicalURL || "#"}
+            target="_blank_"
           >
             {technicalURL}
           </a>
