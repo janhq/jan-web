@@ -4,8 +4,14 @@ import ConversationalList from "@/components/ConversationalList";
 import GenerateImageList from "@/components/GenerateImageList";
 import { SpinnerCircularSplit } from "@/components/Indicators/SpinnerCircularSplit";
 import { ProductsProps } from "@/services/products";
+import Gleap from "gleap";
+import { useEffect } from "react";
 
 const Discover: React.FC<ProductsProps> = (props) => {
+  useEffect(() => {
+    Gleap.showFeedbackButton(true);
+  }, []);
+  
   return (
     <div>
       {props.products && props.products?.length > 0 ? (

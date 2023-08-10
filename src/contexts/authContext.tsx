@@ -15,6 +15,7 @@ import {
 } from "firebase/auth";
 import useGetUserConversations from "../hooks/useGetUserConversations";
 import useTracking from "@/utils/posthog";
+import Gleap from "gleap";
 
 interface AuthContextType {
   currentUser: User | undefined;
@@ -47,6 +48,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         getUserConversations(user);
         setCurrentUser(user);
         identityUser(user.email || user.displayName || user.uid);
+        Gleap.identify(user.uid, {
+          name: user.displayName || undefined,
+          email: user.email || undefined,
+        });
       } else {
         setCurrentUser(undefined);
         identityUser("");
