@@ -17,7 +17,7 @@ export const ImageBlankState: React.FC<Props> = ({ product }) => {
 
   return (
     <button
-      className="flex flex-col gap-2 p-2 rounded-[8px] bg-white overflow-hidden"
+      className="flex flex-col gap-2 p-2 rounded-[8px] bg-gray-100 overflow-hidden items-center"
       onClick={onClick}
     >
       <img
@@ -28,7 +28,7 @@ export const ImageBlankState: React.FC<Props> = ({ product }) => {
         alt=""
       />
 
-      <h2 className="font-bold text-[14px] leading-[20px]">
+      <h2 className="font-bold text-[14px] leading-[20px] text-center">
         {product.decoration.title}
       </h2>
     </button>
