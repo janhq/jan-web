@@ -18,8 +18,8 @@ import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
 import { RemoteConfigKeys, useRemoteConfig } from "@/hooks/useRemoteConfig";
 import { useRouter, useSearchParams } from "next/navigation";
 import useCreateConversation from "@/hooks/useCreateConversation";
-import { ProductsProps, withProducts } from "@/hooks/withProducts";
 import { useAuth } from "@/contexts/authContext";
+import { ProductsProps } from "@/services/products";
 
 const ChatContainer: React.FC<ProductsProps> = observer((props) => {
   const params = useSearchParams();
@@ -72,13 +72,16 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
         );
         if (product) {
           await requestCreateConvo(product);
-          if (params.get("prompt"))
+          if (params.get("prompt")) {
             router.replace(`/chat?prompt=${params.get("prompt")}`, undefined);
+          } else {
+            router.replace(`/chat`, undefined);
+          }
         }
       }
     };
     createConversationAndActive();
-  }, [props.products]);
+  }, []);
 
   const [open, setOpen] = useState(false);
 
@@ -185,4 +188,4 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
   );
 });
 
-export default withProducts(ChatContainer);
+export default ChatContainer;

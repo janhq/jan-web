@@ -52,32 +52,6 @@ export class Api {
   }
 
   /**
-   *  Query discovery configurations
-   * @returns
-   */
-  async getConfigurations(
-    name: string
-  ): Promise<{ kind: "ok"; configuration: any } | GeneralApiProblem> {
-    // make the api call
-    const response: ApiResponse<any> = await this.apisauce.get(
-      `/discover/${name}`
-    );
-    // the typical ways to die when calling an api
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response);
-      if (problem) {
-        return problem;
-      }
-    }
-    // transform the data into the format we are expecting
-    try {
-      return { kind: "ok", configuration: response.data };
-    } catch (e) {
-      return { kind: "bad-data" };
-    }
-  }
-
-  /**
    *  Sends magic prompt request
    * @param prompt prompt content
    * @returns

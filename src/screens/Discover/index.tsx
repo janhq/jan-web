@@ -3,7 +3,7 @@ import { Slider } from "@/components";
 import ConversationalList from "@/components/ConversationalList";
 import GenerateImageList from "@/components/GenerateImageList";
 import { SpinnerCircularSplit } from "@/components/Indicators/SpinnerCircularSplit";
-import { ProductsProps, withProducts } from "@/hooks/withProducts";
+import { ProductsProps } from "@/services/products";
 
 const Discover: React.FC<ProductsProps> = (props) => {
   return (
@@ -43,4 +43,4 @@ const Discover: React.FC<ProductsProps> = (props) => {
   );
 };
 
-export default withProducts(Discover);
+export default Discover;

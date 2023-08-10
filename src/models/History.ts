@@ -70,7 +70,7 @@ export const History = types
       if (result.messages.length < MESSAGE_PER_PAGE) {
         convo.setHasMore(false);
       }
-
+      
       convo.offset += result.messages.length;
 
       const messages: Instance<typeof ChatMessage>[] = [];
