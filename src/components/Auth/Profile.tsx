@@ -24,7 +24,6 @@ const Profile: React.FC<ProfileProps> = ({
   logoutCallBack,
   closeProfileFunc,
 }) => {
-  const { historyStore } = useStore();
   const { currentUser, handleSignOut } = useAuth();
   const sharingURLTextRef = useRef<HTMLInputElement>(null);
 
@@ -43,7 +42,6 @@ const Profile: React.FC<ProfileProps> = ({
 
   const onSignOutClick = () => {
     handleSignOut();
-    historyStore.clearAllConversations();
     logoutCallBack();
   };
 

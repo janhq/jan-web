@@ -3,15 +3,10 @@ import { Slider } from "@/components";
 import ConversationalList from "@/components/ConversationalList";
 import GenerateImageList from "@/components/GenerateImageList";
 import { SpinnerCircularSplit } from "@/components/Indicators/SpinnerCircularSplit";
+import { withAnalytics } from "@/helpers/withAnalytics";
 import { ProductsProps } from "@/services/products";
-import Gleap from "gleap";
-import { useEffect } from "react";
 
 const Discover: React.FC<ProductsProps> = (props) => {
-  useEffect(() => {
-    Gleap.showFeedbackButton(true);
-  }, []);
-  
   return (
     <div>
       {props.products && props.products?.length > 0 ? (
@@ -42,11 +37,11 @@ const Discover: React.FC<ProductsProps> = (props) => {
         </>
       ) : (
         <div className="flex flex-1 w-full h-screen justify-center items-center">
-          <SpinnerCircularSplit color="#1F2A37" className="-mt-40"/>
+          <SpinnerCircularSplit color="#1F2A37" className="-mt-40" />
         </div>
       )}
     </div>
   );
 };
 
-export default Discover;
+export default withAnalytics<ProductsProps>(Discover);

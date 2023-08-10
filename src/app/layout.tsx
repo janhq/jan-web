@@ -1,90 +1,36 @@
-"use client";
 import "./globals.css";
-// import type { Metadata } from "next";
-import { useRef, useEffect, useState } from "react";
 import { Inter } from "next/font/google";
 import { Header } from "@/components";
 import classNames from "classnames";
-import { Provider, RootInstance, initializeStore } from "../models/RootStore";
 import { AuthProvider } from "@/contexts/authContext";
 import LoginModal from "@/components/Auth/LoginModal";
-import SettingsModal from "@/components/Settings/SettingsModal";
-import Profile from "@/components/Auth/Profile";
-import Gleap from "gleap";
-import useTracking from "@/utils/posthog";
 import MobileShowcase from "@/screens/MobileShowcase";
+import { Metadata } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// TODO: Comment below because client side rendering does not support
-// export const metadata: Metadata = {
-//   title: "Jan: On-Device AI + Cloud AIs",
-//   description:
-//     "No subscription needed. Protect your privacy. Use AI without an internet connection",
-// };
+export const metadata: Metadata = {
+  title: "Jan: On-Device AI + Cloud AIs",
+  description:
+    "No subscription needed. Protect your privacy. Use AI without an internet connection",
+};
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const store = useRef<RootInstance>(initializeStore());
-  const [showSettingModal, setShowSettingsModal] = useState(false);
-  const [showProfileModal, setShowProfileModal] = useState(false);
-  const { initAnalytics } = useTracking();
-
-  // On/Off Setting Modal
-  const toggleSettingsModal = () => {
-    setShowSettingsModal(!showSettingModal);
-  };
-
-  // Open once user click to avatar on Header
-  const openSettingModal = () => {
-    setShowProfileModal(true);
-  };
-
-  // Called once your click to the exit button
-  const closeProfileModal = () => {
-    setShowProfileModal(false);
-  };
-
-  // Called once user click logout from menu or profile page
-  const logoutCallBack = () => {
-    closeProfileModal();
-    toggleSettingsModal();
-  };
-
-  useEffect(() => {
-    Gleap.initialize(process.env.NEXT_PUBLIC_GLEAP_API_KEY || "");
-    initAnalytics();
-  }, []);
-
   return (
     <html lang="en">
       <body
         className={classNames(inter.className, "flex flex-col w-full h-screen")}
       >
         <div className="hidden md:flex flex-col w-full h-full">
-          {store && (
-            <Provider value={store.current}>
-              <AuthProvider>
-                <Header toggleDisplaySettingMenu={toggleSettingsModal} />
-                {children}
-                <LoginModal />
-                <SettingsModal
-                  isOpen={showSettingModal}
-                  setOpen={setShowSettingsModal}
-                  openSettingFunc={openSettingModal}
-                  logoutCallBack={logoutCallBack}
-                />
-                <Profile
-                  isOpen={showProfileModal}
-                  closeProfileFunc={closeProfileModal}
-                  logoutCallBack={logoutCallBack}
-                />
-              </AuthProvider>
-            </Provider>
-          )}
+          <AuthProvider>
+            <Header />
+            {children}
+            <LoginModal />
+          </AuthProvider>
         </div>
         <MobileShowcase />
       </body>

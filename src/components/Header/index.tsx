@@ -5,19 +5,43 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/contexts/authContext";
+import SettingsModal from "../Settings/SettingsModal";
+import Profile from "../Auth/Profile";
 
 const navigation = [
   { name: "Chat", icon: "/icons/chat.svg", href: "/chat" },
   { name: "AIs", icon: "/icons/brain.svg", href: "/ai" },
 ];
 
-interface HeaderProps {
-  toggleDisplaySettingMenu: () => void;
-}
+interface HeaderProps {}
 
-const Header: React.FC<HeaderProps> = ({ toggleDisplaySettingMenu }) => {
+const Header: React.FC<HeaderProps> = ({}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { currentUser, setShowLogin } = useAuth();
+
+  const [showSettingModal, setShowSettingsModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+
+  // On/Off Setting Modal
+  const toggleSettingsModal = () => {
+    setShowSettingsModal(!showSettingModal);
+  };
+
+  // Open once user click to avatar on Header
+  const openSettingModal = () => {
+    setShowProfileModal(true);
+  };
+
+  // Called once your click to the exit button
+  const closeProfileModal = () => {
+    setShowProfileModal(false);
+  };
+
+  // Called once user click logout from menu or profile page
+  const logoutCallBack = () => {
+    closeProfileModal();
+    toggleSettingsModal();
+  };
 
   return (
     <header className="text-sm bg-white border-b-[1px] border-gray-200">
@@ -77,7 +101,7 @@ const Header: React.FC<HeaderProps> = ({ toggleDisplaySettingMenu }) => {
             {currentUser ? (
               <button
                 className="flex items-center gap-4"
-                onClick={toggleDisplaySettingMenu}
+                onClick={toggleSettingsModal}
               >
                 <img
                   className="rounded-sm w-8 aspect-square"
@@ -152,6 +176,18 @@ const Header: React.FC<HeaderProps> = ({ toggleDisplaySettingMenu }) => {
           </div>
         </Dialog.Panel>
       </Dialog>
+
+      <SettingsModal
+        isOpen={showSettingModal}
+        setOpen={setShowSettingsModal}
+        openSettingFunc={openSettingModal}
+        logoutCallBack={logoutCallBack}
+      />
+      <Profile
+        isOpen={showProfileModal}
+        closeProfileFunc={closeProfileModal}
+        logoutCallBack={logoutCallBack}
+      />
     </header>
   );
 };

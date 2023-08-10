@@ -19,12 +19,15 @@ import { RemoteConfigKeys, useRemoteConfig } from "@/hooks/useRemoteConfig";
 import { useRouter, useSearchParams } from "next/navigation";
 import useCreateConversation from "@/hooks/useCreateConversation";
 import { ProductsProps } from "@/services/products";
+import { useAuth } from "@/contexts/authContext";
+import useGetUserConversations from "@/hooks/useGetUserConversations";
 
 const ChatContainer: React.FC<ProductsProps> = observer((props) => {
   const params = useSearchParams();
   const router = useRouter();
   const newConvProductName = params.get("productId");
   const [searchText, setSearchText] = useState("");
+  const { currentUser, isReady } = useAuth();
   const ref = useRef<HTMLDivElement>(null);
   const [prefillPrompt, setPrefillPrompt] = useState<string>(
     params.get("prompt") || ""
@@ -32,6 +35,7 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
 
   const { historyStore } = useStore();
   const { requestCreateConvo } = useCreateConversation();
+  const { getUserConversations } = useGetUserConversations();
 
   const showBodyChat = historyStore.activeConversationId != null;
   const showHistoryList = historyStore.conversations.length > 0;
@@ -47,6 +51,7 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
 
   const conversation = historyStore.getActiveConversation();
 
+  // Hide Feedback Button
   useEffect(() => {
     if (conversation) {
       Gleap.showFeedbackButton(false);
@@ -54,6 +59,15 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
       Gleap.showFeedbackButton(true);
     }
   }, [conversation]);
+
+  // Prepare Conversation
+  useEffect(() => {
+    if (isReady && !currentUser) {
+      historyStore.clearAllConversations();
+    } else if (isReady && currentUser) {
+      getUserConversations(currentUser);
+    }
+  }, [currentUser, isReady]);
 
   useEffect(() => {
     const createConversationAndActive = async () => {
