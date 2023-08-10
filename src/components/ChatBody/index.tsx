@@ -7,7 +7,7 @@ import SimpleImageMessage from "../SimpleImageMessage";
 import SimpleTextMessage from "../SimpleTextMessage";
 import { Instance } from "mobx-state-tree";
 import Lottie from "lottie-react";
-import animationData from "/public/lotties/typing";
+import animationData from "@/../public/lotties/typing.json";
 
 type Props = {
   chatHeight: number;
