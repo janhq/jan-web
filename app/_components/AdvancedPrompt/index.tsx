@@ -26,7 +26,7 @@ export const AdvancedPrompt: React.FC = observer(() => {
           BASIC PROMPT
         </span>
       </button>
-      <div className="flex flex-col justify-start flex-1 p-3 gap-[10px] overflow-x-hidden">
+      <div className="flex flex-col justify-start flex-1 p-3 gap-[10px] overflow-x-hidden scroll">
         <MenuAdvancedPrompt />
       </div>
 

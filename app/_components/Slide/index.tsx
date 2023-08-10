@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
 
@@ -7,28 +8,25 @@ interface ISlideprops {
   title?: string;
   description?: string;
 }
-const Slide: FC<ISlideprops> = (props) => {
+const Slide: FC<ISlideprops> = ({ description, image, title, productId }) => {
   return (
-    <div className="w-full relative">
-      <Link href={`/ai/${props.productId}`} className="w-full h-full">
-        <img
-          className="w-full aspect-video object-cover rounded-lg"
-          src={props.image}
-          alt=""
-        />
-      </Link>
-      <div className="absolute bg-[rgba(0,0,0,0.7)] w-full text-white bottom-0 inset-x-0 rounded-bl-lg rounded-br-lg">
-        <div className="flex flex-row justify-between items-center p-4 gap-4">
-          <div className="flex-grow flex flex-col overflow-hidden h-14 justify-center">
-            <h2 className="font-bold">{props.title}</h2>
-            <p className="text-gray-300 text-xs line-clamp-2 text-ellipsis">
-              {props.description}
-            </p>
+    <div className="w-full h-[435px] relative">
+      <Image
+        className="w-full h-full object-cover"
+        src={image || ""}
+        layout="fill"
+        alt=""
+      />
+      <div className="absolute bg-[rgba(0,0,0,0.7)] w-full text-white bottom-0">
+        <div className="flex justify-between p-4">
+          <div className="flex flex-col">
+            <h2 className="font-bold">{title}</h2>
+            <span className="text-gray-300 text-xs">{description}</span>
           </div>
           <Link
             href={{
               pathname: `/chat`,
-              query: { productId: props.productId },
+              query: { productId: productId },
             }}
             className="flex-none flex w-30 h-12 items-center justify-center gap-2 px-5 py-[10px] rounded-md bg-white text-black"
           >

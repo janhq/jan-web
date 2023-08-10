@@ -26,14 +26,8 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
       historyStore.clearAllConversations();
     }
   }, [isReady, currentUser, historyStore]);
-
-  // Hide Feedback Button
   useEffect(() => {
-    if (conversation) {
-      Gleap.showFeedbackButton(false);
-    } else {
-      Gleap.showFeedbackButton(true);
-    }
+    Gleap.showFeedbackButton(conversation ? false : true);
   }, [conversation]);
 
   const [open, setOpen] = useState(false);
@@ -60,7 +54,8 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
       />
       {showBodyChat ? (
         <div className="flex-1 flex flex-col w-full">
-          <div className="flex w-full px-3 py-1 border-b border-gray-200 bg-white shadow-sm sm:px-3 lg:px-3">
+          <div className="flex w-full overflow-hidden flex-shrink-0 px-3 py-1 border-b dark:bg-gray-950 border-gray-200 bg-white shadow-sm sm:px-3 lg:px-3">
+            {/* Separator */}
             <div
               className="h-full w-px bg-gray-200 lg:hidden"
               aria-hidden="true"
@@ -74,19 +69,16 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
               />
             </div>
           </div>
-          <div className="w-full h-full">
+          <div className="w-full h-full overflow-hidden">
             <div className="flex flex-col h-full px-1 sm:px-2 lg:px-3">
-              <ChatBody />
+              <ChatBody onPromptSelected={onSuggestPromptClick} />
               <InputToolbar prefillPrompt={prefillPrompt} />
             </div>
           </div>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col w-full">
-          <NewChatBlankState />
-        </div>
+        <NewChatBlankState />
       )}
-
       <ModelDetailSideBar onPromptClick={onSuggestPromptClick} />
     </div>
   );

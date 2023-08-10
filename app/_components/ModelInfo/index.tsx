@@ -16,7 +16,7 @@ const ModelInfo: React.FC<Props> = ({
   pricing,
 }) => (
   <div className="flex flex-col rounded-lg border border-gray-200 p-3 gap-3">
-    <h2 className="font-semibold text-sm text-gray-900">
+    <h2 className="font-semibold text-sm text-gray-900 dark:text-white">
       {modelName} is available via Jan API
     </h2>
     <div className="flex items-center gap-4">

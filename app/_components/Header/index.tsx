@@ -1,16 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { Popover } from "@headlessui/react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
-import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "../../_contexts/authContext";
 import { usePathname } from "next/navigation";
-import { MenuHeader } from "../MenuHeader";
 import SignInModal from "../SignInModal";
 import MobileMenuPane from "../MobileMenuPane";
 import ConfirmSignOutModal from "../ConfirmSignOutModal";
 import useSignOut from "@/_hooks/useSignOut";
+import { ThemeChanger } from "../ChangeTheme";
+import UserProfileDropDown from "../UserProfileDropDown";
 
 export const navigation = [
   { name: "Products", href: "/chat" },
@@ -32,8 +31,13 @@ const Header: React.FC = () => {
     return link.includes(router);
   };
 
+  const isUserLoggedIn = currentUser != null && !currentUser.isAnonymous;
+
   return (
-    <header className="text-sm bg-white border-b-[1px] border-gray-200 relative w-full py-3 px-6">
+    <header
+      id="header"
+      className="text-sm bg-white border-b-[1px] border-gray-200 relative w-full py-3 px-6 dark:bg-gray-800"
+    >
       <nav className="mx-auto flex items-center" aria-label="Global">
         <div className="flex items-center flex-1 justify-center">
           {navigation.map((item, index) => (
@@ -53,26 +57,13 @@ const Header: React.FC = () => {
         </div>
 
         <div className="hidden md:flex items-center gap-2">
-          {currentUser == null || currentUser.isAnonymous ? (
-            <button onClick={() => setShowLoginModal(true)}>Login</button>
+          <ThemeChanger />
+          {isUserLoggedIn ? (
+            <UserProfileDropDown
+              onLogOutClick={() => setShowLogOutModal(true)}
+            />
           ) : (
-            <Popover.Group className="hidden lg:flex lg:gap-x-12">
-              <Popover className="relative">
-                <Popover.Button className="flex items-center gap-2 outline-none">
-                  <img
-                    className="rounded-sm w-8 aspect-square"
-                    src={currentUser?.photoURL || "/icons/app_icon.svg"}
-                    alt=""
-                  />
-                  <div className="flex flex-col justify-start">
-                    <h2 className="text-sm leading-5 text-[#111928]">
-                      {currentUser?.displayName || "Guest"}
-                    </h2>
-                  </div>
-                </Popover.Button>
-                <MenuHeader onLogOutClick={() => setShowLogOutModal(true)} />
-              </Popover>
-            </Popover.Group>
+            <button onClick={() => setShowLoginModal(true)}>Login</button>
           )}
         </div>
         <div className="flex lg:hidden">

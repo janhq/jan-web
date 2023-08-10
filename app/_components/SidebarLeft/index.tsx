@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation";
 import { fetchShortcuts } from "@/_services/products";
 import { useAuth } from "../../_contexts/authContext";
 import useGetUserConversations from "@/_hooks/useGetUserConversations";
+import DiscordContainer from "../DiscordContainer";
 
 export const SidebarLeft: React.FC = observer(() => {
   const router = usePathname();
@@ -52,30 +53,30 @@ export const SidebarLeft: React.FC = observer(() => {
     ? products
     : products?.filter((e) => e.action?.params?.models[0]?.offline !== true);
 
+  const onLogoClick = () => {
+    historyStore.clearActiveConversationId();  }
   const onSearching = (text: string) => {
     setSearchText(text);
-  };
-
-  return (
-    <div
+  };  
+  return (    <div
       className={`${
         historyStore.showAdvancedPrompt ? "lg:hidden" : "lg:flex"
       } ${
         checkRouter() ? "lg:hidden" : "lg:block"
-      } hidden lg:inset-y-0 lg:w-72 lg:flex-col overflow-hidden border-r border-gray-200`}
+      } hidden lg:inset-y-0 lg:w-72 lg:flex-col flex-shrink-0 overflow-hidden border-r border-gray-200 dark:bg-gray-800`}
     >
-      <div className="h-full flex grow flex-col overflow-y-auto px-2">
-        <button className="p-3 flex gap-3">
+      <div className="h-full flex grow flex-col overflow-hidden">
+        <button className="p-3 flex gap-3" onClick={onLogoClick}>
           <div className="flex gap-[2px] items-center">
             <Image src={"/icons/app_icon.svg"} width={28} height={28} alt="" />
             <Image src={"/icons/Jan.svg"} width={27} height={12} alt="" />
           </div>
         </button>
         <div className="flex flex-col gap-3 overflow-x-hidden h-full">
-          <div className="flex flex-col h-16 shrink-0 items-center gap-[10px]">
+          <div className="flex items-center px-3">
             <SearchBar onTextChanged={onSearching} />
           </div>
-          <div className="flex flex-col flex-auto overflow-x-hidden h-full scroll">
+          <div className="flex flex-col h-full overflow-x-hidden scroll gap-3">
             <ShortcutList
               products={
                 productsMain?.filter(
@@ -96,20 +97,8 @@ export const SidebarLeft: React.FC = observer(() => {
           </div>
         </div>
       </div>
-      <div className="border-t border-gray-200 p-3 gap-3 flex items-center justify-between">
-        <button className="flex gap-2 items-center rounded-lg text-gray-900 text-xs leading-[18px]">
-          <Image
-            src={"/icons/ico_mobile-android.svg"}
-            width={16}
-            height={16}
-            alt=""
-          />
-          Get the app
-        </button>
-        <button className="flex items-center rounded-lg text-purple-700 text-xs leading-[18px] font-semibold gap-2">
-          <Image src={"/icons/ico_Discord.svg"} width={20} height={20} alt="" />
-          Discord
-        </button>
+      <div className="flex-grow">
+        <DiscordContainer />
       </div>
     </div>
   );
