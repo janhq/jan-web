@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import firebaseConfigs from "./firebase_configs.json";
-import { getAuth, signInAnonymously, User } from "firebase/auth";
+import { getAuth, User } from "firebase/auth";
 
 // Initialize firebase with configrurations
 const app = initializeApp(firebaseConfigs);
@@ -15,18 +15,13 @@ function getCurrentUser(): User | null {
 
 // Retuns firebase token from current user profile
 async function getFirebaseToken() {
-
   return firebaseAuth.authStateReady().then(async () => {
     let user = firebaseAuth.currentUser;
     // If user is already signed in, return their token
     if (user) {
       return user.getIdToken();
     }
-
-    // If user is not signed in, perform anonymous sign-in and return the token
-    return signInAnonymously(firebaseAuth).then((credential) => {
-      return credential.user.getIdToken();
-    });
+    return null
   });
 }
 

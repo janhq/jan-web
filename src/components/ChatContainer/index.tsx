@@ -18,13 +18,11 @@ import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
 import { RemoteConfigKeys, useRemoteConfig } from "@/hooks/useRemoteConfig";
 import { useRouter, useSearchParams } from "next/navigation";
 import useCreateConversation from "@/hooks/useCreateConversation";
-import { useAuth } from "@/contexts/authContext";
 import { ProductsProps } from "@/services/products";
 
 const ChatContainer: React.FC<ProductsProps> = observer((props) => {
   const params = useSearchParams();
   const router = useRouter();
-  const { currentUser, setShowLogin, isReady: authReady } = useAuth();
   const newConvProductName = params.get("productId");
   const [searchText, setSearchText] = useState("");
   const ref = useRef<HTMLDivElement>(null);
@@ -56,12 +54,6 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
       Gleap.showFeedbackButton(true);
     }
   }, [conversation]);
-
-  useEffect(() => {
-    if (authReady && (!currentUser || currentUser.isAnonymous)) {
-      setShowLogin(true);
-    }
-  }, [authReady, currentUser, setShowLogin]);
 
   useEffect(() => {
     const createConversationAndActive = async () => {

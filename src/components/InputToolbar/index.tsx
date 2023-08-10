@@ -15,9 +15,9 @@ type Props = {
 export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const { historyStore } = useStore();
-  const { currentUser } = useAuth();
   const [text, setText] = useState(prefillPrompt);
   const [promptGenerating, setPromptGenerating] = useState(false);
+  const { currentUser, setShowLogin } = useAuth();
 
   const shouldShowEnhanceButton =
     historyStore.getActiveConversation()?.aiModel.aiModelType ===
@@ -50,7 +50,8 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
     api
       .magicPrompt(text)
       .then((res) => {
-        if (res.kind === "ok") setText([text.trim(),res.data.text.trim()].join(" "));
+        if (res.kind === "ok")
+          setText([text.trim(), res.data.text.trim()].join(" "));
       })
       .finally(() => {
         setPromptGenerating(false);
@@ -71,6 +72,11 @@ export const InputToolbar: React.FC<Props> = ({ prefillPrompt, callback }) => {
   };
 
   const onSubmitClick = () => {
+    if (!currentUser || currentUser.isAnonymous) {
+      setShowLogin(true);
+      return
+    }
+
     if (text.trim().length === 0) return;
     historyStore.sendMessage(
       text,
