@@ -1,9 +1,9 @@
-import ChatContainer from "@/components/ChatContainer";
+import ChatPage from "@/screens/Chat";
 import { fetchDiscoverShortcuts } from "@/services/products";
 
 const Page = async ({}) => {
   const props = await fetchDiscoverShortcuts();
-  return <ChatContainer {...props} />;
+  return <ChatPage {...props} />;
 };
 
 export default Page;

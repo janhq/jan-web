@@ -6,6 +6,7 @@ import { SampleImage } from "@/screens/AIModelDetail/components/SampleImage";
 import OverviewPane from "@/screens/AIModelDetail/components/OverviewPane";
 import { useLayoutEffect, useRef, useState } from "react";
 import { ProductsProps } from "@/services/products";
+import { withAnalytics } from "@/helpers/withAnalytics";
 
 interface AIModelDetailProps extends ProductsProps {
   slug: string;
@@ -70,4 +71,4 @@ const AIModelDetail: React.FC<AIModelDetailProps> = (props) => {
   );
 };
 
-export default AIModelDetail;
+export default withAnalytics<AIModelDetailProps>(AIModelDetail);

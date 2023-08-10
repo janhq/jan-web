@@ -1,3 +1,4 @@
+"use client";
 import {
   createContext,
   useState,
@@ -13,7 +14,6 @@ import {
   onAuthStateChanged,
   signInWithPopup,
 } from "firebase/auth";
-import useGetUserConversations from "../hooks/useGetUserConversations";
 import useTracking from "@/utils/posthog";
 import Gleap from "gleap";
 
@@ -37,7 +37,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [showLogin, setShowLogin] = useState<boolean>(false);
   const [isReady, setIsReady] = useState<boolean>(false);
-  const { getUserConversations } = useGetUserConversations();
   const { identityUser } = useTracking();
 
   useEffect(() => {
@@ -45,7 +44,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     currentAuth.authStateReady().then(() => setIsReady(true));
     const unsubscribe = onAuthStateChanged(currentAuth, (user) => {
       if (user) {
-        getUserConversations(user);
         setCurrentUser(user);
         identityUser(user.email || user.displayName || user.uid);
         Gleap.identify(user.uid, {

@@ -63,6 +63,7 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
             isReverse={true}
             loadMore={loadFunc}
             hasMore={hasMore}
+            initialLoad={true}
           >
             <div
               className={`flex flex-col justify-end gap-8 py-2`}
