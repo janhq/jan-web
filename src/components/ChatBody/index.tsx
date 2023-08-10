@@ -6,7 +6,7 @@ import { ChatMessage, MessageType } from "../../models/ChatMessage";
 import SimpleImageMessage from "../SimpleImageMessage";
 import SimpleTextMessage from "../SimpleTextMessage";
 import { Instance } from "mobx-state-tree";
-import Lottie from "react-lottie";
+import Lottie from "lottie-react";
 import animationData from "/public/lotties/typing";
 
 type Props = {
@@ -81,7 +81,7 @@ export const ChatBody: React.FC<Props> = observer(({ chatHeight }) => {
               <div ref={refSmooth}>
                 {convo?.isWaitingForModelResponse && (
                   <div className="w-[50px] h-[50px] flex flex-row items-start justify-start">
-                    <Lottie options={defaultOptions} height={50} width={50} />
+                    <Lottie animationData={animationData} loop={true} autoPlay={true} height={50} width={50} />
                   </div>
                 )}
               </div>
