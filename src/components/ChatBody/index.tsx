@@ -100,6 +100,7 @@ const renderItem = (
           senderName={senderName}
           createdAt={createdAt}
           imageUrls={imageUrls ?? []}
+          text={text}
         />
       );
     case MessageType.Text:
