@@ -1,3 +1,4 @@
+"use server";
 import { Product, Section } from "@/models/Product";
 
 export interface ProductsProps {
@@ -12,7 +13,8 @@ export interface ProductsProps {
 
 const fetchDiscover = (): Promise<Section[]> => {
   return fetch(
-    new URL(`configuration/discover`, process.env.NEXT_PUBLIC_API_URL)
+    new URL(`configuration/discover`, process.env.NEXT_PUBLIC_API_URL),
+    { cache: "force-cache" }
   )
     .then((response) => response.json())
     .then((data) => data.sections);
@@ -20,7 +22,8 @@ const fetchDiscover = (): Promise<Section[]> => {
 
 const fetchShortcuts = (): Promise<Product[]> => {
   return fetch(
-    new URL(`configuration/shortcuts`, process.env.NEXT_PUBLIC_API_URL)
+    new URL(`configuration/shortcuts`, process.env.NEXT_PUBLIC_API_URL),
+    { cache: "force-cache" }
   )
     .then((response) => response.json())
     .then((data) => data.products);
@@ -66,17 +69,17 @@ const fetchDiscoverShortcuts = async (): Promise<ProductsProps> => {
 };
 
 const fetchProducts = async (): Promise<Product[]> => {
-    const discover: Section[] = await fetchDiscover();
-    const categoryProducts: Product[] =
-      discover.find((section: Section) => section.name === "all_categories")
-        ?.products || [];
-  
-    const products: Product[] =
-      categoryProducts
-        .flatMap((e) => e.action.params.products)
-        .filter((e): e is Product => !!e) || [];
-  
-    return products
-  };
+  const discover: Section[] = await fetchDiscover();
+  const categoryProducts: Product[] =
+    discover.find((section: Section) => section.name === "all_categories")
+      ?.products || [];
+
+  const products: Product[] =
+    categoryProducts
+      .flatMap((e) => e.action.params.products)
+      .filter((e): e is Product => !!e) || [];
+
+  return products;
+};
 
 export { fetchDiscoverShortcuts, fetchProducts };
