@@ -424,7 +424,6 @@ export const History = types
           text: welcomeText,
           createdAt: Date.now(),
         });
-        newConvo.addMessage(welcomeMsg);
         newConvo.setProp("lastTextMessage", welcomeMsg.text);
       }
       self.conversations.push(newConvo);
