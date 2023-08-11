@@ -1,4 +1,3 @@
-import { Product } from "@/models/Product";
 import AIModelDetail from "@/screens/AIModelDetail";
 import { fetchDiscoverShortcuts } from "@/services/products";
 import { Metadata, ResolvingMetadata } from "next";
@@ -9,7 +8,6 @@ interface IModelDetailProps {
 
 export async function generateMetadata(
   { params }: IModelDetailProps,
-  parent?: ResolvingMetadata
 ): Promise<Metadata> {
   // read route params
   const slug = params.slug;
