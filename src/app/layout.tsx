@@ -5,15 +5,8 @@ import classNames from "classnames";
 import { AuthProvider } from "@/contexts/authContext";
 import LoginModal from "@/components/Auth/LoginModal";
 import MobileShowcase from "@/screens/MobileShowcase";
-import { Metadata } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Jan: On-Device AI + Cloud AIs",
-  description:
-    "No subscription needed. Protect your privacy. Use AI without an internet connection",
-};
 
 export default function RootLayout({
   children,
