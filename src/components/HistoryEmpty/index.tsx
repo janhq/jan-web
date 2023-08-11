@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export const HistoryEmpty: React.FC = () => {
   return (
@@ -12,9 +13,12 @@ export const HistoryEmpty: React.FC = () => {
       <p className="text-[14px] leading-5 text-center text-[#9CA3AF]">
         Jan allows you to use 100s of AIs on your mobile phone
       </p>
-      <button className="bg-[#1F2A37] py-[10px] px-5 gap-2 rounded-[8px] text-[14px] font-medium leading-[21px] text-white">
+      <Link
+        href="/ai"
+        className="bg-[#1F2A37] py-[10px] px-5 gap-2 rounded-[8px] text-[14px] font-medium leading-[21px] text-white"
+      >
         Explore AIs
-      </button>
+      </Link>
     </div>
   );
 };
