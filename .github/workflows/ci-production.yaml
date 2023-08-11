@@ -1,0 +1,41 @@
+name: jan-web CI
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+env:
+  ACR_REPOSITORY_URL: janacrproduction.azurecr.io
+  IMAGE_NAME: jan-web
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get tag
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+      - name: Log into registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.ACR_REPOSITORY_URL }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Get .env file for build time
+        run: base64 -d <<< "$ENV_FILE_BASE64" > .env
+        shell: bash
+        env:
+          ENV_FILE_BASE64: ${{ secrets.ENV_FILE_BASE64 }}
+
+      - name: Get Firebase config
+        run: rm -rf ./src/services/firebase/firebase_configs.json && base64 -d <<< "$FIRE_BASE_CONFIG" > ./src/services/firebase/firebase_configs.json
+        shell: bash
+        env:
+          FIRE_BASE_CONFIG: ${{ secrets.FIRE_BASE_CONFIG_BASE64 }}
+
+      - run: |
+          docker build -t ${{ env.ACR_REPOSITORY_URL }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }} .
+          docker push ${{ env.ACR_REPOSITORY_URL }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}

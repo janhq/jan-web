@@ -1,0 +1,28 @@
+import { Instance } from "mobx-state-tree";
+import { ChatMessage } from "../models/ChatMessage";
+
+/**
+ * Util function to merge two array of messages and remove duplicates.
+ * Also preserve the order
+ *
+ * @param arr1 Message array 1
+ * @param arr2 Message array 2
+ * @returns Merged array of messages
+ */
+export function mergeAndRemoveDuplicates(
+  arr1: Instance<typeof ChatMessage>[],
+  arr2: Instance<typeof ChatMessage>[]
+): Instance<typeof ChatMessage>[] {
+  const mergedArray = arr1.concat(arr2);
+  const uniqueIdMap = new Map<string, boolean>();
+  const result: Instance<typeof ChatMessage>[] = [];
+
+  for (const message of mergedArray) {
+    if (!uniqueIdMap.has(message.id)) {
+      uniqueIdMap.set(message.id, true);
+      result.push(message);
+    }
+  }
+
+  return result.reverse();
+}
