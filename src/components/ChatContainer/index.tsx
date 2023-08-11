@@ -65,32 +65,27 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
     if (isReady && !currentUser) {
       historyStore.clearAllConversations();
     } else if (isReady && currentUser) {
-      if (historyStore.conversations.length === 0) {
-        getUserConversations(currentUser);
-      } else {
-        const createConversationAndActive = async () => {
-          if (newConvProductName && newConvProductName !== "") {
-            historyStore.setActiveConversationId(undefined);
-            const product = props.products?.find(
-              (e) => e.name === newConvProductName
-            );
-            if (product) {
-              await requestCreateConvo(product);
-              if (params.get("prompt")) {
-                router.replace(
-                  `/chat?prompt=${params.get("prompt")}`,
-                  undefined
-                );
-              } else {
-                router.replace(`/chat`, undefined);
-              }
+      const createConversationAndActive = async () => {
+        if (historyStore.conversations.length === 0)
+          await getUserConversations(currentUser);
+        if (newConvProductName && newConvProductName !== "") {
+          historyStore.setActiveConversationId(undefined);
+          const product = props.products?.find(
+            (e) => e.name === newConvProductName
+          );
+          if (product) {
+            await requestCreateConvo(product, true);
+            if (params.get("prompt")) {
+              router.replace(`/chat?prompt=${params.get("prompt")}`, undefined);
+            } else {
+              router.replace(`/chat`, undefined);
             }
           }
-        };
-        createConversationAndActive();
-      }
+        }
+      };
+      createConversationAndActive();
     }
-  }, [currentUser, isReady, historyStore.conversations]);
+  }, [currentUser, isReady, historyStore]);
 
   const [open, setOpen] = useState(false);
 
