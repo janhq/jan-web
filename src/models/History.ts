@@ -50,8 +50,8 @@ export const History = types
         console.error("Could not get convo", convoId);
         return;
       }
-      if(convo?.isFetching) {
-        return
+      if (convo?.isFetching) {
+        return;
       }
 
       if (!convo.hasMore) {
@@ -67,7 +67,7 @@ export const History = types
       );
 
       if (result.kind !== "ok") {
-        convo.isFetching = false
+        convo.isFetching = false;
         console.error(`Error`, JSON.stringify(result));
         return;
       }
@@ -112,7 +112,7 @@ export const History = types
         "chatMessages",
         messages.reverse().concat(convo.chatMessages)
       );
-      convo.isFetching = false
+      convo.isFetching = false;
     });
 
     return { fetchConversationMessages };
@@ -191,7 +191,7 @@ export const History = types
     ) {
       // TODO: handle case timeout using higher order function
       const latestMessages = conversation.chatMessages
-        .slice(0, 10)
+        .slice(-5)
         .map((e) => ({
           role:
             e.messageSenderType === MessageSenderType.User

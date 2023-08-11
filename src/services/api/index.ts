@@ -165,7 +165,7 @@ export class Api {
           // if the returned content does not have type as epxected
           if (
             res.ok &&
-            res.headers.get("content-type") !== EventStreamContentType
+            !res.headers.get("content-type")?.includes(EventStreamContentType)
           ) {
             responseText += await res.clone().json();
             return finish();
