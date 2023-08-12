@@ -9,8 +9,13 @@ export const metadata: Metadata = {
     "Generate AI art and images for free. Access many open source AI models through an easy to use interface. Create unique AI images in seconds.",
 };
 
+const fetchServerSideProducts = async () => {
+  "use server";
+  return fetchDiscoverShortcuts()
+};
+
 const AiPage = async ({}) => {
-  const props = await fetchDiscoverShortcuts();
+  const props = await fetchServerSideProducts();
   return (
     <main className="container m-auto flex flex-col space-y-8">
       <Discover {...props} />

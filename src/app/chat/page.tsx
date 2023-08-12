@@ -8,8 +8,12 @@ export const metadata: Metadata = {
     "Free AI chat website with many open source AI models allows you to choose different bots to converse with.",
 };
 
+const fetchServerSideProducts = async () => {
+  "use server";
+  return fetchDiscoverShortcuts()
+};
 const Page = async ({}) => {
-  const props = await fetchDiscoverShortcuts();
+  const props = await fetchServerSideProducts();
   return <ChatPage {...props} />;
 };
 

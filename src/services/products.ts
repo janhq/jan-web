@@ -1,4 +1,3 @@
-"use server";
 import { Product, Section } from "@/models/Product";
 
 export interface ProductsProps {
