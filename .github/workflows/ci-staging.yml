@@ -32,7 +32,7 @@ jobs:
           ENV_FILE_BASE64: ${{ secrets.ENV_FILE_BASE64 }}
 
       - name: Get Firebase config
-        run: rm -rf ./src/services/firebase/firebase_configs.json && base64 -d <<< "$FIRE_BASE_CONFIG" > ./src/services/firebase/firebase_configs.json
+        run: rm -rf ./app/_services/firebase/firebase_configs.json && base64 -d <<< "$FIRE_BASE_CONFIG" > ./app/_services/firebase/firebase_configs.json
         shell: bash
         env:
           FIRE_BASE_CONFIG: ${{ secrets.FIRE_BASE_CONFIG_BASE64 }}

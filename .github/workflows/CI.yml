@@ -26,7 +26,7 @@ jobs:
           yarn install
       - name: Fake firebase config
         run: |
-          echo "{}" > src/services/firebase/firebase_configs.json
+          echo "{}" > app/_services/firebase/firebase_configs.json
       - name: Running lint
         run: |
           yarn lint
