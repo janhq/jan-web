@@ -52,7 +52,7 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
   };
 
   return (
-    <div className="flex flex-1 h-full">
+    <div className="flex flex-1 h-full overflow-y-hidden">
       <ConfirmDeleteConversationModal
         open={open}
         setOpen={setOpen}

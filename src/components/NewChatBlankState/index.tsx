@@ -31,7 +31,7 @@ const NewChatBlankState: React.FC = () => {
     .flatMap((e) => e.action.params.products || []) as Product[];
 
   return (
-    <div className="p-6 w-full m-auto flex flex-col space-y-8 overflow-x-hidden">
+    <div className="p-6 w-full h-full m-auto flex flex-col space-y-8 overflow-x-hidden scroll">
       <div>
         <div className="flex items-center justify-between">
           <h2 className="font-bold mt-3 mb-4 leading-[52px] text-[40px] text-gray-400">
@@ -53,7 +53,6 @@ const NewChatBlankState: React.FC = () => {
       </div>
       <ConversationalList products={conversationals} />
       <GenerateImageList products={generateImages} />
-      <Footer />
     </div>
   );
 };
