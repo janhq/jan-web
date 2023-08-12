@@ -36,4 +36,4 @@ next-env.d.ts
 .env
 
 # Firebase config file
-src/services/firebase/firebase_configs.json
+app/_services/firebase/firebase_configs.json
