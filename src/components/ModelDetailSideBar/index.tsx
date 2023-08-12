@@ -1,5 +1,5 @@
 import { FC, useRef, useState } from "react";
-import OverviewPane from "@/screens/AIModelDetail/components/OverviewPane";
+import OverviewPane from "@/components/OverviewPane";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/models/RootStore";
 import { Draggable } from "../Draggable";

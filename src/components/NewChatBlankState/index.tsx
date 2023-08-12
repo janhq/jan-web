@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { AiSearch, Slider } from "@/components";
+import AiSearch from "@/components/AiSearch";
+import Slider from "@/components/Slider";
 import AiTypeList from "@/components/AiTypeList";
 import ConversationalList from "@/components/ConversationalList";
 import GenerateImageList from "@/components/GenerateImageList";
