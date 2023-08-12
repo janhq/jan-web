@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+// DEPRECATED
 export default function Footer() {
   return (
     <div className="flex items-center justify-between container m-auto">

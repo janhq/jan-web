@@ -1,5 +1,5 @@
 "use client";
-import { Header } from "@/components";
+import Header from "@/components/Header";
 import { AdvancedPrompt } from "@/components/AdvancedPrompt";
 import ChatContainer from "@/components/ChatContainer";
 import { CompactSideBar } from "@/components/CompactSideBar";

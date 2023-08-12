@@ -20,13 +20,11 @@ export const GenerativeSampleContainer: React.FC = () => {
         </h2>
         <div className="flex flex-wrap mx-auto gap-3">
           {showMore.map((item, index) => (
-            <Image
+            <img
               style={{ objectFit: "cover", width: "207px", height: "207px" }}
               className="rounded"
               key={index}
               src={item}
-              width={207}
-              height={207}
               alt=""
             />
           ))}
