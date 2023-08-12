@@ -1,17 +1,21 @@
 import React from "react";
 import { Metadata } from "next";
-import { Home } from "@/screens/Home";
+import { fetchDiscoverShortcuts } from "@/services/products";
+import ChatPage from "@/screens/Chat";
 
 export const metadata: Metadata = {
-  title: "Free AI Image Generator and Interact with Ai Chat - Jan.ai",
+  title: "Free AI Chat with Open AI Chat GPT and other models - Jan.ai",
   description:
-    "Create unique ai images or chat with open source AI models trained on various models. Run Open Source Ai Models on our GPUs, and make them accessible in one user-friendly app.",
+    "Free AI chat website with many open source AI models allows you to choose different bots to converse with.",
 };
 
-export default function Page() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <Home/>
-    </main>
-  );
-}
+const fetchServerSideProducts = async () => {
+  "use server";
+  return fetchDiscoverShortcuts();
+};
+const Page = async ({}) => {
+  const props = await fetchServerSideProducts();
+  return <ChatPage {...props} />;
+};
+
+export default Page;

@@ -1,16 +1,25 @@
 import { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 export const metadata: Metadata = {
   title: "Privacy - Jan.ai",
-  description:
-    "Privacy",
+  description: "Privacy",
 };
 
 const Page: React.FC = () => {
   return (
-    <div className="flex flex-col text-black justify-center items-center my-14">
-      <article className="prose lg:prose-xl">
+    <div className="relative flex flex-col text-black items-center h-screen overflow-y-scroll scroll pt-2">
+      <div className="absolute top-3 left-5">
+        <Link href="/" className="flex flex-row gap-2">
+          <div className="flex gap-[2px] items-center">
+            <Image src={"/icons/app_icon.svg"} width={28} height={28} alt="" />
+            <Image src={"/icons/Jan.svg"} width={27} height={12} alt="" />
+          </div>
+        </Link>
+      </div>
+      <article className="prose lg:prose-xl w-full my-20">
         <h1>Privacy Policy </h1>
         <p>
           Jan is committed to protecting your privacy and ensuring that your
