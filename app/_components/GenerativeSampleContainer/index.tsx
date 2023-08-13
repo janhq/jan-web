@@ -12,17 +12,17 @@ export const GenerativeSampleContainer: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col w-full items-center justify-center">
+    <div className="flex flex-col items-center justify-center max-w-5xl mx-auto">
       <JanWelcomeTitle />
       <div className="flex gap-2 flex-col">
         <h2 className="text-xl leading-[25px] tracking-[-0.4px] font-semibold">
           CreateNow
         </h2>
-        <div className="flex flex-wrap mx-auto gap-3">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
           {showMore.map((item, index) => (
             <img
               style={{ objectFit: "cover", width: "207px", height: "207px" }}
-              className="rounded"
+              className="rounded col-span-1 flex flex-col"
               key={index}
               src={item}
               alt=""
@@ -30,7 +30,7 @@ export const GenerativeSampleContainer: React.FC = () => {
           ))}
         </div>
       </div>
-      <div className="flex justify-center mt-3">
+      {/* <div className="flex justify-center mt-3 mx-auto">
         <button
           onClick={
             showMore.length === 6
@@ -48,7 +48,7 @@ export const GenerativeSampleContainer: React.FC = () => {
             alt=""
           />
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

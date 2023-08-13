@@ -13,21 +13,18 @@ interface IOverviewPanelProps {
   inAIModel?: number;
 }
 
-const OverviewPane: React.FC<IOverviewPanelProps> = (props) => {
+const OverviewPane: React.FC<IOverviewPanelProps> = ({
+  samples = [],
+  description,
+  technicalVersion,
+  technicalURL,
+  onPromptClick,
+  inAIModel,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const [read, setRead] = useState<boolean>(true);
   const [readMoreTechnical, setReadMoreTechnical] = useState<boolean>(true);
   const [height, setHeight] = useState<number>(0);
-
-  const {
-    samples = [],
-    description,
-    technicalVersion,
-    technicalURL,
-    technicalDescription,
-    onPromptClick,
-    inAIModel,
-  } = props;
 
   useLayoutEffect(() => {
     if (!ref.current) return;

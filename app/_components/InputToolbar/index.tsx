@@ -110,7 +110,7 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
     <div
       className={`${
         historyStore.showAdvancedPrompt ? "hidden" : "block"
-      } mb-3 flex-none w-full shadow-sm ring-1 ring-inset ring-gray-300 rounded-lg`}
+      } mb-3 flex-none w-full shadow-sm ring-1 ring-inset ring-gray-300 rounded-lg dark:bg-gray-800`}
     >
       <div className="overflow-hidden">
         <label htmlFor="comment" className="sr-only">
@@ -124,7 +124,7 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
           rows={2}
           name="comment"
           id="comment"
-          className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+          className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 dark:text-white"
           placeholder="Add your comment..."
         />
       </div>

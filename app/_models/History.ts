@@ -176,6 +176,12 @@ export const History = types
     return { setActiveConversationId };
   })
   .actions((self) => ({
+    clearActiveConversationId() {
+      self.activeConversationId = undefined;
+      self.showModelDetail = false;
+      self.showAdvancedPrompt = false;
+    },
+
     setConversations(conversations: Instance<typeof Conversation>[]) {
       self.conversations = castToSnapshot(conversations);
     },
@@ -195,15 +201,13 @@ export const History = types
       conversation: Instance<typeof Conversation>
     ) {
       // TODO: handle case timeout using higher order function
-      const latestMessages = conversation.chatMessages
-        .slice(-5)
-        .map((e) => ({
-          role:
-            e.messageSenderType === MessageSenderType.User
-              ? Role.User
-              : Role.Assistant,
-          content: e.text,
-        }));
+      const latestMessages = conversation.chatMessages.slice(-5).map((e) => ({
+        role:
+          e.messageSenderType === MessageSenderType.User
+            ? Role.User
+            : Role.Assistant,
+        content: e.text,
+      }));
 
       const modelName =
         self.getActiveConversation()?.aiModel.name ?? "gpt-3.5-turbo";
@@ -398,39 +402,6 @@ export const History = types
         updatedAt: Date.now(),
       });
 
-      const welcomeText = product.action.params.welcomeMessage;
-      if (welcomeText) {
-        const createMsgResult = yield api.createNewTextChatMessage(
-          newConvo.id,
-          MessageSenderType.Ai,
-          newAiModel.modelId,
-          newAiModel.title,
-          newAiModel.avatarUrl || "",
-          welcomeText
-        );
-
-        if (createMsgResult.kind !== "ok") {
-          // TODO: handle case bad-data
-          console.error(
-            `Create message error`,
-            JSON.stringify(createMsgResult)
-          );
-          return;
-        }
-
-        const welcomeMsg = ChatMessage.create({
-          id: createMsgResult.messageId,
-          conversationId: newConvo.id,
-          messageType: MessageType.Text,
-          messageSenderType: MessageSenderType.Ai,
-          senderUid: newAiModel.modelId,
-          senderName: newAiModel.title,
-          senderAvatarUrl: newAiModel.avatarUrl || "",
-          text: welcomeText,
-          createdAt: Date.now(),
-        });
-        newConvo.setProp("lastTextMessage", welcomeMsg.text);
-      }
       self.conversations.push(newConvo);
       self.activeConversationId = newConvo.id;
     });
