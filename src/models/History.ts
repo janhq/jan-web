@@ -201,7 +201,7 @@ export const History = types
         }));
 
       const modelName =
-        self.getActiveConversation()?.aiModel.name ?? "gpt-3.5-turbo";
+        self.getActiveConversation()?.aiModel.modelId ?? "gpt-3.5-turbo";
 
       const result = yield api.createNewTextChatMessage(
         conversation.id,
