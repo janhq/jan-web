@@ -14,11 +14,9 @@ const UserProfileDropDown: React.FC<Props> = ({ onLogOutClick }) => {
     <Popover.Group className="hidden lg:flex lg:gap-x-12">
       <Popover className="relative">
         <Popover.Button className="flex items-center gap-2 outline-none">
-          <Image
+          <img
             className="rounded-sm w-8 aspect-square"
             src={currentUser?.photoURL || "/icons/app_icon.svg"}
-            width={32}
-            height={32}
             alt=""
           />
           <div className="flex flex-col justify-start">

@@ -11,10 +11,9 @@ interface ISlideprops {
 const Slide: FC<ISlideprops> = ({ description, image, title, productId }) => {
   return (
     <div className="w-full h-[435px] relative">
-      <Image
+      <img
         className="w-full h-full object-cover"
         src={image || ""}
-        layout="fill"
         alt=""
       />
       <div className="absolute bg-[rgba(0,0,0,0.7)] w-full text-white bottom-0">
