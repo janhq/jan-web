@@ -6,7 +6,7 @@ const DiscordContainer = () => (
   <div className="border-t border-gray-200 p-3 gap-3 flex items-center justify-between">
     <Link
       className="flex gap-2 items-center rounded-lg text-gray-900 text-xs leading-[18px]"
-      href={""}
+      href="/download"
       target="_blank_"
     >
       <Image

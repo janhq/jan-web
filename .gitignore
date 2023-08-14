@@ -37,3 +37,6 @@ next-env.d.ts
 
 # Firebase config file
 app/_services/firebase/firebase_configs.json
+# Sentry Auth Token
+.sentryclirc
+

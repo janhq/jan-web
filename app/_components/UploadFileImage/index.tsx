@@ -4,7 +4,7 @@ import Image from "next/image";
 export const UploadFileImage: React.FC = () => {
   const ref = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<string | null>(null);
-  const [checked, setChecked] = useState<boolean>(false);
+  const [checked, setChecked] = useState<boolean>(true);
   const [fileName, setFileName] = useState<string>("No selected file");
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
@@ -86,7 +86,6 @@ export const UploadFileImage: React.FC = () => {
           checked={checked}
           className="rounded"
           type="checkbox"
-          defaultChecked
         />
         <span className="text-sm leading-5 text-[#111928]">
           Crop center to fit output resolution
