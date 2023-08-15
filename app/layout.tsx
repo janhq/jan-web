@@ -1,9 +1,10 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import classNames from "classnames";
-import MobileShowcase from "@/_screens/MobileShowcase";
+import MobileShowcase from "@/_components/MobileShowcase";
 import { Metadata } from "next";
 const inter = Inter({ subsets: ["latin"] });
+
 export const metadata: Metadata = {
   title: "Free AI Image Generator and Interact with Ai Chat - Jan.ai",
   description:

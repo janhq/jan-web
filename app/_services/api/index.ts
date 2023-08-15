@@ -12,7 +12,7 @@ import type {
 } from "./api.types";
 import { GeneralApiProblem, getGeneralApiProblem } from "./api.problems";
 import { ConversationResponse } from "./models/conversation.response";
-import { ChatMessage, MessageType } from "../../_models/ChatMessage";
+import { ChatMessage, MessageType } from "@/_models/ChatMessage";
 import { MessageResponse } from "./models/message.response";
 import { Instance } from "mobx-state-tree";
 

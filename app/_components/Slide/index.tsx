@@ -30,7 +30,7 @@ const Slide: FC<ISlideprops> = ({ description, image, title, productId }) => {
           </div>
           <Link
             href={{
-              pathname: `/chat`,
+              pathname: `/`,
               query: { productId: productId },
             }}
             className="flex-none flex w-30 h-12 items-center text-sm justify-center gap-2 px-5 py-[10px] rounded-md bg-white leading-[21px] text-gray-800"

@@ -10,7 +10,7 @@ import Gleap from "gleap";
 import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
 import { ModelDetailSideBar } from "../ModelDetailSideBar";
 import NewChatBlankState from "../NewChatBlankState";
-import { useAuth } from "../../_contexts/authContext";
+import { useAuth } from "@/_contexts/authContext";
 
 const ChatContainer: React.FC = observer(() => {
   const [prefillPrompt, setPrefillPrompt] = useState("");

@@ -3,7 +3,7 @@ import JanImage from "../JanImage";
 import { displayDate } from "@/_utils/datetime";
 import Link from "next/link";
 import { useStore } from "@/_models/RootStore";
-import { useAuth } from "../../_contexts/authContext";
+import { useAuth } from "@/_contexts/authContext";
 import { DefaultUser } from "@/_models/User";
 
 type Props = {

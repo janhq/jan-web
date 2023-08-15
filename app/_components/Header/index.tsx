@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { useAuth } from "../../_contexts/authContext";
+import { useAuth } from "@/_contexts/authContext";
 import { usePathname } from "next/navigation";
 import SignInModal from "../SignInModal";
 import MobileMenuPane from "../MobileMenuPane";
@@ -12,7 +12,7 @@ import { ThemeChanger } from "../ChangeTheme";
 import UserProfileDropDown from "../UserProfileDropDown";
 
 export const navigation = [
-  { name: "Products", href: "/chat" },
+  { name: "Products", href: "/" },
   { name: "Pricing", href: "/pricing" },
   { name: "Docs", href: "/docs" },
   { name: "About", href: "/about" },

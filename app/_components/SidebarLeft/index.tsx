@@ -8,7 +8,7 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "@/_models/RootStore";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useAuth } from "../../_contexts/authContext";
+import { useAuth } from "@/_contexts/authContext";
 import useGetUserConversations from "@/_hooks/useGetUserConversations";
 import DiscordContainer from "../DiscordContainer";
 import useGetCollections from "@/_hooks/useGetCollections";
@@ -24,7 +24,7 @@ export const SidebarLeft: React.FC = observer(() => {
   const { featuredProducts } = useGetCollections();
 
   const checkRouter = () =>
-    navigation.map((item) => router.includes(item)).includes(true);
+    navigation.map((item) => router?.includes(item)).includes(true);
 
   useEffect(() => {
     if (isReady && currentUser && historyStore.conversations.length === 0) {

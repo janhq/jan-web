@@ -1,7 +1,7 @@
 import SendButton from "../SendButton";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useStore } from "@/_models/RootStore";
-import { useAuth } from "../../_contexts/authContext";
+import { useAuth } from "@/_contexts/authContext";
 import { DefaultUser } from "@/_models/User";
 import { AiModelType } from "@/_models/AiModel";
 import { api } from "@/_services/api";

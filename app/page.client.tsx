@@ -1,16 +1,16 @@
 "use client";
-import Header from "../../_components/Header";
-import { AdvancedPrompt } from "../../_components/AdvancedPrompt";
-import ChatContainer from "../../_components/ChatContainer";
-import { CompactSideBar } from "../../_components/CompactSideBar";
-import { SidebarLeft } from "../../_components/SidebarLeft";
-import { AuthProvider } from "../../_contexts/authContext";
+import Header from "@/_components/Header";
+import { AdvancedPrompt } from "@/_components/AdvancedPrompt";
+import ChatContainer from "@/_components/ChatContainer";
+import { CompactSideBar } from "@/_components/CompactSideBar";
+import { SidebarLeft } from "@/_components/SidebarLeft";
+import { AuthProvider } from "@/_contexts/authContext";
 import { withAnalytics } from "@/_helpers/withAnalytics";
 import { Provider, RootInstance, initializeStore } from "@/_models/RootStore";
 import { useRef } from "react";
 import { ThemeProvider } from "next-themes";
 
-const ChatPage: React.FC = () => {
+const PageClient: React.FC = () => {
   const store = useRef<RootInstance>(initializeStore());
 
   return (
@@ -38,4 +38,4 @@ const ChatPage: React.FC = () => {
   );
 };
 
-export default withAnalytics(ChatPage);
+export default withAnalytics(PageClient);
