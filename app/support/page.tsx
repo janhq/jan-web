@@ -24,7 +24,7 @@ const Page: React.FC = () => {
         <h3>Get fast support in our Discord channel</h3>
         <Link
           className="flex gap-2 cursor-pointer"
-          href={process.env.NEXT_PUBLIC_DISCORD_INVITATION_URL || ""}
+          href={process.env.NEXT_PUBLIC_DISCORD_INVITATION_URL ?? "#"}
           target="_blank_"
         >
           <Image src={"/icons/discord.svg"} width={70} height={70} alt="" />

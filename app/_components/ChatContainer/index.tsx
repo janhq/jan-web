@@ -10,10 +10,9 @@ import Gleap from "gleap";
 import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
 import { ModelDetailSideBar } from "../ModelDetailSideBar";
 import NewChatBlankState from "../NewChatBlankState";
-import { ProductsProps } from "@/_services/products";
 import { useAuth } from "../../_contexts/authContext";
 
-const ChatContainer: React.FC<ProductsProps> = observer((props) => {
+const ChatContainer: React.FC = observer(() => {
   const [prefillPrompt, setPrefillPrompt] = useState("");
   const { historyStore } = useStore();
   const { isReady, currentUser } = useAuth();
@@ -26,8 +25,9 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
       historyStore.clearAllConversations();
     }
   }, [isReady, currentUser, historyStore]);
+
   useEffect(() => {
-    Gleap.showFeedbackButton(conversation ? false : true);
+    Gleap.showFeedbackButton(!conversation);
   }, [conversation]);
 
   const [open, setOpen] = useState(false);

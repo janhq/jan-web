@@ -40,9 +40,9 @@ const Header: React.FC = () => {
     >
       <nav className="mx-auto flex items-center" aria-label="Global">
         <div className="flex items-center flex-1 justify-center">
-          {navigation.map((item, index) => (
+          {navigation.map((item) => (
             <div
-              key={index}
+              key={item.name}
               className={`px-3 py-1 flex gap-2 rounded-lg ${
                 checkLink(router || "", item.href)
                   ? "bg-[#E5E7EB] text-[#1F2A37]"

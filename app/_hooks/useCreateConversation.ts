@@ -1,5 +1,5 @@
+import { ProductV2 } from "@/_models/ProductV2";
 import { useAuth } from "../_contexts/authContext";
-import { Product } from "../_models/Product";
 import { useStore } from "../_models/RootStore";
 import { DefaultUser } from "../_models/User";
 
@@ -8,7 +8,7 @@ const useCreateConversation = () => {
   const { currentUser, setShowLogin } = useAuth();
 
   const requestCreateConvo = (
-    product: Product,
+    product: ProductV2,
     forceCreate: boolean = false
   ) => {
     if (!currentUser || currentUser.isAnonymous) {
@@ -16,16 +16,10 @@ const useCreateConversation = () => {
       return;
     }
 
-    const modelId = product.action.params.models[0].name;
-    if (!modelId) {
-      console.error("No model id found");
-      return;
-    }
-
     // search if any fresh convo with particular product id
     const convo = historyStore.conversations.find(
       (convo) =>
-        convo.aiModel.modelId === modelId && convo.chatMessages.length <= 1
+        convo.aiModel.modelId === product.slug && convo.chatMessages.length <= 1
     );
 
     if (convo && !forceCreate) {

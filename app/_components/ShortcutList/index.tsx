@@ -2,10 +2,10 @@ import Image from "next/image";
 import React from "react";
 import ShortcutItem from "../ShortcutItem";
 import { observer } from "mobx-react-lite";
-import { Product } from "@/_models/Product";
+import { ProductV2 } from "@/_models/ProductV2";
 
 type Props = {
-  products: Product[];
+  products: ProductV2[];
 };
 
 const ShortcutList: React.FC<Props> = observer(({ products }) => {
@@ -31,8 +31,8 @@ const ShortcutList: React.FC<Props> = observer(({ products }) => {
       <div
         className={`flex flex-col gap-3 py-2 ${!expand ? "hidden " : "block"}`}
       >
-        {products.map((product, index) => (
-          <ShortcutItem key={index} product={product} />
+        {products.map((product) => (
+          <ShortcutItem key={product.ID} product={product} />
         ))}
       </div>
     </div>

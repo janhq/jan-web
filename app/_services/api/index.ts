@@ -144,7 +144,7 @@ export class Api {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
           Authorization: `Bearer ${authToken}`,
-          be_key: process.env.NEXT_PUBLIC_BE_KEY || "",
+          be_key: process.env.NEXT_PUBLIC_BE_KEY ?? "",
         },
         debug: false,
         pollingInterval: 100000,
@@ -409,12 +409,7 @@ export class Api {
       }
     }
 
-    try {
-      return { kind: "ok" };
-    } catch (e) {
-      console.error("updateChatMessage error", e);
-      return { kind: "bad-data" };
-    }
+    return { kind: "ok" };
   }
 
   async deleteConversation(convoId: string) {
@@ -430,12 +425,7 @@ export class Api {
       }
     }
 
-    try {
-      return { kind: "ok" };
-    } catch (e) {
-      console.error("createNewImageChatMessage error", e);
-      return { kind: "bad-data" };
-    }
+    return { kind: "ok" };
   }
 }
 

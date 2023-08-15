@@ -1,32 +1,62 @@
-import { FC } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import Slide from "../Slide";
-import { Product } from "@/_models/Product";
+import useEmblaCarousel, { EmblaCarouselType } from "embla-carousel-react";
+import { NextButton, PrevButton } from "../ButtonSlider";
+import { ProductV2 } from "@/_models/ProductV2";
 
-interface ISliderProps {
-  product: Product;
-}
+type Props = {
+  products: ProductV2[];
+};
 
-const Slider: FC<ISliderProps> = (props) => {
-  // const data = [1, 2, 3];
-  // const settings = {
-  //   dots: true,
-  //   infinite: true,
-  //   speed: 500,
-  //   slidesToShow: 1,
-  //   slidesToScroll: 1,
-  // };
+const Slider: FC<Props> = ({ products }) => {
+  const [emblaRef, emblaApi] = useEmblaCarousel();
+  const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
+  const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
+
+  const scrollPrev = useCallback(
+    () => emblaApi && emblaApi.scrollPrev(),
+    [emblaApi]
+  );
+  const scrollNext = useCallback(
+    () => emblaApi && emblaApi.scrollNext(),
+    [emblaApi]
+  );
+
+  const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
+    setPrevBtnDisabled(!emblaApi.canScrollPrev());
+    setNextBtnDisabled(!emblaApi.canScrollNext());
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect(emblaApi);
+    emblaApi.on("reInit", onSelect);
+    emblaApi.on("select", onSelect);
+  }, [emblaApi, onSelect]);
+
   return (
-    <div className="w-full flex overflow-hidden rounded-lg">
-      <Slide
-        productId={props.product?.name}
-        title={props.product?.decoration.title}
-        description={
-          props.product.decoration.subTitle ||
-          props.product.decoration.description
-        }
-        image={props.product.decoration.images[0]}
-      />
+    <div className="embla rounded-lg overflow-hidden relative">
+      <div className="embla__viewport" ref={emblaRef}>
+        <div className="embla__container">
+          {products.map((product) => {
+            return (
+              <Slide
+                key={product.slug}
+                productId={product.name}
+                title={product.name}
+                description={product.description}
+                image={product.image_url}
+              />
+            );
+          })}
+        </div>
+      </div>
+      <div className="embla__buttons">
+        <PrevButton onClick={scrollPrev} disabled={prevBtnDisabled} />
+        <NextButton onClick={scrollNext} disabled={nextBtnDisabled} />
+      </div>
     </div>
   );
 };
+
 export default Slider;

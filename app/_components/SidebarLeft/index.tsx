@@ -1,42 +1,30 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import SearchBar from "../SearchBar";
 import ShortcutList from "../ShortcutList";
 import HistoryList from "../HistoryList";
 import HistoryEmpty from "../HistoryEmpty";
-import { useRemoteConfig, RemoteConfigKeys } from "@/_hooks/useRemoteConfig";
-import { Product } from "@/_models/Product";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/_models/RootStore";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { fetchShortcuts } from "@/_services/products";
 import { useAuth } from "../../_contexts/authContext";
 import useGetUserConversations from "@/_hooks/useGetUserConversations";
 import DiscordContainer from "../DiscordContainer";
+import useGetCollections from "@/_hooks/useGetCollections";
 
 export const SidebarLeft: React.FC = observer(() => {
   const router = usePathname();
-  const [products, setProducts] = useState<Product[] | null>(null);
   const [searchText, setSearchText] = useState("");
   const { isReady, currentUser } = useAuth();
   const { getUserConversations } = useGetUserConversations();
 
   const { historyStore } = useStore();
   const navigation = ["pricing", "docs", "about"];
+  const { featuredProducts } = useGetCollections();
 
-  const checkRouter = () => {
-    const checked = navigation.map((item) => router.includes(item));
-    return checked.includes(true);
-  };
-
-  useEffect(() => {
-    const getProducts = async () => {
-      const shortcuts = await fetchShortcuts();
-      setProducts(shortcuts);
-    };
-    getProducts();
-  }, []);
+  const checkRouter = () =>
+    navigation.map((item) => router.includes(item)).includes(true);
 
   useEffect(() => {
     if (isReady && currentUser && historyStore.conversations.length === 0) {
@@ -48,17 +36,17 @@ export const SidebarLeft: React.FC = observer(() => {
   }, [currentUser, isReady, historyStore, getUserConversations]);
 
   const showHistoryList = historyStore.conversations.length > 0;
-  const { getConfig } = useRemoteConfig();
-  const productsMain = getConfig(RemoteConfigKeys.ENABLE_OFFLINE_MODEL)
-    ? products
-    : products?.filter((e) => e.action?.params?.models[0]?.offline !== true);
 
-  const onLogoClick = () => {
-    historyStore.clearActiveConversationId();  }
+  const onLogoClick = useCallback(() => {
+    historyStore.clearActiveConversationId();
+  }, []);
+
   const onSearching = (text: string) => {
     setSearchText(text);
-  };  
-  return (    <div
+  };
+
+  return (
+    <div
       className={`${
         historyStore.showAdvancedPrompt ? "lg:hidden" : "lg:flex"
       } ${
@@ -79,13 +67,10 @@ export const SidebarLeft: React.FC = observer(() => {
           <div className="flex flex-col h-full overflow-x-hidden scroll gap-3">
             <ShortcutList
               products={
-                productsMain?.filter(
+                featuredProducts?.filter(
                   (e) =>
                     searchText === "" ||
-                    e.name.toLowerCase().includes(searchText.toLowerCase()) ||
-                    e.decoration.title
-                      .toLowerCase()
-                      .includes(searchText.toLowerCase())
+                    e.name.toLowerCase().includes(searchText.toLowerCase())
                 ) || []
               }
             />

@@ -2,12 +2,12 @@ import { Instance, castToSnapshot, flow, types } from "mobx-state-tree";
 import { Conversation } from "./Conversation";
 import { AiModel, AiModelType } from "./AiModel";
 import { User } from "./User";
-import { Product } from "./Product";
 import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
 import { api } from "../_services/api";
 import { Role } from "../_services/api/api.types";
 import { MessageResponse } from "@/_services/api/models/message.response";
 import { MESSAGE_PER_PAGE } from "../_utils/const";
+import { ProductV2 } from "./ProductV2";
 
 export const History = types
   .model("History", {
@@ -217,7 +217,7 @@ export const History = types
         MessageSenderType.Ai,
         conversation.aiModel.name,
         conversation.aiModel.title,
-        conversation.aiModel.avatarUrl || "",
+        conversation.aiModel.avatarUrl ?? "",
         ""
       );
 
@@ -237,7 +237,7 @@ export const History = types
         messageSenderType: MessageSenderType.Ai,
         senderUid: conversation.aiModel.name,
         senderName: conversation.aiModel.title,
-        senderAvatarUrl: conversation.aiModel.avatarUrl || "",
+        senderAvatarUrl: conversation.aiModel.avatarUrl ?? "",
         text: "",
         createdAt: Date.now(),
       });
@@ -310,7 +310,7 @@ export const History = types
           MessageSenderType.Ai,
           conversation.aiModel.name,
           conversation.aiModel.title,
-          conversation.aiModel.avatarUrl || "",
+          conversation.aiModel.avatarUrl ?? "",
           message || "",
           imageUrl
         );
@@ -328,7 +328,7 @@ export const History = types
           messageSenderType: MessageSenderType.Ai,
           senderUid: conversation.aiModel.name,
           senderName: conversation.aiModel.title,
-          senderAvatarUrl: conversation.aiModel.avatarUrl || "",
+          senderAvatarUrl: conversation.aiModel.avatarUrl ?? "",
           text: message,
           imageUrls: data.outputs,
           createdAt: Date.now(),
@@ -348,42 +348,31 @@ export const History = types
   })
   .actions((self) => {
     const createConversation = flow(function* (
-      product: Product,
+      product: ProductV2,
       userId: string,
       displayName: string,
       avatarUrl?: string
     ) {
       const textPrompts: string[] = [];
-      product.action.params.suggestedPrompts?.map((p) => {
+      product.prompts?.map((p) => {
         if (typeof p === "string") {
           textPrompts.push(p);
         }
       });
 
-      let modelType = AiModelType.LLM;
-      if (product.decoration.tags.includes("Awesome Art")) {
-        modelType = AiModelType.GenerativeArt;
-      }
-
-      const modelId = product.action.params.models[0].name;
-      if (!modelId) {
-        console.error("No model id found");
-        return;
-      }
-
       const newAiModel = AiModel.create({
         name: product.name,
-        modelId: modelId,
-        title: product.decoration.title,
-        aiModelType: modelType,
-        description: product.decoration.technicalDescription,
-        modelUrl: product.decoration.technicalURL,
-        modelVersion: product.decoration.technicalVersion,
-        avatarUrl: product.decoration.images[0],
+        modelId: product.slug,
+        title: product.name,
+        aiModelType: product.modelType,
+        description: product.description,
+        modelUrl: product.source_url,
+        modelVersion: product.version,
+        avatarUrl: product.image_url,
         defaultPrompts: textPrompts,
       });
 
-      const createConvoResult = yield api.createConversation(modelId);
+      const createConvoResult = yield api.createConversation(product.slug);
       if (createConvoResult.kind !== "ok") {
         // TODO showing error dialog
         console.error(`Error`, JSON.stringify(createConvoResult));

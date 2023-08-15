@@ -1,12 +1,12 @@
 import Image from "next/image";
 import GenerateImageCard from "../GenerateImageCard";
-import { Product } from "@/_models/Product";
+import { ProductV2 } from "@/_models/ProductV2";
 
-interface IGenerateImage {
-  products: Product[];
+type Props = {
+  products: ProductV2[];
 }
 
-const GenerateImageList: React.FC<IGenerateImage> = ({ products }) => (
+const GenerateImageList: React.FC<Props> = ({ products }) => (
   <div className="pb-4">
     <div className="flex mt-4 justify-between">
       <div className="gap-4 flex items-center">
@@ -17,12 +17,12 @@ const GenerateImageList: React.FC<IGenerateImage> = ({ products }) => (
       </div>
     </div>
     <div className="mt-2 grid grid-cols-2 gap-4 sm:gap-x-6 md:grid-cols-4 md:gap-8">
-      {products.map((item, index) => (
+      {products.map((item) => (
         <GenerateImageCard
-          key={index}
+          key={item.ID}
           name={item.name}
-          img={item.decoration.images[0]}
-          title={item.decoration.title}
+          img={item.image_url}
+          title={item.name}
         />
       ))}
     </div>

@@ -1,5 +1,4 @@
 import ChatPage from "@/_screens/Chat";
-import { fetchDiscoverShortcuts } from "@/_services/products";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,13 +7,8 @@ export const metadata: Metadata = {
     "Free AI chat website with many open source AI models allows you to choose different bots to converse with.",
 };
 
-const fetchServerSideProducts = async () => {
-  "use server";
-  return fetchDiscoverShortcuts()
-};
-const Page = async ({}) => {
-  const props = await fetchServerSideProducts();
-  return <ChatPage {...props} />;
+const Page = () => {
+  return <ChatPage />;
 };
 
 export default Page;

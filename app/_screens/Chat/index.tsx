@@ -7,11 +7,10 @@ import { SidebarLeft } from "../../_components/SidebarLeft";
 import { AuthProvider } from "../../_contexts/authContext";
 import { withAnalytics } from "@/_helpers/withAnalytics";
 import { Provider, RootInstance, initializeStore } from "@/_models/RootStore";
-import { ProductsProps } from "@/_services/products";
 import { useRef } from "react";
 import { ThemeProvider } from "next-themes";
 
-const ChatPage: React.FC<ProductsProps> = (props) => {
+const ChatPage: React.FC = () => {
   const store = useRef<RootInstance>(initializeStore());
 
   return (
@@ -29,7 +28,7 @@ const ChatPage: React.FC<ProductsProps> = (props) => {
                 <div className="flex-shrink-0 flex-0">
                   <Header />
                 </div>
-                <ChatContainer {...props} />
+                <ChatContainer />
               </div>
             </div>
           </Provider>
@@ -38,4 +37,5 @@ const ChatPage: React.FC<ProductsProps> = (props) => {
     </AuthProvider>
   );
 };
-export default withAnalytics<ProductsProps>(ChatPage);
+
+export default withAnalytics(ChatPage);

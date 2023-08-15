@@ -1,31 +1,22 @@
-import React, { useEffect, useState } from "react";
-import AiSearch from "../AiSearch";
+import React from "react";
 import Slider from "../Slider";
-import AiTypeList from "../AiTypeList";
 import ConversationalList from "../ConversationalList";
 import GenerateImageList from "../GenerateImageList";
-import Footer from "../Footer";
-import { Product, Section } from "@/_models/Product";
-import { fetchDiscover } from "@/_services/products";
-import useGetProducts from "@/_hooks/useGetProducts";
+import useGetCollections from "@/_hooks/useGetCollections";
 
 const NewChatBlankState: React.FC = () => {
-  const {
-    fetchConfigurations,
-    featuredProducts,
-    conversationalProducts,
-    generateImageProducts,
-  } = useGetProducts();
+  const { isLoading, llmProducts, imageGenProducts, featuredProducts } =
+    useGetCollections();
 
-  useEffect(() => {
-    fetchConfigurations();
-  }, []);
+  if (isLoading) {
+    return <div></div>;
+  }
 
   return (
     <div className="px-6 pt-8 w-full h-full overflow-y-scroll scroll">
-      {featuredProducts.length > 0 && <Slider product={featuredProducts[0]} />}
-      <ConversationalList products={conversationalProducts} />
-      <GenerateImageList products={generateImageProducts} />
+      {featuredProducts.length > 0 && <Slider products={featuredProducts} />}
+      <ConversationalList products={llmProducts} />
+      <GenerateImageList products={imageGenProducts} />
     </div>
   );
 };

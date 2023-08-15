@@ -1,15 +1,13 @@
-import { Product } from "@/_models/Product";
 import React from "react";
 import useCreateConversation from "@/_hooks/useCreateConversation";
+import { ProductV2 } from "@/_models/ProductV2";
 
 type Props = {
-  product: Product;
+  product: ProductV2;
 };
 
 const ShortcutItem: React.FC<Props> = ({ product }) => {
   const { requestCreateConvo } = useCreateConversation();
-  const { decoration } = product;
-  const avatarUrl = decoration.images.length > 0 ? decoration.images[0] : "";
 
   const onClickHandler = () => {
     requestCreateConvo(product);
@@ -17,10 +15,10 @@ const ShortcutItem: React.FC<Props> = ({ product }) => {
 
   return (
     <button className="flex items-center gap-2" onClick={onClickHandler}>
-      <img src={avatarUrl} className="w-9 aspect-square rounded-full" alt="" />
+      <img src={product.image_url} className="w-9 aspect-square rounded-full" alt="" />
       <div className="flex flex-col text-sm leading-[20px]">
         <span className="text-[#111928] dark:text-white">
-          {decoration.title}
+          {product.name}
         </span>
       </div>
     </button>

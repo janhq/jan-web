@@ -1,5 +1,4 @@
 import { Instance, cast } from "mobx-state-tree";
-import { Product, Section } from "../_models/Product";
 import { useStore } from "../_models/RootStore";
 import { api } from "../_services/api";
 import { AiModel, AiModelType } from "../_models/AiModel";
@@ -11,10 +10,6 @@ import { fetchProducts } from "@/_services/products";
 const useGetUserConversations = () => {
   const { historyStore } = useStore();
 
-  const getProducts = (): Promise<Product[]> => {
-    return fetchProducts().then((products) => products || []);
-  };
-
   const getUserConversations = async (firebaseUser: FirebaseUser) => {
     const convoResult = await api.getConversations();
     if (convoResult.kind !== "ok") {
@@ -23,43 +18,31 @@ const useGetUserConversations = () => {
     }
 
     // getting ai models
-    const products = await getProducts();
-    if (!products) {
+    const products = await fetchProducts();
+    if (!products || products.length === 0) {
       return;
     }
 
     const aiModels: Instance<typeof AiModel>[] = [];
     products.forEach((product) => {
       const textPrompts: string[] = [];
-      product.action.params.suggestedPrompts?.map((p) => {
+      product.prompts?.map((p) => {
         if (typeof p === "string") {
           textPrompts.push(p);
         }
       });
 
-      let modelType = AiModelType.LLM;
-      if (product.decoration.tags?.includes("Awesome Art")) {
-        modelType = AiModelType.GenerativeArt;
-      }
-
-      const modelId = product.action.params.models[0].name;
-      if (!modelId) {
-        console.error("No model id found");
-        return;
-      }
-
       const aiModel: Instance<typeof AiModel> = {
         name: product.name,
-        modelId: modelId,
-        title: product.decoration.title,
-        aiModelType: modelType,
-        description: product.decoration.technicalDescription,
-        modelUrl: product.decoration.technicalURL,
-        modelVersion: product.decoration.technicalVersion,
+        modelId: product.slug,
+        title: product.name,
+        aiModelType: product.modelType,
+        description: product.description,
+        modelUrl: product.source_url,
+        modelVersion: product.version,
         modelDescription:
-          product.decoration.additionalDescription ||
-          product.decoration.technicalDescription,
-        avatarUrl: product.decoration.images[0],
+          product.technical_description || product.long_description,
+        avatarUrl: product.image_url,
         defaultPrompts: cast(textPrompts),
       };
       aiModels.push(aiModel);

@@ -9,7 +9,7 @@ export function withAnalytics<P extends Record<string, any>>(
   const WrappedComponent: React.FC<P> = (props) => {
 
     const { initAnalytics } = useTracking();
-    Gleap.initialize(process.env.NEXT_PUBLIC_GLEAP_API_KEY || "");
+    Gleap.initialize(process.env.NEXT_PUBLIC_GLEAP_API_KEY ?? "");
     initAnalytics();
     
     return <Component {...props} />;

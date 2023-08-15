@@ -27,7 +27,7 @@ const SimpleTextMessage: React.FC<Props> = ({
         <div className="text-[#1B1B1B] text-[13px] font-extrabold leading-[15.2px] dark:text-[#d1d5db]">
           {senderName}
         </div>
-        <div className="text-[11px] leading-[13.2px] font-medium text-gray-400 ml-2">
+        <div className="text-[11px] leading-[13.2px] font-medium text-gray-400">
           {displayDate(createdAt)}
         </div>
       </div>

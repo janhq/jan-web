@@ -86,8 +86,9 @@ export const UploadFileImage: React.FC = () => {
           checked={checked}
           className="rounded"
           type="checkbox"
+          onChange={() => setChecked(!checked)}
         />
-        <span className="text-sm leading-5 text-[#111928]">
+        <span className="text-sm leading-5 text-[#111928] pointer-events-none">
           Crop center to fit output resolution
         </span>
       </div>

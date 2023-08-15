@@ -19,7 +19,7 @@ const ModelInfo: React.FC<Props> = ({
     <h2 className="font-semibold text-sm text-gray-900 dark:text-white">
       {modelName} is available via Jan API
     </h2>
-    <div className="flex items-center gap-4">
+    <div className="flex items-start gap-4">
       <ModelInfoItem description={inferenceTime} name="Inference Time" />
       <ModelInfoItem description={hardware} name="Hardware" />
     </div>
