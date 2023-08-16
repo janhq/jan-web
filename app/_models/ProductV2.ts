@@ -1,5 +1,4 @@
 // Should change name to Product after we remove the old one
-
 import { AiModelType } from "./AiModel";
 
 export interface Collection {
@@ -36,7 +35,7 @@ export interface ProductV2 {
   inputs: Record<string, unknown>;
   outputs: Record<string, unknown>;
   greeting: string;
-  modelType: AiModelType.LLM; // TODO: hardcoded for now
+  modelType: AiModelType;
 }
 
 export interface Prompt {

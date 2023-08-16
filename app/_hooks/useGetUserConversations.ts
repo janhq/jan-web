@@ -1,19 +1,25 @@
 import { Instance, cast } from "mobx-state-tree";
 import { useStore } from "../_models/RootStore";
-import { api } from "../_services/api";
 import { AiModel, AiModelType } from "../_models/AiModel";
 import { Conversation } from "../_models/Conversation";
 import { DefaultUser, User } from "../_models/User";
-import { User as FirebaseUser } from "firebase/auth";
 import { fetchProducts } from "@/_services/products";
+import { useAuth } from "@/_contexts/authContext";
+import { fetchConversations } from "@/_services/conversations";
 
 const useGetUserConversations = () => {
   const { historyStore } = useStore();
+  const { currentUser } = useAuth();
 
-  const getUserConversations = async (firebaseUser: FirebaseUser) => {
-    const convoResult = await api.getConversations();
-    if (convoResult.kind !== "ok") {
-      console.error("Error getting user conversations", convoResult);
+  const getUserConversations = async () => {
+    if (!currentUser) {
+      console.error("User not logged in");
+      return;
+    }
+
+    const token = await currentUser.getIdToken();
+    const convos = await fetchConversations(token);
+    if (!convos || convos.length === 0) {
       return;
     }
 
@@ -36,7 +42,7 @@ const useGetUserConversations = () => {
         name: product.name,
         modelId: product.slug,
         title: product.name,
-        aiModelType: product.modelType,
+        aiModelType: AiModelType.LLM, // TODO: hard code for now
         description: product.description,
         modelUrl: product.source_url,
         modelVersion: product.version,
@@ -50,12 +56,12 @@ const useGetUserConversations = () => {
 
     const finalConvo: Instance<typeof Conversation>[] = [];
     // TODO: should ask backend to sort this
-    convoResult.conversations.sort(
+    convos.sort(
       (a, b) =>
         new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
     );
     // mapping
-    convoResult.conversations.forEach((convo) => {
+    convos.forEach((convo) => {
       const modelId = convo.ai_model;
       const correspondingAiModel = aiModels.find(
         (model) => model.modelId === modelId
@@ -63,9 +69,9 @@ const useGetUserConversations = () => {
 
       if (correspondingAiModel) {
         const user: Instance<typeof User> = {
-          id: firebaseUser?.uid ?? DefaultUser.id,
-          displayName: firebaseUser?.displayName ?? DefaultUser.displayName,
-          avatarUrl: firebaseUser?.photoURL ?? DefaultUser.avatarUrl,
+          id: currentUser.uid,
+          displayName: currentUser.displayName ?? DefaultUser.displayName,
+          avatarUrl: currentUser.photoURL ?? DefaultUser.avatarUrl,
         };
 
         const conversation = Conversation.create({

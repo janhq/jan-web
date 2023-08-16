@@ -29,7 +29,7 @@ export const SidebarLeft: React.FC = observer(() => {
   useEffect(() => {
     if (isReady && currentUser && historyStore.conversations.length === 0) {
       const createConversationAndActive = async () => {
-        await getUserConversations(currentUser);
+        await getUserConversations();
       };
       createConversationAndActive();
     }

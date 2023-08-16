@@ -19,7 +19,7 @@ const GenerateImageList: React.FC<Props> = ({ products }) => (
     <div className="mt-2 grid grid-cols-2 gap-4 sm:gap-x-6 md:grid-cols-4 md:gap-8">
       {products.map((item) => (
         <GenerateImageCard
-          key={item.ID}
+          key={item.name}
           name={item.name}
           img={item.image_url}
           title={item.name}

@@ -17,7 +17,7 @@ const ConversationalList: React.FC<Props> = ({ products }) => (
     <div className="mt-4 flex w-full overflow-y-hidden gap-2">
       {products.map((item) => (
         <ConversationalCard
-          key={item.ID}
+          key={item.name}
           name={item.name}
           image={item.image_url}
           title={item.name}
