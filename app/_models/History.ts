@@ -372,7 +372,7 @@ export const History = types
         name: product.name,
         modelId: product.slug,
         title: product.name,
-        aiModelType: AiModelType.LLM, //product.modelType, TODO: hardcode
+        aiModelType: AiModelType.GenerativeArt, //product.modelType, TODO: hardcode
         description: product.description,
         modelUrl: product.source_url,
         modelVersion: product.version,

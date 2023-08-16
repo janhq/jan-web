@@ -70,6 +70,7 @@ export const UploadFileImage: React.FC = () => {
             Drag an image here, or click to select
           </span>
           <input
+            id="fileInput"
             ref={ref}
             type="file"
             style={{ display: "none" }}

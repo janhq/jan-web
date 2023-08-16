@@ -1,20 +1,24 @@
+import useCreateConversation from "@/_hooks/useCreateConversation";
+import { ProductV2 } from "@/_models/ProductV2";
 import Image from "next/image";
-import Link from "next/link";
-import { FC } from "react";
 
-interface ISlideprops {
-  productId?: string;
-  image?: string;
-  title?: string;
-  description?: string;
-}
+type Props = {
+  product: ProductV2;
+};
 
-const Slide: FC<ISlideprops> = ({ description, image, title, productId }) => {
+const Slide: React.FC<Props> = ({ product }) => {
+  const { name, image_url, description } = product;
+  const { requestCreateConvo } = useCreateConversation();
+
+  const onClick = () => {
+    requestCreateConvo(product);
+  };
+
   return (
     <div className="w-full embla__slide h-[435px] relative">
       <Image
         className="object-cover w-full h-full embla__slide__img"
-        src={image ?? ""}
+        src={image_url}
         layout="fill"
         alt=""
       />
@@ -22,21 +26,18 @@ const Slide: FC<ISlideprops> = ({ description, image, title, productId }) => {
         <div className="flex justify-between p-4">
           <div className="flex flex-col gap-[2px]">
             <h2 className="font-semibold text-xl leading-[25px] tracking-[-0.5px]">
-              {title}
+              {name}
             </h2>
             <span className="text-gray-300 text-xs leading-[18px]">
               {description}
             </span>
           </div>
-          <Link
-            href={{
-              pathname: `/`,
-              query: { productId: productId },
-            }}
+          <button
+            onClick={onClick}
             className="flex-none flex w-30 h-12 items-center text-sm justify-center gap-2 px-5 py-[10px] rounded-md bg-white leading-[21px] text-gray-800"
           >
             Try now
-          </Link>
+          </button>
         </div>
       </div>
     </div>

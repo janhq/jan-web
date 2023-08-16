@@ -4,7 +4,7 @@ import { ProductV2 } from "@/_models/ProductV2";
 
 type Props = {
   products: ProductV2[];
-}
+};
 
 const GenerateImageList: React.FC<Props> = ({ products }) => (
   <div className="pb-4">
@@ -18,12 +18,7 @@ const GenerateImageList: React.FC<Props> = ({ products }) => (
     </div>
     <div className="mt-2 grid grid-cols-2 gap-4 sm:gap-x-6 md:grid-cols-4 md:gap-8">
       {products.map((item) => (
-        <GenerateImageCard
-          key={item.name}
-          name={item.name}
-          img={item.image_url}
-          title={item.name}
-        />
+        <GenerateImageCard key={item.name} product={item} />
       ))}
     </div>
   </div>

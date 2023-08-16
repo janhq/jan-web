@@ -39,15 +39,7 @@ const Slider: FC<Props> = ({ products }) => {
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
           {products.map((product) => {
-            return (
-              <Slide
-                key={product.slug}
-                productId={product.name}
-                title={product.name}
-                description={product.description}
-                image={product.image_url}
-              />
-            );
+            return <Slide key={product.slug} product={product} />;
           })}
         </div>
       </div>

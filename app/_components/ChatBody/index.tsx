@@ -61,7 +61,10 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
     <div className="flex-grow flex flex-col h-fit overflow-x-hidden" ref={ref}>
       {shouldShowSampleContainer && model ? (
         shouldShowImageSampleContainer ? (
-          <GenerativeSampleContainer />
+          <GenerativeSampleContainer
+            model={convo?.aiModel}
+            onPromptSelected={onPromptSelected}
+          />
         ) : (
           <SampleLlmContainer
             model={convo?.aiModel}
@@ -89,20 +92,20 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
                 .slice()
                 .sort((a, b) => a.createdAt - b.createdAt)
                 .map((message, index) => renderItem(index, message))}
-            <div ref={refSmooth}>
-              {convo?.isWaitingForModelResponse && (
-                <div className="w-[50px] h-[50px] flex flex-row items-start justify-start">
-                  <Lottie
-                    animationData={animationData}
-                    loop={true}
-                    autoPlay={true}
-                    height={50}
-                    width={50}
-                  />
-                </div>
-              )}
+              <div ref={refSmooth}>
+                {convo?.isWaitingForModelResponse && (
+                  <div className="w-[50px] h-[50px] flex flex-row items-start justify-start">
+                    <Lottie
+                      animationData={animationData}
+                      loop={true}
+                      autoPlay={true}
+                      height={50}
+                      width={50}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
           </InfiniteScroll>
         </div>
       )}
