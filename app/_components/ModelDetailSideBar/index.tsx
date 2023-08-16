@@ -56,7 +56,7 @@ export const ModelDetailSideBar: FC<Props> = observer(({ onPromptClick }) => {
           <OverviewPane
             onPromptClick={onPromptClick}
             description={conversation?.aiModel.description}
-            samples={conversation?.aiModel.defaultPrompts}
+            prompts={conversation?.aiModel.defaultPrompts}
             technicalURL={conversation?.aiModel.modelUrl}
             technicalVersion={conversation?.aiModel.modelVersion}
           />

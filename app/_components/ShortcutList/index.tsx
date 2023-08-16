@@ -32,7 +32,7 @@ const ShortcutList: React.FC<Props> = observer(({ products }) => {
         className={`flex flex-col gap-3 py-2 ${!expand ? "hidden " : "block"}`}
       >
         {products.map((product) => (
-          <ShortcutItem key={product.ID} product={product} />
+          <ShortcutItem key={product.slug} product={product} />
         ))}
       </div>
     </div>

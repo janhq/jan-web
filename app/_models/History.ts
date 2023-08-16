@@ -1,6 +1,6 @@
 import { Instance, castToSnapshot, flow, types } from "mobx-state-tree";
 import { Conversation } from "./Conversation";
-import { AiModel, AiModelType } from "./AiModel";
+import { AiModel, AiModelType, PromptModel } from "./AiModel";
 import { User } from "./User";
 import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
 import { api } from "../_services/api";
@@ -210,7 +210,7 @@ export const History = types
       }));
 
       const modelName =
-        self.getActiveConversation()?.aiModel.name ?? "gpt-3.5-turbo";
+        self.getActiveConversation()?.aiModel.modelId ?? "gpt-3.5-turbo";
 
       const result = yield api.createNewTextChatMessage(
         conversation.id,
@@ -353,23 +353,31 @@ export const History = types
       displayName: string,
       avatarUrl?: string
     ) {
-      const textPrompts: string[] = [];
+      const prompts: Instance<typeof PromptModel>[] = [];
       product.prompts?.map((p) => {
-        if (typeof p === "string") {
-          textPrompts.push(p);
-        }
+        prompts.push(
+          PromptModel.create({
+            id: p.id,
+            createdAt: p.created_at,
+            updatedAt: p.updated_at,
+            deletedAt: p.deleted_at,
+            slug: p.slug,
+            content: p.content,
+            imageUrl: p.image_url,
+          })
+        );
       });
 
       const newAiModel = AiModel.create({
         name: product.name,
         modelId: product.slug,
         title: product.name,
-        aiModelType: product.modelType,
+        aiModelType: AiModelType.LLM, //product.modelType, TODO: hardcode
         description: product.description,
         modelUrl: product.source_url,
         modelVersion: product.version,
         avatarUrl: product.image_url,
-        defaultPrompts: textPrompts,
+        defaultPrompts: prompts,
       });
 
       const createConvoResult = yield api.createConversation(product.slug);

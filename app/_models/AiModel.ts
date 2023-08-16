@@ -5,6 +5,16 @@ export enum AiModelType {
   GenerativeArt = "GenerativeArt",
 }
 
+export const PromptModel = types.model("Prompt", {
+  id: types.number,
+  createdAt: types.string,
+  updatedAt: types.maybeNull(types.string),
+  deletedAt: types.maybeNull(types.string),
+  slug: types.string,
+  content: types.string,
+  imageUrl: types.maybeNull(types.string),
+});
+
 export const AiModel = types.model("AiModel", {
   name: types.string,
   modelId: types.string,
@@ -15,5 +25,5 @@ export const AiModel = types.model("AiModel", {
   modelVersion: types.maybeNull(types.string),
   modelUrl: types.maybeNull(types.string),
   modelDescription: types.maybeNull(types.string),
-  defaultPrompts: types.optional(types.array(types.string), []),
+  defaultPrompts: types.array(PromptModel),
 });

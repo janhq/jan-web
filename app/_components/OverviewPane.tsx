@@ -1,20 +1,20 @@
-import classNames from "classnames";
-import Link from "next/link";
+import { PromptModel } from "@/_models/AiModel";
+import { Instance } from "mobx-state-tree";
 import { useLayoutEffect, useRef, useState } from "react";
 
-interface IOverviewPanelProps {
+type Props = {
   productId?: string;
   description?: string | null;
   technicalVersion?: string | null;
   technicalDescription?: string | null;
   technicalURL?: string | null;
-  samples?: string[];
+  prompts?: Instance<typeof PromptModel>[];
   onPromptClick?: (prompt: string) => void;
   inAIModel?: number;
-}
+};
 
-const OverviewPane: React.FC<IOverviewPanelProps> = ({
-  samples = [],
+const OverviewPane: React.FC<Props> = ({
+  prompts = [],
   description,
   technicalVersion,
   technicalURL,
@@ -23,17 +23,12 @@ const OverviewPane: React.FC<IOverviewPanelProps> = ({
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [read, setRead] = useState<boolean>(true);
-  const [readMoreTechnical, setReadMoreTechnical] = useState<boolean>(true);
   const [height, setHeight] = useState<number>(0);
 
   useLayoutEffect(() => {
     if (!ref.current) return;
     setHeight(ref.current?.offsetHeight);
   }, [read]);
-  useLayoutEffect(() => {
-    if (!ref.current) return;
-    setHeight(ref.current?.offsetHeight);
-  }, []);
 
   return (
     <div
@@ -72,17 +67,17 @@ const OverviewPane: React.FC<IOverviewPanelProps> = ({
       <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-base">
         <h2 className="font-bold">Try it yourself</h2>
         <ul className="border-[1px] border-[#D1D5DB] rounded-[12px]">
-          {samples?.map((item, index) => {
-            const showBorder = index === samples.length - 1 ? false : true;
+          {prompts.map((prompt, index) => {
+            const showBorder = index !== prompts.length - 1;
             return (
               <button
-                onClick={() => onPromptClick?.(item)}
-                key={index}
+                onClick={() => onPromptClick?.(prompt.content)}
+                key={prompt.slug}
                 className={`text-sm text-gray-500 leading-[20px] flex gap-[10px] border-b-[${
                   showBorder ? "1" : "0"
                 }px] border-[#E5E7EB] hover:text-blue-400 text-left p-3 w-full`}
               >
-                {item}
+                {prompt.content}
               </button>
             );
           })}

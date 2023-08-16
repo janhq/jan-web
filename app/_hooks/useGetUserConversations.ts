@@ -1,6 +1,6 @@
 import { Instance, cast } from "mobx-state-tree";
 import { useStore } from "../_models/RootStore";
-import { AiModel, AiModelType } from "../_models/AiModel";
+import { AiModel, AiModelType, PromptModel } from "../_models/AiModel";
 import { Conversation } from "../_models/Conversation";
 import { DefaultUser, User } from "../_models/User";
 import { fetchProducts } from "@/_services/products";
@@ -31,11 +31,19 @@ const useGetUserConversations = () => {
 
     const aiModels: Instance<typeof AiModel>[] = [];
     products.forEach((product) => {
-      const textPrompts: string[] = [];
+      const prompts: Instance<typeof PromptModel>[] = [];
       product.prompts?.map((p) => {
-        if (typeof p === "string") {
-          textPrompts.push(p);
-        }
+        prompts.push(
+          PromptModel.create({
+            id: p.id,
+            createdAt: p.created_at,
+            updatedAt: p.updated_at,
+            deletedAt: p.deleted_at,
+            slug: p.slug,
+            content: p.content,
+            imageUrl: p.image_url,
+          })
+        );
       });
 
       const aiModel: Instance<typeof AiModel> = {
@@ -49,7 +57,7 @@ const useGetUserConversations = () => {
         modelDescription:
           product.technical_description || product.long_description,
         avatarUrl: product.image_url,
-        defaultPrompts: cast(textPrompts),
+        defaultPrompts: cast(prompts),
       };
       aiModels.push(aiModel);
     });

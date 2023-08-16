@@ -2,10 +2,10 @@
 import { AiModelType } from "./AiModel";
 
 export interface Collection {
-  ID: number;
-  CreatedAt: string;
-  UpdatedAt: string | undefined;
-  DeletedAt: string | undefined;
+  id: number;
+  created_at: string;
+  updated_at: string | undefined;
+  deleted_at: string | undefined;
   slug: CollectionType;
   name: string;
   description: string;
@@ -13,10 +13,10 @@ export interface Collection {
 }
 
 export interface ProductV2 {
-  ID: number;
-  CreatedAt: string;
-  UpdatedAt: string | undefined;
-  DeletedAt: string | undefined;
+  id: number;
+  created_at: string;
+  updated_at: string | undefined;
+  deleted_at: string | undefined;
   slug: string;
 
   name: string;
@@ -39,14 +39,14 @@ export interface ProductV2 {
 }
 
 export interface Prompt {
-  ID: number;
-  CreatedAt: string;
-  UpdatedAt: string | undefined;
-  DeletedAt: string | undefined;
+  id: number;
+  created_at: string;
+  updated_at: string | undefined;
+  deleted_at: string | undefined;
   slug: string;
 
   content: string;
-  image_url: string;
+  image_url: string | undefined;
   products: ProductV2[] | undefined;
 }
 

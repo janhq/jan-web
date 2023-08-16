@@ -30,13 +30,13 @@ const SampleLlmContainer: React.FC<Props> = ({ model, onPromptSelected }) => {
         </h2>
         <div className="flex flex-col items-center gap-[9px]">
           <ul>
-            {model.defaultPrompts.map((item, index) => (
-              <li key={item}>
+            {model.defaultPrompts.map((item) => (
+              <li key={item.slug}>
                 <button
-                  onClick={() => onPromptSelected(item)}
+                  onClick={() => onPromptSelected(item.content)}
                   className="rounded p-2 gap-[10px] hover:bg-[#0000000F] text-xs leading-[18px] text-gray-500"
                 >
-                  {item}
+                  {item.content}
                 </button>
               </li>
             ))}

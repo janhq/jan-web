@@ -11,7 +11,6 @@ import type {
   StreamMessageOptions,
 } from "./api.types";
 import { GeneralApiProblem, getGeneralApiProblem } from "./api.problems";
-import { ConversationResponse } from "./models/conversation.response";
 import { ChatMessage, MessageType } from "@/_models/ChatMessage";
 import { MessageResponse } from "./models/message.response";
 import { Instance } from "mobx-state-tree";
@@ -244,38 +243,6 @@ export class Api {
       return { kind: "ok", conversationId };
     } catch (e) {
       console.error("createConversation error", e);
-      return { kind: "bad-data" };
-    }
-  }
-
-  async getConversations(): Promise<
-    { kind: "ok"; conversations: ConversationResponse[] } | GeneralApiProblem
-  > {
-    // make the api call
-    const response: ApiResponse<ConversationResponse[]> =
-      await this.apisauce.get(`/conversation`);
-
-    // the typical ways to die when calling an api
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response);
-      if (problem) {
-        return problem;
-      }
-    }
-
-    if (!response.data) {
-      return { kind: "bad-data" };
-    }
-
-    // transform the data into the format we are expecting
-    const convos = response.data.filter((c) => {
-      return c.ai_model != null && c.ai_model.trim().length > 0;
-    });
-
-    try {
-      return { kind: "ok", conversations: convos };
-    } catch (e) {
-      console.error("getConversations error", e);
       return { kind: "bad-data" };
     }
   }
