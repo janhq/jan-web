@@ -38,7 +38,7 @@ const useGetUserConversations = () => {
       });
 
       let modelType = AiModelType.LLM;
-      if (product.decoration.tags?.includes("Awesome Art")) {
+      if (product.action?.params?.models[0]?.category === "text-to-image") {
         modelType = AiModelType.GenerativeArt;
       }
 
