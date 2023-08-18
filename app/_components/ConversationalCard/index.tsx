@@ -1,5 +1,7 @@
 import useCreateConversation from "@/_hooks/useCreateConversation";
 import { ProductV2 } from "@/_models/ProductV2";
+import React from "react";
+import Image from "next/image";
 
 type Props = {
   product: ProductV2;
@@ -9,20 +11,32 @@ const ConversationalCard: React.FC<Props> = ({ product }) => {
   const { requestCreateConvo } = useCreateConversation();
   const { name, image_url, description } = product;
 
-  const onClick = () => {
-    requestCreateConvo(product);
-  };
-
   return (
-    <button onClick={onClick}>
-      <div className="bg-gray-100 dark:bg-gray-700 gap-3 p-4 w-[218px] rounded-lg active:opacity-50 hover:opacity-20 flex flex-col h-full">
-        <img src={image_url} className="w-8 h-8 rounded-full" alt="" />
-        <h2 className="text-[#1B1B1B] font-bold dark:text-white text-left">{name}</h2>
-        <span className="text-gray-500 flex-1 text-left">{description}</span>
-        <div></div>
+    <button
+      onClick={() => requestCreateConvo(product)}
+      className="flex flex-col justify-between flex-shrink-0 gap-3 bg-white p-4 w-52 rounded-lg text-left dark:bg-gray-700 hover:opacity-20"
+    >
+      <div className="flex flex-col gap-2 box-border">
+        <Image
+          width={32}
+          height={32}
+          src={image_url}
+          className="rounded-full"
+          alt=""
+        />
+        <h2 className="text-gray-900 font-semibold dark:text-white line-clamp-1 mt-2">
+          {name}
+        </h2>
+        <span className="text-gray-600 mt-1 font-normal line-clamp-2">
+          {description}
+        </span>
       </div>
+      <span className="flex text-xs leading-5 text-gray-500 items-center gap-[2px]">
+        <Image src={"/icons/play.svg"} width={16} height={16} alt="" />
+        32.2k runs
+      </span>
     </button>
   );
 };
 
-export default ConversationalCard;
+export default React.memo(ConversationalCard);

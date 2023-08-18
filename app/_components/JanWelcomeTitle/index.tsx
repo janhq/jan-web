@@ -13,7 +13,7 @@ const JanWelcomeTitle: React.FC<Props> = ({ title, description }) => (
       Operated by
       <Image src={"/icons/ico_logo.svg"} width={42} height={22} alt="" />
     </span>
-    <span className="text-xs leading-[18px]">{description}</span>
+    <span className="text-sm text-center font-normal">{description}</span>
   </div>
 );
 

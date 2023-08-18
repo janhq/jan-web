@@ -1,5 +1,5 @@
 import SendButton from "../SendButton";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useStore } from "@/_models/RootStore";
 import { useAuth } from "@/_contexts/authContext";
 import { DefaultUser } from "@/_models/User";
@@ -14,7 +14,6 @@ type Props = {
 };
 
 export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const { historyStore } = useStore();
   const [text, setText] = useState(prefillPrompt);
   const [promptGenerating, setPromptGenerating] = useState(false);
@@ -31,18 +30,6 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
   const handleMessageChange = (event: any) => {
     setText(event.target.value);
   };
-  const resizeTextArea = () => {
-    if (textAreaRef.current) {
-      textAreaRef.current.style.height = "auto";
-      textAreaRef.current.style.height =
-        textAreaRef.current.scrollHeight + "px";
-      textAreaRef.current.style.maxHeight = "200px";
-    }
-  };
-
-  useEffect(() => {
-    resizeTextArea();
-  }, [text]);
 
   const onEnhanceClick = () => {
     setPromptGenerating(true);
@@ -73,7 +60,7 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
   const onSubmitClick = () => {
     if (!currentUser || currentUser.isAnonymous) {
       setShowLogin(true);
-      return
+      return;
     }
 
     if (text.trim().length === 0) return;
@@ -106,25 +93,30 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
     historyStore.toggleAdvancedPrompt();
   }, []);
 
+  const handleResize = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    event.target.style.height = "auto";
+    event.target.style.height = event.target.scrollHeight + "px";
+  };
+
   return (
     <div
       className={`${
         historyStore.showAdvancedPrompt ? "hidden" : "block"
-      } mb-3 flex-none w-full shadow-sm ring-1 ring-inset ring-gray-300 rounded-lg dark:bg-gray-800`}
+      } mb-3 flex-none overflow-hidden w-full shadow-sm ring-1 ring-inset ring-gray-300 rounded-lg dark:bg-gray-800`}
     >
       <div className="overflow-hidden">
         <label htmlFor="comment" className="sr-only">
           Add your comment
         </label>
         <textarea
-          ref={textAreaRef}
           onKeyDown={handleKeyDown}
           value={text}
           onChange={handleMessageChange}
+          onInput={handleResize}
           rows={2}
           name="comment"
           id="comment"
-          className="block w-full resize-none border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 dark:text-white"
+          className="block w-full scroll resize-none border-0 bg-transparent py-1.5 text-gray-900 transition-height duration-200 placeholder:text-gray-400 sm:text-sm sm:leading-6 dark:text-white"
           placeholder="Add your comment..."
         />
       </div>

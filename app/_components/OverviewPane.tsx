@@ -1,20 +1,17 @@
-import { PromptModel } from "@/_models/AiModel";
-import { Instance } from "mobx-state-tree";
+import useGetPrompts from "@/_hooks/useGetPrompts";
 import { useLayoutEffect, useRef, useState } from "react";
 
 type Props = {
-  productId?: string;
+  slug: string;
   description?: string | null;
   technicalVersion?: string | null;
-  technicalDescription?: string | null;
   technicalURL?: string | null;
-  prompts?: Instance<typeof PromptModel>[];
   onPromptClick?: (prompt: string) => void;
   inAIModel?: number;
 };
 
 const OverviewPane: React.FC<Props> = ({
-  prompts = [],
+  slug,
   description,
   technicalVersion,
   technicalURL,
@@ -24,6 +21,7 @@ const OverviewPane: React.FC<Props> = ({
   const ref = useRef<HTMLDivElement>(null);
   const [read, setRead] = useState<boolean>(true);
   const [height, setHeight] = useState<number>(0);
+  const { prompts } = useGetPrompts(slug);
 
   useLayoutEffect(() => {
     if (!ref.current) return;
@@ -32,7 +30,7 @@ const OverviewPane: React.FC<Props> = ({
 
   return (
     <div
-      className="w-full flex flex-auto flex-col gap-6 overflow-x-hidden"
+      className="w-full flex flex-auto flex-col gap-6 overflow-x-hidden scroll"
       ref={ref}
       style={!inAIModel ? { height: `${height}px` } : { height: "100%" }}
     >

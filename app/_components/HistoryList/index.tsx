@@ -33,7 +33,7 @@ const HistoryList: React.FC<IHistoryListProps> = observer((props) => {
           .filter(
             (e) =>
               props.searchText === "" ||
-              e.aiModel.title
+              e.aiModel.name
                 .toLowerCase()
                 .includes(props.searchText.toLowerCase()) ||
               e.aiModel.description
@@ -46,7 +46,7 @@ const HistoryList: React.FC<IHistoryListProps> = observer((props) => {
               key={id}
               conversationId={id}
               avatarUrl={aiModel.avatarUrl || ""}
-              name={aiModel.title}
+              name={aiModel.name}
               updatedAt={updatedAt}
             />
           ))}

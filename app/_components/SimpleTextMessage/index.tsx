@@ -1,5 +1,7 @@
 import React from "react";
 import { displayDate } from "@/_utils/datetime";
+import { TextCode } from "../TextCode";
+import { getMessageCode } from "@/_utils/message";
 
 type Props = {
   avatarUrl?: string;
@@ -31,9 +33,20 @@ const SimpleTextMessage: React.FC<Props> = ({
           {displayDate(createdAt)}
         </div>
       </div>
-      <p className="leading-[20px] whitespace-break-spaces text-[14px] font-normal dark:text-[#d1d5db]">
-        {text}
-      </p>
+      {text.includes("```") ? (
+        getMessageCode(text).map((item, i) => (
+          <div className="flex gap-1 flex-col" key={i}>
+            <p className="leading-[20px] whitespace-break-spaces text-[14px] font-normal dark:text-[#d1d5db]">
+              {item.text}
+            </p>
+            {item.code.trim().length > 0 && <TextCode text={item.code} />}
+          </div>
+        ))
+      ) : (
+        <p className="leading-[20px] whitespace-break-spaces text-[14px] font-normal dark:text-[#d1d5db]">
+          {text}
+        </p>
+      )}
     </div>
   </div>
 );

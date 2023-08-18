@@ -69,11 +69,9 @@ const ChatContainer: React.FC = observer(() => {
               />
             </div>
           </div>
-          <div className="w-full h-full overflow-hidden">
-            <div className="flex flex-col h-full px-1 sm:px-2 lg:px-3">
-              <ChatBody onPromptSelected={onSuggestPromptClick} />
-              <InputToolbar prefillPrompt={prefillPrompt} />
-            </div>
+          <div className="flex flex-col h-full px-1 sm:px-2 lg:px-3 overflow-hidden">
+            <ChatBody onPromptSelected={onSuggestPromptClick} />
+            <InputToolbar prefillPrompt={prefillPrompt} />
           </div>
         </div>
       ) : (

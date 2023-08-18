@@ -14,7 +14,7 @@ const ApiPane: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col relative">
-      <div className="absolute top-0 left-0 h-full w-full overflow-x-hidden">
+      <div className="absolute top-0 left-0 h-full w-full overflow-x-hidden scroll">
         <button
           onClick={() => setExpend(!expend)}
           className="flex items-center flex-none"
@@ -62,7 +62,7 @@ const ApiPane: React.FC = () => {
             </button>
           </div>
           <SyntaxHighlighter
-            className="w-full bg-transparent overflow-x-hidden resize-none"
+            className="w-full bg-transparent overflow-x-hidden scroll resize-none"
             language="jsx"
             style={atomOneDark}
             customStyle={{ padding: "12px", background: "transparent" }}

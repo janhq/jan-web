@@ -1,6 +1,6 @@
 import { Instance, cast } from "mobx-state-tree";
 import { useStore } from "../_models/RootStore";
-import { AiModel, AiModelType, PromptModel } from "../_models/AiModel";
+import { AiModel, AiModelType } from "../_models/AiModel";
 import { Conversation } from "../_models/Conversation";
 import { DefaultUser, User } from "../_models/User";
 import { fetchProducts } from "@/_services/products";
@@ -31,35 +31,31 @@ const useGetUserConversations = () => {
 
     const aiModels: Instance<typeof AiModel>[] = [];
     products.forEach((product) => {
-      const prompts: Instance<typeof PromptModel>[] = [];
-      product.prompts?.map((p) => {
-        prompts.push(
-          PromptModel.create({
-            id: p.id,
-            createdAt: p.created_at,
-            updatedAt: p.updated_at,
-            deletedAt: p.deleted_at,
-            slug: p.slug,
-            content: p.content,
-            imageUrl: p.image_url,
-          })
-        );
-      });
+      let modelType: AiModelType | undefined = undefined;
+      if (product.inputs.slug === "llm") {
+        modelType = AiModelType.LLM;
+      } else if (product.inputs.slug === "sd") {
+        modelType = AiModelType.GenerativeArt;
+      } else if (product.inputs.slug === "controlnet") {
+        modelType = AiModelType.ControlNet;
+      } else {
+        console.error("Model type not supported");
+        return;
+      }
 
-      const aiModel: Instance<typeof AiModel> = {
+      const model: Instance<typeof AiModel> = {
         name: product.name,
         modelId: product.slug,
-        title: product.name,
-        aiModelType: AiModelType.LLM, // TODO: hard code for now
+        aiModelType: modelType,
         description: product.description,
-        modelUrl: product.source_url,
-        modelVersion: product.version,
-        modelDescription:
-          product.technical_description || product.long_description,
         avatarUrl: product.image_url,
-        defaultPrompts: cast(prompts),
+        modelVersion: product.version,
+        modelUrl: product.source_url,
+        modelDescription: product.technical_description,
+        input: null,
+        output: null,
       };
-      aiModels.push(aiModel);
+      aiModels.push(model);
     });
 
     const finalConvo: Instance<typeof Conversation>[] = [];

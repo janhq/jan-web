@@ -23,7 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={classNames(inter.className, "flex flex-col w-full h-screen")}
+        className={classNames(
+          inter.className,
+          "flex flex-col w-full h-screen overflow-hidden"
+        )}
       >
         <div className="hidden md:flex flex-col w-full h-screen">
           {children}

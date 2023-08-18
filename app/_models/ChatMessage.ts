@@ -4,7 +4,6 @@ import { withSetPropAction } from "../_helpers/withSetPropAction";
 export enum MessageType {
   Text = "Text",
   Image = "Image",
-  WaitingResponse = "WaitingResponse",
   Error = "Error",
 }
 

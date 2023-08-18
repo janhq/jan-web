@@ -1,5 +1,4 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import InfiniteScroll from "react-infinite-scroller";
 import { useStore } from "@/_models/RootStore";
 import { observer } from "mobx-react-lite";
 import { ChatMessage, MessageType } from "@/_models/ChatMessage";
@@ -18,6 +17,7 @@ type Props = {
 
 export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
   const { historyStore } = useStore();
   const refSmooth = useRef<HTMLDivElement>(null);
@@ -57,8 +57,26 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
 
   const model = convo?.aiModel;
 
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    if (
+      scrollRef.current?.clientHeight - scrollRef.current?.scrollTop + 1 >=
+      scrollRef.current?.scrollHeight
+    ) {
+      loadFunc();
+    }
+  };
+
+  useEffect(() => {
+    loadFunc();
+    scrollRef.current?.addEventListener("scroll", handleScroll);
+    return () => {
+      scrollRef.current?.removeEventListener("scroll", handleScroll);
+    };
+  }, [scrollRef.current]);
+
   return (
-    <div className="flex-grow flex flex-col h-fit overflow-x-hidden" ref={ref}>
+    <div className="flex-grow flex flex-col h-fit" ref={ref}>
       {shouldShowSampleContainer && model ? (
         shouldShowImageSampleContainer ? (
           <GenerativeSampleContainer
@@ -73,40 +91,32 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
         )
       ) : (
         <div
-          className="flex flex-col-reverse"
+          className="flex flex-col-reverse scroll"
           style={{
             height: height + "px",
             overflowX: "hidden",
           }}
+          ref={scrollRef}
         >
-          <InfiniteScroll
-            isReverse={true}
-            loadMore={loadFunc}
-            hasMore={hasMore}
+          <div
+            className="flex flex-col justify-end gap-8 py-2"
+            ref={refContent}
           >
-            <div
-              className={`flex flex-col justify-end gap-8 py-2`}
-              ref={refContent}
-            >
-              {messages
-                .slice()
-                .sort((a, b) => a.createdAt - b.createdAt)
-                .map((message, index) => renderItem(index, message))}
-              <div ref={refSmooth}>
-                {convo?.isWaitingForModelResponse && (
-                  <div className="w-[50px] h-[50px] flex flex-row items-start justify-start">
-                    <Lottie
-                      animationData={animationData}
-                      loop={true}
-                      autoPlay={true}
-                      height={50}
-                      width={50}
-                    />
-                  </div>
-                )}
-              </div>
+            {messages.map((message, index) => renderItem(index, message))}
+            <div ref={refSmooth}>
+              {convo?.isWaitingForModelResponse && (
+                <div className="w-[50px] h-[50px] flex flex-row items-start justify-start">
+                  <Lottie
+                    animationData={animationData}
+                    loop={true}
+                    autoPlay={true}
+                    height={50}
+                    width={50}
+                  />
+                </div>
+              )}
             </div>
-          </InfiniteScroll>
+          </div>
         </div>
       )}
     </div>
@@ -146,8 +156,6 @@ const renderItem = (
           text={text}
         />
       );
-    case MessageType.WaitingResponse:
-      return null;
     default:
       return null;
   }

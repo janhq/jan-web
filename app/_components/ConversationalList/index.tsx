@@ -7,19 +7,19 @@ type Props = {
 };
 
 const ConversationalList: React.FC<Props> = ({ products }) => (
-  <div className="grid">
-    <div className="flex items-center gap-3 mt-4 mb-2">
+  <>
+    <div className="flex items-center gap-3 mt-8 mb-2">
       <Image src={"/icons/messicon.svg"} width={24} height={24} alt="" />
-      <span className="font-bold text-gray-900 dark:text-white">
+      <span className="font-semibold text-gray-900 dark:text-white">
         Conversational
       </span>
     </div>
-    <div className="mt-4 flex w-full overflow-y-hidden gap-2">
+    <div className="mt-2 flex w-full gap-2 overflow-x-scroll scroll overflow-hidden">
       {products.map((item) => (
         <ConversationalCard key={item.name} product={item} />
       ))}
     </div>
-  </div>
+  </>
 );
 
 export default ConversationalList;

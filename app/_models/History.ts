@@ -215,8 +215,8 @@ export const History = types
       const result = yield api.createNewTextChatMessage(
         conversation.id,
         MessageSenderType.Ai,
+        conversation.aiModel.modelId,
         conversation.aiModel.name,
-        conversation.aiModel.title,
         conversation.aiModel.avatarUrl ?? "",
         ""
       );
@@ -235,8 +235,8 @@ export const History = types
         conversationId: conversation.id,
         messageType: MessageType.Text,
         messageSenderType: MessageSenderType.Ai,
-        senderUid: conversation.aiModel.name,
-        senderName: conversation.aiModel.title,
+        senderUid: conversation.aiModel.modelId,
+        senderName: conversation.aiModel.name,
         senderAvatarUrl: conversation.aiModel.avatarUrl ?? "",
         text: "",
         createdAt: Date.now(),
@@ -249,10 +249,9 @@ export const History = types
         max_tokens: 500,
         messages: latestMessages,
         onOpen: () => {
-          // TODO: maybe showing ... while waiting for response
           conversation.addMessage(aiResponseMessage);
         },
-        onUpdate: (message: string, chunk: string) => {
+        onUpdate: (message: string) => {
           aiResponseMessage.setProp("text", message);
           conversation.setProp("updatedAt", Date.now());
 
@@ -308,8 +307,8 @@ export const History = types
         const result = yield api.createNewImageChatMessage(
           conversation.id,
           MessageSenderType.Ai,
+          conversation.aiModel.modelId,
           conversation.aiModel.name,
-          conversation.aiModel.title,
           conversation.aiModel.avatarUrl ?? "",
           message || "",
           imageUrl
@@ -326,8 +325,8 @@ export const History = types
           conversationId: conversation.id,
           messageType: MessageType.Image,
           messageSenderType: MessageSenderType.Ai,
-          senderUid: conversation.aiModel.name,
-          senderName: conversation.aiModel.title,
+          senderUid: conversation.aiModel.modelId,
+          senderName: conversation.aiModel.name,
           senderAvatarUrl: conversation.aiModel.avatarUrl ?? "",
           text: message,
           imageUrls: data.outputs,
@@ -353,31 +352,26 @@ export const History = types
       displayName: string,
       avatarUrl?: string
     ) {
-      const prompts: Instance<typeof PromptModel>[] = [];
-      product.prompts?.map((p) => {
-        prompts.push(
-          PromptModel.create({
-            id: p.id,
-            createdAt: p.created_at,
-            updatedAt: p.updated_at,
-            deletedAt: p.deleted_at,
-            slug: p.slug,
-            content: p.content,
-            imageUrl: p.image_url,
-          })
-        );
-      });
+      let modelType: AiModelType | undefined = undefined;
+      if (product.inputs.slug === "llm") {
+        modelType = AiModelType.LLM;
+      } else if (product.inputs.slug === "sd") {
+        modelType = AiModelType.GenerativeArt;
+      } else if (product.inputs.slug === "controlnet") {
+        modelType = AiModelType.ControlNet;
+      } else {
+        console.error("Model type not supported");
+        return;
+      }
 
       const newAiModel = AiModel.create({
         name: product.name,
         modelId: product.slug,
-        title: product.name,
-        aiModelType: AiModelType.GenerativeArt, //product.modelType, TODO: hardcode
+        aiModelType: modelType,
         description: product.description,
         modelUrl: product.source_url,
         modelVersion: product.version,
         avatarUrl: product.image_url,
-        defaultPrompts: prompts,
       });
 
       const createConvoResult = yield api.createConversation(product.slug);

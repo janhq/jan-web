@@ -1,5 +1,6 @@
 import useCreateConversation from "@/_hooks/useCreateConversation";
 import { ProductV2 } from "@/_models/ProductV2";
+import { useCallback } from "react";
 
 type Props = {
   product: ProductV2;
@@ -9,23 +10,19 @@ const GenerateImageCard: React.FC<Props> = ({ product }) => {
   const { name, image_url } = product;
   const { requestCreateConvo } = useCreateConversation();
 
-  const onClick = () => {
+  const onClick = useCallback(() => {
     requestCreateConvo(product);
-  };
+  }, [product]);
 
   return (
-    <button onClick={onClick}>
-      <div className="group relative active:opacity-50">
-        <div className="h-56 w-full overflow-hidden rounded-[8px] bg-gray-200 group-hover:opacity-75 lg:h-72 xl:h-80">
-          <img
-            src={image_url}
-            alt=""
-            className="w-full h-full object-cover object-center"
-          />
-        </div>
-        <div className="absolute bottom-0 rounded-br-[8px] rounded-bl-[8px] bg-[rgba(0,0,0,0.7)] w-full gap-2 p-5">
-          <span className="text-white">{name}</span>
-        </div>
+    <button onClick={onClick} className="relative active:opacity-50 text-left">
+      <img
+        src={image_url}
+        alt=""
+        className="w-full h-full rounded-[8px] bg-gray-200 group-hover:opacity-75 object-cover object-center"
+      />
+      <div className="absolute bottom-0 rounded-br-[8px] rounded-bl-[8px] bg-[rgba(0,0,0,0.5)] w-full p-3">
+        <span className="text-white font-semibold">{name}</span>
       </div>
     </button>
   );

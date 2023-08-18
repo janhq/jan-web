@@ -13,10 +13,12 @@ const NewChatBlankState: React.FC = () => {
   }
 
   return (
-    <div className="px-6 pt-8 w-full h-full overflow-y-scroll scroll">
-      {featuredProducts.length > 0 && <Slider products={featuredProducts} />}
-      <ConversationalList products={llmProducts} />
-      <GenerateImageList products={imageGenProducts} />
+    <div className="grid">
+      <div className="bg-gray-100 px-6 pt-8 w-full h-full overflow-y-scroll scroll">
+        {featuredProducts.length > 0 && <Slider products={featuredProducts} />}
+        <ConversationalList products={llmProducts} />
+        <GenerateImageList products={imageGenProducts} />
+      </div>
     </div>
   );
 };

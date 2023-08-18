@@ -32,10 +32,38 @@ export interface ProductV2 {
   collections: Collection[];
 
   prompts: Prompt[] | undefined;
-  inputs: Record<string, unknown>;
+  inputs: InputResponse;
   outputs: Record<string, unknown>;
   greeting: string;
   modelType: AiModelType;
+}
+
+export interface OutputResponse {}
+
+export interface InputProperty {
+  name: string;
+  type: string;
+  example: string;
+  description: string;
+}
+
+export interface InputBody {
+  name: string;
+  type: string; // TODO make enum for this
+  items: InputArrayItem[] | undefined;
+  example: unknown;
+  description: string;
+}
+
+export interface InputArrayItem {
+  type: string;
+  properties: InputProperty[];
+}
+
+export interface InputResponse {
+  body: InputBody[];
+  slug: string;
+  headers: Record<string, string>;
 }
 
 export interface Prompt {
