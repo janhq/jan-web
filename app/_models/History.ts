@@ -8,6 +8,7 @@ import { Role } from "../_services/api/api.types";
 import { MessageResponse } from "@/_services/api/models/message.response";
 import { MESSAGE_PER_PAGE } from "../_utils/const";
 import { ProductV2 } from "./ProductV2";
+import { controlNetRequest } from "@/_services/controlnet";
 
 export const History = types
   .model("History", {
@@ -311,7 +312,8 @@ export const History = types
           conversation.aiModel.name,
           conversation.aiModel.avatarUrl ?? "",
           message || "",
-          imageUrl
+          imageUrl,
+          MessageType.Image
         );
 
         if (result.kind !== "ok") {
@@ -346,6 +348,75 @@ export const History = types
     };
   })
   .actions((self) => {
+    const sendControlNetPrompt = flow(function* (
+      prompt: string,
+      negPrompt: string,
+      file: any // TODO: file type, for now I don't know what is that
+    ) {
+      if (!self.activeConversationId) {
+        console.error("No active conversation found");
+        return;
+      }
+
+      const conversation = self.getActiveConversation();
+      if (!conversation) {
+        console.error(
+          "No active conversation found with id",
+          self.activeConversationId
+        );
+        return;
+      }
+
+      conversation.setWaitingForModelResponse(true);
+
+      const imageUrl = yield controlNetRequest("", prompt, negPrompt, file);
+      if (!imageUrl || !imageUrl.startsWith("https://")) {
+        console.error(
+          "Failed to invoking control net",
+          self.activeConversationId
+        );
+        return;
+      }
+      const message = `${prompt}. Negative: ${negPrompt}`;
+      const createMessageResult = yield api.createNewImageChatMessage(
+        conversation.id,
+        MessageSenderType.Ai,
+        conversation.aiModel.modelId,
+        conversation.aiModel.name,
+        conversation.aiModel.avatarUrl ?? "",
+        message,
+        imageUrl,
+        MessageType.ImageWithText
+      );
+
+      if (createMessageResult.kind !== "ok") {
+        // TODO: display error
+        console.error(
+          "Error creating user message",
+          JSON.stringify(createMessageResult)
+        );
+        conversation.setWaitingForModelResponse(false);
+        return;
+      }
+
+      const chatMessage = ChatMessage.create({
+        id: createMessageResult.messageId,
+        conversationId: self.activeConversationId,
+        messageType: MessageType.ImageWithText,
+        messageSenderType: MessageSenderType.Ai,
+        senderUid: conversation.aiModel.modelId,
+        senderName: conversation.aiModel.name,
+        senderAvatarUrl: conversation.aiModel.avatarUrl ?? "",
+        text: message,
+        imageUrls: [imageUrl],
+        createdAt: Date.now(),
+      });
+      conversation.addMessage(chatMessage);
+      conversation.setProp("lastTextMessage", message);
+      conversation.setProp("lastImageUrl", imageUrl);
+      conversation.setWaitingForModelResponse(false);
+    });
+
     const createConversation = flow(function* (
       product: ProductV2,
       userId: string,
@@ -467,6 +538,7 @@ export const History = types
 
     return {
       sendMessage,
+      sendControlNetPrompt,
       createConversation,
     };
   });

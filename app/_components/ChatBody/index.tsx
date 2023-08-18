@@ -10,6 +10,7 @@ import animationData from "@/../public/lotties/typing.json";
 import { GenerativeSampleContainer } from "../GenerativeSampleContainer";
 import { AiModelType } from "@/_models/AiModel";
 import SampleLlmContainer from "@/_components/SampleLlmContainer";
+import SimpleControlNetMessage from "../SimpleControlNetMessage";
 
 type Props = {
   onPromptSelected: (prompt: string) => void;
@@ -135,6 +136,17 @@ const renderItem = (
   }: Instance<typeof ChatMessage>
 ) => {
   switch (messageType) {
+    case MessageType.ImageWithText:
+      return (
+        <SimpleControlNetMessage
+          key={index}
+          avatarUrl={senderAvatarUrl}
+          senderName={senderName}
+          createdAt={createdAt}
+          imageUrls={imageUrls ?? []}
+          text={text ?? ""}
+        />
+      );
     case MessageType.Image:
       return (
         <SimpleImageMessage

@@ -4,6 +4,7 @@ import { withSetPropAction } from "../_helpers/withSetPropAction";
 export enum MessageType {
   Text = "Text",
   Image = "Image",
+  ImageWithText = "ImageWithText",
   Error = "Error",
 }
 

@@ -21,7 +21,7 @@ export const AdvancedTextArea: React.FC<Props> = ({
       style={{ height: `${height}px` }}
       className="rounded-lg py-[13px] px-5 border outline-none resize-none border-gray-300 bg-gray-50 placeholder:gray-400 text-sm font-normal"
       placeholder={placeholder}
-      {...register(formId, { required: true })}
+      {...register(formId, { required: formId === "prompt" ? true : false })}
     />
   </div>
 );

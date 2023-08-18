@@ -294,11 +294,12 @@ export class Api {
     senderName: string,
     senderAvatarUrl: string,
     content: string,
-    image: string
+    image: string,
+    messageType: MessageType
   ): Promise<{ kind: "ok"; messageId: string } | GeneralApiProblem> {
     const response: ApiResponse<any> = await this.apisauce.post("message", {
       conversation_id: conversationId,
-      message_type: MessageType.Image,
+      message_type: messageType,
       message_sender_type: messageSenderType,
       sender_uuid: senderUuid,
       sender_name: senderName,

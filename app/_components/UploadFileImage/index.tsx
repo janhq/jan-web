@@ -1,7 +1,12 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
+import { FieldValues, UseFormRegister } from "react-hook-form";
 
-export const UploadFileImage: React.FC = () => {
+type Props = {
+  register: UseFormRegister<FieldValues>;
+};
+
+export const UploadFileImage: React.FC<Props> = ({ register }) => {
   const ref = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<string | null>(null);
   const [checked, setChecked] = useState<boolean>(true);
@@ -47,7 +52,7 @@ export const UploadFileImage: React.FC = () => {
       onDrop={handleDrop}
       onDragOver={handleDragOver}
     >
-      {image ? (
+      {/* {image ? (
         <div className="relative group">
           <Image
             style={{ width: "100%", height: "107px", objectFit: "cover" }}
@@ -60,25 +65,24 @@ export const UploadFileImage: React.FC = () => {
             <button onClick={handleDelete}>Delete</button>
           </div>
         </div>
-      ) : (
-        <button
-          onClick={handleClick}
-          className="flex flex-col justify-center items-center py-5 px-2 gap-2 round-[2px] border border-dashed border-[#C8D0E0] rounded-sm"
-        >
-          <Image src={"/icons/ic_plus.svg"} width={14} height={14} alt="" />
+      ) : ( */}
+      <div
+        onClick={handleClick}
+        className="flex flex-col justify-center items-center py-5 px-2 gap-2 round-[2px] border border-dashed border-[#C8D0E0] rounded-sm"
+      >
+        {/* <Image src={"/icons/ic_plus.svg"} width={14} height={14} alt="" />
           <span className="text-gray-700 font-normal text-sm">
             Drag an image here, or click to select
-          </span>
-          <input
-            id="fileInput"
-            ref={ref}
-            type="file"
-            style={{ display: "none" }}
-            onChange={onSelectedFile}
-          />
-        </button>
-      )}
-
+          </span> */}
+        <input
+          {...register("fileInput", { required: true })}
+          // ref={ref}
+          type="file"
+          onChange={onSelectedFile}
+          accept="image/*"
+        />
+      </div>
+      ){/* } */}
       <div
         className="flex gap-2 items-center cursor-pointer"
         onClick={() => setChecked(!checked)}
