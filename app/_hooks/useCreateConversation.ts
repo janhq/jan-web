@@ -1,18 +1,17 @@
-import { useAuth } from "../_contexts/authContext";
 import { Product } from "../_models/Product";
 import { useStore } from "../_models/RootStore";
 import { DefaultUser } from "../_models/User";
+import useGetCurrentUser from "./useGetCurrentUser";
 
 const useCreateConversation = () => {
   const { historyStore } = useStore();
-  const { currentUser, setShowLogin } = useAuth();
+  const { user } = useGetCurrentUser();
 
   const requestCreateConvo = (
     product: Product,
     forceCreate: boolean = false
   ) => {
-    if (!currentUser || currentUser.isAnonymous) {
-      setShowLogin(true);
+    if (!user) {
       return;
     }
 
@@ -34,11 +33,7 @@ const useCreateConversation = () => {
     }
 
     // if not found, create new convo and set it as current
-    historyStore.createConversation(
-      product,
-      currentUser?.uid ?? DefaultUser.id,
-      currentUser?.displayName ?? DefaultUser.displayName
-    );
+    historyStore.createConversation(product, user.id, user.displayName);
   };
 
   return {

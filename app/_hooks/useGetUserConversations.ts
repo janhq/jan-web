@@ -1,11 +1,10 @@
 import { Instance, cast } from "mobx-state-tree";
-import { Product, Section } from "../_models/Product";
+import { Product } from "../_models/Product";
 import { useStore } from "../_models/RootStore";
 import { api } from "../_services/api";
 import { AiModel, AiModelType } from "../_models/AiModel";
 import { Conversation } from "../_models/Conversation";
-import { DefaultUser, User } from "../_models/User";
-import { User as FirebaseUser } from "firebase/auth";
+import { User } from "../_models/User";
 import { fetchProducts } from "@/_services/products";
 
 const useGetUserConversations = () => {
@@ -15,7 +14,7 @@ const useGetUserConversations = () => {
     return fetchProducts().then((products) => products || []);
   };
 
-  const getUserConversations = async (firebaseUser: FirebaseUser) => {
+  const getUserConversations = async (user: Instance<typeof User>) => {
     const convoResult = await api.getConversations();
     if (convoResult.kind !== "ok") {
       console.error("Error getting user conversations", convoResult);
@@ -79,12 +78,6 @@ const useGetUserConversations = () => {
       );
 
       if (correspondingAiModel) {
-        const user: Instance<typeof User> = {
-          id: firebaseUser?.uid ?? DefaultUser.id,
-          displayName: firebaseUser?.displayName ?? DefaultUser.displayName,
-          avatarUrl: firebaseUser?.photoURL ?? DefaultUser.avatarUrl,
-        };
-
         const conversation = Conversation.create({
           id: convo.id!!,
           aiModel: correspondingAiModel,

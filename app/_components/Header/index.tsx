@@ -2,14 +2,14 @@
 import React, { useState } from "react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { useAuth } from "../../_contexts/authContext";
 import { usePathname } from "next/navigation";
-import SignInModal from "../SignInModal";
 import MobileMenuPane from "../MobileMenuPane";
 import ConfirmSignOutModal from "../ConfirmSignOutModal";
 import useSignOut from "@/_hooks/useSignOut";
 import { ThemeChanger } from "../ChangeTheme";
 import UserProfileDropDown from "../UserProfileDropDown";
+import useSignIn from "@/_hooks/useSignIn";
+import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
 
 export const navigation = [
   { name: "Products", href: "/chat" },
@@ -20,18 +20,16 @@ export const navigation = [
 
 const Header: React.FC = () => {
   const router = usePathname();
-  const { currentUser } = useAuth();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showLogOutModal, setShowLogOutModal] = useState(false);
-
+  const { signInWithKeyCloak } = useSignIn();
+  const { user, loading } = useGetCurrentUser();
   const { signOut } = useSignOut();
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showLogOutModal, setShowLogOutModal] = useState(false);
 
   const checkLink = (link: string, router: string) => {
     return link.includes(router);
   };
-
-  const isUserLoggedIn = currentUser != null && !currentUser.isAnonymous;
 
   return (
     <header
@@ -58,12 +56,14 @@ const Header: React.FC = () => {
 
         <div className="hidden md:flex items-center gap-2">
           <ThemeChanger />
-          {isUserLoggedIn ? (
+          {loading ? (
+            <div></div>
+          ) : user ? (
             <UserProfileDropDown
               onLogOutClick={() => setShowLogOutModal(true)}
             />
           ) : (
-            <button onClick={() => setShowLoginModal(true)}>Login</button>
+            <button onClick={signInWithKeyCloak}>Login</button>
           )}
         </div>
         <div className="flex lg:hidden">
@@ -77,7 +77,6 @@ const Header: React.FC = () => {
           </button>
         </div>
       </nav>
-      <SignInModal open={showLoginModal} setOpen={setShowLoginModal} />
       <ConfirmSignOutModal
         open={showLogOutModal}
         setOpen={setShowLogOutModal}

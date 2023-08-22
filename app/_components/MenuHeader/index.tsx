@@ -1,9 +1,8 @@
-import { useAuth } from "../../_contexts/authContext";
-import { DefaultUser } from "@/_models/User";
 import Image from "next/image";
 import Link from "next/link";
 import { Popover, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
 
 type Props = {
   onLogOutClick: () => void;
@@ -29,10 +28,11 @@ const menu = [
 ];
 
 export const MenuHeader: React.FC<Props> = ({ onLogOutClick }) => {
-  const { currentUser } = useAuth();
+  const { user } = useGetCurrentUser();
 
-  const displayName = currentUser?.displayName ?? DefaultUser.displayName;
-  const email = currentUser?.email ?? "";
+  if (!user) {
+    return <div></div>;
+  }
 
   return (
     <Transition
@@ -47,10 +47,10 @@ export const MenuHeader: React.FC<Props> = ({ onLogOutClick }) => {
       <Popover.Panel className="absolute  shadow-profile -right-2 top-full z-10 mt-3 w-[224px] overflow-hidden rounded-[6px] bg-white shadow-lg ring-1 ring-gray-200">
         <div className="py-3 px-4 gap-2 flex flex-col">
           <h2 className="text-[20px] leading-[25px] tracking-[-0.4px] font-bold text-[#111928]">
-            {displayName}
+            {user.displayName}
           </h2>
           <span className="text-[#6B7280] leading-[17.5px] text-sm">
-            {email}
+            {user.email}
           </span>
         </div>
         <hr />
@@ -82,7 +82,7 @@ export const MenuHeader: React.FC<Props> = ({ onLogOutClick }) => {
           <Link href="/privacy">
             <span className="text-[#6B7280] text-xs">Privacy</span>
           </Link>
-          <div className="w-1 h-1 bg-[#D9D9D9] rounded-lg"/>
+          <div className="w-1 h-1 bg-[#D9D9D9] rounded-lg" />
           <Link href="/support">
             <span className="text-[#6B7280] text-xs">Support</span>
           </Link>

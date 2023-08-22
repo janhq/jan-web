@@ -11,15 +11,15 @@ import { useStore } from "@/_models/RootStore";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { fetchShortcuts } from "@/_services/products";
-import { useAuth } from "../../_contexts/authContext";
 import useGetUserConversations from "@/_hooks/useGetUserConversations";
 import DiscordContainer from "../DiscordContainer";
+import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
 
 export const SidebarLeft: React.FC = observer(() => {
   const router = usePathname();
   const [products, setProducts] = useState<Product[] | null>(null);
   const [searchText, setSearchText] = useState("");
-  const { isReady, currentUser } = useAuth();
+  const { user } = useGetCurrentUser();
   const { getUserConversations } = useGetUserConversations();
 
   const { historyStore } = useStore();
@@ -39,13 +39,13 @@ export const SidebarLeft: React.FC = observer(() => {
   }, []);
 
   useEffect(() => {
-    if (isReady && currentUser && historyStore.conversations.length === 0) {
+    if (user) {
       const createConversationAndActive = async () => {
-        await getUserConversations(currentUser);
+        await getUserConversations(user);
       };
       createConversationAndActive();
     }
-  }, [currentUser, isReady, historyStore, getUserConversations]);
+  }, [user]);
 
   const showHistoryList = historyStore.conversations.length > 0;
   const { getConfig } = useRemoteConfig();
@@ -54,11 +54,14 @@ export const SidebarLeft: React.FC = observer(() => {
     : products?.filter((e) => e.action?.params?.models[0]?.offline !== true);
 
   const onLogoClick = () => {
-    historyStore.clearActiveConversationId();  }
+    historyStore.clearActiveConversationId();
+  };
   const onSearching = (text: string) => {
     setSearchText(text);
-  };  
-  return (    <div
+  };
+
+  return (
+    <div
       className={`${
         historyStore.showAdvancedPrompt ? "lg:hidden" : "lg:flex"
       } ${

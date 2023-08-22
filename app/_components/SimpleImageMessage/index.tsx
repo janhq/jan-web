@@ -3,8 +3,7 @@ import JanImage from "../JanImage";
 import { displayDate } from "@/_utils/datetime";
 import Link from "next/link";
 import { useStore } from "@/_models/RootStore";
-import { useAuth } from "../../_contexts/authContext";
-import { DefaultUser } from "@/_models/User";
+import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
 
 type Props = {
   avatarUrl?: string;
@@ -22,10 +21,16 @@ const SimpleImageMessage: React.FC<Props> = ({
   createdAt,
 }) => {
   const { historyStore } = useStore();
-  const { currentUser } = useAuth();
+  const { user } = useGetCurrentUser();
+
   const onRegenerate = () => {
-    historyStore.sendMessage(text ?? "", currentUser?.uid || DefaultUser.id, senderName, avatarUrl);
+    if (!user) {
+      // TODO: we should show an error here
+      return;
+    }
+    historyStore.sendMessage(text ?? "", user.id, senderName, avatarUrl);
   };
+
   return (
     <div className="flex items-start gap-2">
       <img
