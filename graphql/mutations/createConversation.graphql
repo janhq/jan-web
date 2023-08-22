@@ -1,0 +1,5 @@
+mutation createConversation($productId: uuid) {
+  insert_conversations_one(object: {product_id: $productId}) {
+    ...ConversationDetail
+  }
+}

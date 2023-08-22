@@ -8,9 +8,12 @@
     "start": "next start",
     "lint": "next lint",
     "compile": "tsc --noEmit -p . --pretty",
-    "configure": "op read op://Shared/WebDevelopmentEnv/.env > .env && op read op://Shared/WebDevelopmentFirebaseConfig/firebase_configs.json > app/_services/firebase/firebase_configs.json"
+    "configure": "op read op://Shared/WebDevelopmentEnv/.env > .env && op read op://Shared/WebDevelopmentFirebaseConfig/firebase_configs.json > app/_services/firebase/firebase_configs.json",
+    "generate": "graphql-codegen",
+    "watch": "graphql-codegen -w"
   },
   "dependencies": {
+    "@apollo/client": "^3.8.1",
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
     "@microsoft/fetch-event-source": "^2.0.1",
@@ -30,6 +33,7 @@
     "eslint-config-next": "13.4.10",
     "firebase": "^10.0.0",
     "gleap": "^11.0.8",
+    "graphql": "^16.8.0",
     "lottie-react": "^2.4.0",
     "mobx": "^6.10.0",
     "mobx-react-lite": "^4.0.3",
@@ -46,6 +50,8 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
     "@tailwindcss/forms": "^0.5.4",
     "encoding": "^0.1.13"
   }
