@@ -1,0 +1,28 @@
+{
+    "id": "jan-web-kc",
+    "realm": "jan-web-kc",
+    "enabled": true,
+    "users": [
+      {
+        "username": "myuser",
+        "enabled": true,
+        "emailVerified": true,
+        "credentials": [
+          {
+            "type": "password",
+            "value": "mypassword"
+          }
+        ]
+      }
+    ],
+    "clients": [
+      {
+        "clientId": "my-client-id",
+        "name": "My Client",
+        "enabled": true,
+        "clientAuthenticatorType": "client-secret",
+        "secret": "my-client-secret"
+      }
+    ]
+  }
+  
