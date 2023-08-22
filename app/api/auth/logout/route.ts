@@ -12,7 +12,6 @@ export async function GET() {
     }?id_token_hint=${idToken}& post_logout_redirect_uri=${encodeURIComponent(
       process.env.NEXTAUTH_URL ?? "/"
     )}`;
-    console.log("NamH logout url", url);
 
     try {
       await fetch(url, { method: "GET" });
@@ -21,6 +20,6 @@ export async function GET() {
       return new Response({ status: 500 });
     }
   }
-  console.log("NamH logout success");
+
   return new Response({ status: 200 });
 }

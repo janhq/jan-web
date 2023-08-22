@@ -3,7 +3,6 @@ import {
   fetchEventSource,
   EventStreamContentType,
 } from "@microsoft/fetch-event-source";
-import { getFirebaseToken } from "../firebase";
 import type {
   ApiConfig,
   MagicPromptResponse,
@@ -14,6 +13,7 @@ import { GeneralApiProblem, getGeneralApiProblem } from "./api.problems";
 import { ChatMessage, MessageType } from "@/_models/ChatMessage";
 import { MessageResponse } from "./models/message.response";
 import { Instance } from "mobx-state-tree";
+import { getAccessToken } from "@/_utils/tokenAccessor";
 
 /**
  * Configuring the apisauce instance.
@@ -41,7 +41,7 @@ export class Api {
     });
 
     this.apisauce.addAsyncRequestTransform((request) => {
-      return getFirebaseToken().then((token) => {
+      return getAccessToken().then((token) => {
         if (request.headers != undefined) {
           request.headers.Authorization = `Bearer ${token}`;
         }
@@ -134,7 +134,7 @@ export class Api {
         max_tokens: options.max_tokens,
       };
 
-      const authToken = await getFirebaseToken();
+      const authToken = await getAccessToken();
       const chatRequestPayload = {
         method: "POST",
         body: JSON.stringify(chatPayload),

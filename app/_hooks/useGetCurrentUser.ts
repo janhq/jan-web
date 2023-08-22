@@ -26,7 +26,7 @@ export default function useGetCurrentUser() {
       avatarUrl: session?.user?.image ?? DefaultUser.avatarUrl,
       email: session?.user?.email ?? DefaultUser.email,
     };
-    console.log(`NamH user: ${JSON.stringify(tmp)}`);
+
     setUser(tmp);
     setLoading(false);
   }, [status]);
