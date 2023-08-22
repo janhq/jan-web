@@ -1,7 +1,31 @@
+// @ts-nocheck
 import NextAuth from "next-auth/next";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import jwt_decode from "jwt-decode";
 import { encrypt } from "@/_utils/encryption";
+
+async function refreshAccessToken(token) {
+  const resp = await fetch(`${process.env.REFRESH_TOKEN_URL}`, {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: process.env.DEMO_FRONTEND_CLIENT_ID,
+      client_secret: process.env.DEMO_FRONTEND_CLIENT_SECRET,
+      grant_type: "refresh_token",
+      refresh_token: token.refresh_token,
+    }),
+    method: "POST",
+  });
+  const refreshToken = await resp.json();
+  if (!resp.ok) throw refreshToken;
+  return {
+    ...token,
+    access_token: refreshToken.access_token,
+    decoded: jwt_decode(refreshToken.access_token),
+    id_token: refreshToken.id_token,
+    expired_at: Math.floor(Date.now() / 1000) + refreshToken.expired_in,
+    refresh_token: refreshToken.refresh_token,
+  };
+}
 
 export const authOptions = {
   providers: [
@@ -24,17 +48,22 @@ export const authOptions = {
       } else if (nowTimestamp < token.expires_at) {
         return token;
       } else {
-        // token is expired, refresh it
         console.log("token is expired, refresh it");
-        // TODO:
-        return token;
+        try {
+          const refreshedToken = await refreshAccessToken(token);
+          console.log("token is refreshed");
+          return refreshedToken;
+        } catch (e) {
+          console.error("Error refreshing access token", e);
+          return { ...token, error: "RefreshAccessTokenError" };
+        }
       }
     },
     async session({ session, token }) {
       session.access_token = encrypt(token.access_token);
       session.id_token = encrypt(token.id_token);
       session.user.user_id = token.sub;
-
+      session.error = token.error;
       return session;
     },
   },

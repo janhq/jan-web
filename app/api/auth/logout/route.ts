@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { getServerSession } from "next-auth";
 import { authOptions } from "../[...nextauth]/route";
 import { getIdToken } from "@/_utils/tokenAccessor";
