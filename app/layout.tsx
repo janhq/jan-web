@@ -3,6 +3,9 @@ import { Inter } from "next/font/google";
 import classNames from "classnames";
 import MobileShowcase from "@/_screens/MobileShowcase";
 import { Metadata } from "next";
+import AuthStatus from "@/_components/AuthStatus";
+import SessionProviderWrapper from "@/_components/SessionProviderWrapper";
+
 const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Free AI Image Generator and Interact with Ai Chat - Jan.ai",
@@ -20,15 +23,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body
-        className={classNames(inter.className, "flex flex-col w-full h-screen")}
-      >
-        <div className="hidden md:flex flex-col w-full h-screen">
-          {children}
-        </div>
-        <MobileShowcase />
-      </body>
-    </html>
+    <SessionProviderWrapper>
+      <html lang="en">
+        <body
+          className={classNames(
+            inter.className,
+            "flex flex-col w-full h-screen"
+          )}
+        >
+          <AuthStatus />
+          <div className="hidden md:flex flex-col w-full h-screen">
+            {children}
+          </div>
+          <MobileShowcase />
+        </body>
+      </html>
+    </SessionProviderWrapper>
   );
 }
