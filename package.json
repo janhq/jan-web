@@ -9,7 +9,7 @@
     "lint": "next lint",
     "compile": "tsc --noEmit -p . --pretty",
     "configure": "op read op://Shared/WebDevelopmentEnv/.env > .env && op read op://Shared/WebDevelopmentFirebaseConfig/firebase_configs.json > app/_services/firebase/firebase_configs.json",
-    "generate": "graphql-codegen",
+    "generate": "graphql-codegen --config codegen.ts",
     "watch": "graphql-codegen -w"
   },
   "dependencies": {
@@ -50,9 +50,10 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^5.0.0",
-    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-codegen/cli": "5.0.0",
+    "@graphql-codegen/client-preset": "4.1.0",
     "@tailwindcss/forms": "^0.5.4",
-    "encoding": "^0.1.13"
+    "encoding": "^0.1.13",
+    "@graphql-codegen/introspection": "4.0.0"
   }
 }

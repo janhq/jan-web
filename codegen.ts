@@ -1,18 +1,20 @@
-import { CodegenConfig } from "@graphql-codegen/cli"
+
+import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
-  schema: "http://localhost:8080/v1/graphql", // Edit GraphQL Engine URL
-  documents: ["./**/*.graphql"],
+  overwrite: true,
+  schema: "http://localhost:8080/v1/graphql",
+  documents: "graphql/**/*.graphql",
   generates: {
-    "./graphql/__generated__/": {
+    "graphql/generated/": {
       preset: "client",
       plugins: [],
       presetConfig: {
         gqlTagName: "gql",
+        fragmentMasking: false,
       },
-    },
-  },
-  ignoreNoDocuments: true,
-}
+    }
+  }
+};
 
-export default config
+export default config;

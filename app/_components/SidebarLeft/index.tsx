@@ -12,6 +12,12 @@ import { useAuth } from "@/_contexts/authContext";
 import useGetUserConversations from "@/_hooks/useGetUserConversations";
 import DiscordContainer from "../DiscordContainer";
 import useGetCollections from "@/_hooks/useGetCollections";
+import { useQuery } from "@apollo/client";
+import {
+  GetProductsByCollectionSlugDocument,
+  GetProductsByCollectionSlugQuery,
+  ProductDetailFragmentDoc,
+} from "@/../graphql/generated/graphql";
 
 export const SidebarLeft: React.FC = observer(() => {
   const router = usePathname();
@@ -22,6 +28,13 @@ export const SidebarLeft: React.FC = observer(() => {
   const { historyStore } = useStore();
   const navigation = ["pricing", "docs", "about"];
   const { featuredProducts } = useGetCollections();
+
+  const { loading, error, data } = useQuery<GetProductsByCollectionSlugQuery>(
+    GetProductsByCollectionSlugDocument,
+    {
+      variables: { slug: "featured" },
+    }
+  );
 
   const checkRouter = () =>
     navigation.map((item) => router?.includes(item)).includes(true);
@@ -67,7 +80,7 @@ export const SidebarLeft: React.FC = observer(() => {
           <div className="flex flex-col h-full overflow-x-hidden scroll gap-3">
             <ShortcutList
               products={
-                featuredProducts?.filter(
+                data?.products.filter(
                   (e) =>
                     searchText === "" ||
                     e.name.toLowerCase().includes(searchText.toLowerCase())
