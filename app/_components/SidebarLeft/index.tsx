@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchBar from "../SearchBar";
 import ShortcutList from "../ShortcutList";
 import HistoryList from "../HistoryList";
@@ -8,16 +8,16 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "@/_models/RootStore";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useAuth } from "@/_contexts/authContext";
 import useGetUserConversations from "@/_hooks/useGetUserConversations";
 import DiscordContainer from "../DiscordContainer";
 import { useQuery } from "@apollo/client";
 import { GetProductsQuery, GetProductsDocument } from "@/graphql";
+import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
 
 export const SidebarLeft: React.FC = observer(() => {
   const router = usePathname();
   const [searchText, setSearchText] = useState("");
-  const { isReady, currentUser } = useAuth();
+  const { user } = useGetCurrentUser();
   const { getUserConversations } = useGetUserConversations();
 
   const { historyStore } = useStore();
@@ -30,20 +30,19 @@ export const SidebarLeft: React.FC = observer(() => {
     navigation.map((item) => router?.includes(item)).includes(true);
 
   useEffect(() => {
-    if (isReady && currentUser && historyStore.conversations.length === 0) {
+    if (user) {
       const createConversationAndActive = async () => {
-        await getUserConversations();
+        await getUserConversations(user);
       };
       createConversationAndActive();
     }
-  }, [currentUser, isReady, historyStore, getUserConversations]);
+  }, [user]);
 
   const showHistoryList = historyStore.conversations.length > 0;
 
-  const onLogoClick = useCallback(() => {
+  const onLogoClick = () => {
     historyStore.clearActiveConversationId();
-  }, []);
-
+  };
   const onSearching = (text: string) => {
     setSearchText(text);
   };
