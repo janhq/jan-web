@@ -1,7 +1,8 @@
-import useGetPrompts from "@/_hooks/useGetPrompts";
 import JanWelcomeTitle from "../JanWelcomeTitle";
 import { AiModel } from "@/_models/AiModel";
 import { Instance } from "mobx-state-tree";
+import { GetProductPromptsQuery, GetProductPromptsDocument } from "@/graphql";
+import { useQuery } from "@apollo/client";
 
 type Props = {
   model: Instance<typeof AiModel>;
@@ -12,7 +13,12 @@ export const GenerativeSampleContainer: React.FC<Props> = ({
   model,
   onPromptSelected,
 }) => {
-  const { prompts } = useGetPrompts(model.modelId);
+  const { loading, error, data } = useQuery<GetProductPromptsQuery>(
+    GetProductPromptsDocument,
+    {
+      variables: { productSlug: model.modelId },
+    }
+  );
 
   return (
     <div className="flex flex-col max-w-2xl flex-shrink-0 mx-auto mt-6">
@@ -25,10 +31,10 @@ export const GenerativeSampleContainer: React.FC<Props> = ({
           Create now
         </h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-          {prompts.map((item) => (
+          {data?.prompts.map((item) => (
             <button
               key={item.slug}
-              onClick={() => onPromptSelected(item.content)}
+              onClick={() => onPromptSelected(item.content || "")}
               className="w-full h-full"
             >
               <img

@@ -1,19 +1,32 @@
-import useCreateConversation from "@/_hooks/useCreateConversation";
 import React from "react";
 import Image from "next/image";
-import { ProductDetailFragment } from "@/graphql";
+import {
+  ProductDetailFragment,
+  CreateConversationMutation,
+  CreateConversationDocument,
+} from "@/graphql";
+import { useMutation } from "@apollo/client";
 
 type Props = {
   product: ProductDetailFragment;
 };
 
 const ConversationalCard: React.FC<Props> = ({ product }) => {
-  const { requestCreateConvo } = useCreateConversation();
+  const [createConversation, { loading, error, data }] =
+    useMutation<CreateConversationMutation>(CreateConversationDocument);
+
   const { name, image_url, description } = product;
 
   return (
     <button
-      onClick={() => requestCreateConvo(product)}
+      onClick={() =>
+        createConversation({
+          variables: {
+            product_id: "",
+            user_id: "",
+          },
+        })
+      }
       className="flex flex-col justify-between flex-shrink-0 gap-3 bg-white p-4 w-52 rounded-lg text-left dark:bg-gray-700 hover:opacity-20"
     >
       <div className="flex flex-col gap-2 box-border">

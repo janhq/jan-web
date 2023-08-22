@@ -19,13 +19,14 @@ const documents = {
     "fragment MessageDetail on messages {\n  id\n  conversation_id\n  sender\n  sender_name\n  sender_avatar_url\n  content\n  message_type\n  message_sender_type\n  updated_at\n}": types.MessageDetailFragmentDoc,
     "fragment ProductDetail on products {\n  name\n  slug\n  description\n  long_description\n  technical_description\n  image_url\n  author\n  greeting\n  source_url\n  version\n  inputs\n  outputs\n  nsfw\n}": types.ProductDetailFragmentDoc,
     "fragment PromptDetail on prompts {\n  slug\n  content\n  image_url\n}": types.PromptDetailFragmentDoc,
-    "mutation createConversation($productId: uuid) {\n  insert_conversations_one(object: {product_id: $productId}) {\n    ...ConversationDetail\n  }\n}": types.CreateConversationDocument,
+    "mutation createConversation($product_id: uuid = \"\", $user_id: String = \"\") {\n  insert_conversations_one(object: {product_id: $product_id, user_id: $user_id}) {\n    ...ConversationDetail\n  }\n}": types.CreateConversationDocument,
     "mutation createMessage($convId: uuid, $content: String, $sender: String, $messageType: String, $senderType: String, $mediaUrl: String) {\n  insert_messages_one(\n    object: {conversation_id: $convId, content: $content, sender: $sender, message_type: $messageType, message_sender_type: $senderType, message_medias: {data: {media_url: $mediaUrl}}}\n  ) {\n    ...MessageDetail\n  }\n}": types.CreateMessageDocument,
     "mutation deleteConversation($id: uuid!) {\n  delete_conversations_by_pk(id: $id) {\n    id\n  }\n}": types.DeleteConversationDocument,
     "mutation updateConversation($id: uuid!, $lastMessageText: String, $lastMessageUrl: String) {\n  update_conversations_by_pk(\n    pk_columns: {id: $id}\n    _set: {last_text_message: $lastMessageText, last_image_url: $lastMessageUrl}\n  ) {\n    ...ConversationDetail\n  }\n}": types.UpdateConversationDocument,
     "query getCollections {\n  collections {\n    ...CollectionDetail\n    collection_products {\n      products {\n        ...ProductDetail\n        product_prompts {\n          prompts {\n            ...PromptDetail\n          }\n        }\n      }\n    }\n  }\n}": types.GetCollectionsDocument,
     "query getConversations {\n  conversations {\n    ...ConversationDetail\n    conversation_messages {\n      ...MessageDetail\n      message_medias {\n        ...MessageMedia\n      }\n    }\n  }\n}": types.GetConversationsDocument,
     "query getProductsByCollectionSlug($slug: String = \"\") {\n  products(where: {product_collections: {collections: {slug: {_eq: $slug}}}}) {\n    ...ProductDetail\n    product_prompts {\n      prompts {\n        ...PromptDetail\n      }\n    }\n    product_collections {\n      collections {\n        ...CollectionDetail\n      }\n    }\n  }\n}": types.GetProductsByCollectionSlugDocument,
+    "query getProductPrompts($productSlug: String = \"\") {\n  prompts(where: {prompt_products: {products: {slug: {_eq: $productSlug}}}}) {\n    ...PromptDetail\n  }\n}": types.GetProductPromptsDocument,
     "query getProducts {\n  products {\n    ...ProductDetail\n    product_prompts {\n      prompts {\n        ...PromptDetail\n      }\n    }\n    product_collections {\n      collections {\n        ...CollectionDetail\n      }\n    }\n  }\n}": types.GetProductsDocument,
     "query getProductsIn($_in: [String!] = \"\") {\n  products(where: {slug: {_in: $_in}}) {\n    ...ProductDetail\n  }\n}": types.GetProductsInDocument,
 };
@@ -71,7 +72,7 @@ export function gql(source: "fragment PromptDetail on prompts {\n  slug\n  conte
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "mutation createConversation($productId: uuid) {\n  insert_conversations_one(object: {product_id: $productId}) {\n    ...ConversationDetail\n  }\n}"): (typeof documents)["mutation createConversation($productId: uuid) {\n  insert_conversations_one(object: {product_id: $productId}) {\n    ...ConversationDetail\n  }\n}"];
+export function gql(source: "mutation createConversation($product_id: uuid = \"\", $user_id: String = \"\") {\n  insert_conversations_one(object: {product_id: $product_id, user_id: $user_id}) {\n    ...ConversationDetail\n  }\n}"): (typeof documents)["mutation createConversation($product_id: uuid = \"\", $user_id: String = \"\") {\n  insert_conversations_one(object: {product_id: $product_id, user_id: $user_id}) {\n    ...ConversationDetail\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -96,6 +97,10 @@ export function gql(source: "query getConversations {\n  conversations {\n    ..
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "query getProductsByCollectionSlug($slug: String = \"\") {\n  products(where: {product_collections: {collections: {slug: {_eq: $slug}}}}) {\n    ...ProductDetail\n    product_prompts {\n      prompts {\n        ...PromptDetail\n      }\n    }\n    product_collections {\n      collections {\n        ...CollectionDetail\n      }\n    }\n  }\n}"): (typeof documents)["query getProductsByCollectionSlug($slug: String = \"\") {\n  products(where: {product_collections: {collections: {slug: {_eq: $slug}}}}) {\n    ...ProductDetail\n    product_prompts {\n      prompts {\n        ...PromptDetail\n      }\n    }\n    product_collections {\n      collections {\n        ...CollectionDetail\n      }\n    }\n  }\n}"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "query getProductPrompts($productSlug: String = \"\") {\n  prompts(where: {prompt_products: {products: {slug: {_eq: $productSlug}}}}) {\n    ...PromptDetail\n  }\n}"): (typeof documents)["query getProductPrompts($productSlug: String = \"\") {\n  prompts(where: {prompt_products: {products: {slug: {_eq: $productSlug}}}}) {\n    ...PromptDetail\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
