@@ -17,7 +17,7 @@ export const ModelDetailSideBar: FC<Props> = observer(({ onPromptClick }) => {
   const [tab, setTab] = useState<"description" | "api">("description");
   const conversation = useStore().historyStore.getActiveConversation();
 
-  const modelName = conversation?.aiModel.title ?? "";
+  const modelName = conversation?.aiModel.name ?? "";
 
   const onTabClick = (clickedTab: "description" | "api") => {
     if (clickedTab === tab) {
@@ -29,9 +29,10 @@ export const ModelDetailSideBar: FC<Props> = observer(({ onPromptClick }) => {
 
   return (
     <div
+      style={historyStore.showModelDetail ? { width: "473px" } : {}}
       ref={ref}
       className={`${
-        historyStore.showModelDetail ? "w-[473px] p-3" : "hidden"
+        historyStore.showModelDetail ? "w-[473px]" : "hidden"
       } flex flex-col gap-3 h-full p-3 relative pb-3 border-l-[1px] border-[#E5E7EB]`}
     >
       <Draggable targetRef={ref} />
@@ -53,9 +54,9 @@ export const ModelDetailSideBar: FC<Props> = observer(({ onPromptClick }) => {
           <ApiPane />
         ) : (
           <OverviewPane
+            slug={conversation?.aiModel.modelId ?? ""}
             onPromptClick={onPromptClick}
             description={conversation?.aiModel.description}
-            samples={conversation?.aiModel.defaultPrompts}
             technicalURL={conversation?.aiModel.modelUrl}
             technicalVersion={conversation?.aiModel.modelVersion}
           />

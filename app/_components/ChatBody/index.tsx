@@ -1,5 +1,4 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import InfiniteScroll from "react-infinite-scroller";
 import { useStore } from "@/_models/RootStore";
 import { observer } from "mobx-react-lite";
 import { ChatMessage, MessageType } from "@/_models/ChatMessage";
@@ -11,6 +10,7 @@ import animationData from "@/../public/lotties/typing.json";
 import { GenerativeSampleContainer } from "../GenerativeSampleContainer";
 import { AiModelType } from "@/_models/AiModel";
 import SampleLlmContainer from "@/_components/SampleLlmContainer";
+import SimpleControlNetMessage from "../SimpleControlNetMessage";
 
 type Props = {
   onPromptSelected: (prompt: string) => void;
@@ -18,6 +18,7 @@ type Props = {
 
 export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
   const { historyStore } = useStore();
   const refSmooth = useRef<HTMLDivElement>(null);
@@ -57,11 +58,32 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
 
   const model = convo?.aiModel;
 
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    if (
+      scrollRef.current?.clientHeight - scrollRef.current?.scrollTop + 1 >=
+      scrollRef.current?.scrollHeight
+    ) {
+      loadFunc();
+    }
+  };
+
+  useEffect(() => {
+    loadFunc();
+    scrollRef.current?.addEventListener("scroll", handleScroll);
+    return () => {
+      scrollRef.current?.removeEventListener("scroll", handleScroll);
+    };
+  }, [scrollRef.current]);
+
   return (
-    <div className="flex-grow flex flex-col h-fit overflow-x-hidden" ref={ref}>
+    <div className="flex-grow flex flex-col h-fit" ref={ref}>
       {shouldShowSampleContainer && model ? (
         shouldShowImageSampleContainer ? (
-          <GenerativeSampleContainer />
+          <GenerativeSampleContainer
+            model={convo?.aiModel}
+            onPromptSelected={onPromptSelected}
+          />
         ) : (
           <SampleLlmContainer
             model={convo?.aiModel}
@@ -70,25 +92,18 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
         )
       ) : (
         <div
-          className="flex flex-col-reverse"
+          className="flex flex-col-reverse scroll"
           style={{
             height: height + "px",
             overflowX: "hidden",
           }}
+          ref={scrollRef}
         >
-          <InfiniteScroll
-            isReverse={true}
-            loadMore={loadFunc}
-            hasMore={hasMore}
+          <div
+            className="flex flex-col justify-end gap-8 py-2"
+            ref={refContent}
           >
-            <div
-              className={`flex flex-col justify-end gap-8 py-2`}
-              ref={refContent}
-            >
-              {messages
-                .slice()
-                .sort((a, b) => a.createdAt - b.createdAt)
-                .map((message, index) => renderItem(index, message))}
+            {messages.map((message, index) => renderItem(index, message))}
             <div ref={refSmooth}>
               {convo?.isWaitingForModelResponse && (
                 <div className="w-[50px] h-[50px] flex flex-row items-start justify-start">
@@ -103,7 +118,6 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
               )}
             </div>
           </div>
-          </InfiniteScroll>
         </div>
       )}
     </div>
@@ -122,6 +136,17 @@ const renderItem = (
   }: Instance<typeof ChatMessage>
 ) => {
   switch (messageType) {
+    case MessageType.ImageWithText:
+      return (
+        <SimpleControlNetMessage
+          key={index}
+          avatarUrl={senderAvatarUrl}
+          senderName={senderName}
+          createdAt={createdAt}
+          imageUrls={imageUrls ?? []}
+          text={text ?? ""}
+        />
+      );
     case MessageType.Image:
       return (
         <SimpleImageMessage
@@ -143,8 +168,6 @@ const renderItem = (
           text={text}
         />
       );
-    case MessageType.WaitingResponse:
-      return null;
     default:
       return null;
   }

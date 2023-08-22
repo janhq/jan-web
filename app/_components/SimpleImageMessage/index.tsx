@@ -3,7 +3,7 @@ import JanImage from "../JanImage";
 import { displayDate } from "@/_utils/datetime";
 import Link from "next/link";
 import { useStore } from "@/_models/RootStore";
-import { useAuth } from "../../_contexts/authContext";
+import { useAuth } from "@/_contexts/authContext";
 import { DefaultUser } from "@/_models/User";
 
 type Props = {
@@ -24,7 +24,12 @@ const SimpleImageMessage: React.FC<Props> = ({
   const { historyStore } = useStore();
   const { currentUser } = useAuth();
   const onRegenerate = () => {
-    historyStore.sendMessage(text ?? "", currentUser?.uid || DefaultUser.id, senderName, avatarUrl);
+    historyStore.sendMessage(
+      text ?? "",
+      currentUser?.uid ?? DefaultUser.id,
+      senderName,
+      avatarUrl
+    );
   };
   return (
     <div className="flex items-start gap-2">
@@ -51,7 +56,7 @@ const SimpleImageMessage: React.FC<Props> = ({
           />
           <div className="flex flex-row justify-start items-start w-full gap-2">
             <Link
-              href={imageUrls[0]}
+              href={imageUrls[0] || "#"}
               target="_blank_"
               className="flex gap-1 items-center px-2 py-1 bg-[#F3F4F6] rounded-[12px]"
             >
@@ -72,7 +77,6 @@ const SimpleImageMessage: React.FC<Props> = ({
           </div>
         </div>
       </div>
-      {/* {text && <div className="leading-[20px] text-sm">{text}</div>} */}
     </div>
   );
 };

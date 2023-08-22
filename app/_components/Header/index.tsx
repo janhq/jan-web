@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { useAuth } from "../../_contexts/authContext";
+import { useAuth } from "@/_contexts/authContext";
 import { usePathname } from "next/navigation";
 import SignInModal from "../SignInModal";
 import MobileMenuPane from "../MobileMenuPane";
@@ -12,7 +12,7 @@ import { ThemeChanger } from "../ChangeTheme";
 import UserProfileDropDown from "../UserProfileDropDown";
 
 export const navigation = [
-  { name: "Products", href: "/chat" },
+  { name: "Products", href: "/" },
   { name: "Pricing", href: "/pricing" },
   { name: "Docs", href: "/docs" },
   { name: "About", href: "/about" },
@@ -40,9 +40,9 @@ const Header: React.FC = () => {
     >
       <nav className="mx-auto flex items-center" aria-label="Global">
         <div className="flex items-center flex-1 justify-center">
-          {navigation.map((item, index) => (
+          {navigation.map((item) => (
             <div
-              key={index}
+              key={item.name}
               className={`px-3 py-1 flex gap-2 rounded-lg ${
                 checkLink(router || "", item.href)
                   ? "bg-[#E5E7EB] text-[#1F2A37]"

@@ -1,13 +1,14 @@
 import { Instance, castToSnapshot, flow, types } from "mobx-state-tree";
 import { Conversation } from "./Conversation";
-import { AiModel, AiModelType } from "./AiModel";
+import { AiModel, AiModelType, PromptModel } from "./AiModel";
 import { User } from "./User";
-import { Product } from "./Product";
 import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
 import { api } from "../_services/api";
 import { Role } from "../_services/api/api.types";
 import { MessageResponse } from "@/_services/api/models/message.response";
 import { MESSAGE_PER_PAGE } from "../_utils/const";
+import { ProductV2 } from "./ProductV2";
+import { controlNetRequest } from "@/_services/controlnet";
 
 export const History = types
   .model("History", {
@@ -210,14 +211,14 @@ export const History = types
       }));
 
       const modelName =
-        self.getActiveConversation()?.aiModel.name ?? "gpt-3.5-turbo";
+        self.getActiveConversation()?.aiModel.modelId ?? "gpt-3.5-turbo";
 
       const result = yield api.createNewTextChatMessage(
         conversation.id,
         MessageSenderType.Ai,
+        conversation.aiModel.modelId,
         conversation.aiModel.name,
-        conversation.aiModel.title,
-        conversation.aiModel.avatarUrl || "",
+        conversation.aiModel.avatarUrl ?? "",
         ""
       );
 
@@ -235,9 +236,9 @@ export const History = types
         conversationId: conversation.id,
         messageType: MessageType.Text,
         messageSenderType: MessageSenderType.Ai,
-        senderUid: conversation.aiModel.name,
-        senderName: conversation.aiModel.title,
-        senderAvatarUrl: conversation.aiModel.avatarUrl || "",
+        senderUid: conversation.aiModel.modelId,
+        senderName: conversation.aiModel.name,
+        senderAvatarUrl: conversation.aiModel.avatarUrl ?? "",
         text: "",
         createdAt: Date.now(),
       });
@@ -249,10 +250,9 @@ export const History = types
         max_tokens: 500,
         messages: latestMessages,
         onOpen: () => {
-          // TODO: maybe showing ... while waiting for response
           conversation.addMessage(aiResponseMessage);
         },
-        onUpdate: (message: string, chunk: string) => {
+        onUpdate: (message: string) => {
           aiResponseMessage.setProp("text", message);
           conversation.setProp("updatedAt", Date.now());
 
@@ -308,11 +308,12 @@ export const History = types
         const result = yield api.createNewImageChatMessage(
           conversation.id,
           MessageSenderType.Ai,
+          conversation.aiModel.modelId,
           conversation.aiModel.name,
-          conversation.aiModel.title,
-          conversation.aiModel.avatarUrl || "",
+          conversation.aiModel.avatarUrl ?? "",
           message || "",
-          imageUrl
+          imageUrl,
+          MessageType.Image
         );
 
         if (result.kind !== "ok") {
@@ -326,9 +327,9 @@ export const History = types
           conversationId: conversation.id,
           messageType: MessageType.Image,
           messageSenderType: MessageSenderType.Ai,
-          senderUid: conversation.aiModel.name,
-          senderName: conversation.aiModel.title,
-          senderAvatarUrl: conversation.aiModel.avatarUrl || "",
+          senderUid: conversation.aiModel.modelId,
+          senderName: conversation.aiModel.name,
+          senderAvatarUrl: conversation.aiModel.avatarUrl ?? "",
           text: message,
           imageUrls: data.outputs,
           createdAt: Date.now(),
@@ -347,43 +348,104 @@ export const History = types
     };
   })
   .actions((self) => {
+    const sendControlNetPrompt = flow(function* (
+      prompt: string,
+      negPrompt: string,
+      file: any // TODO: file type, for now I don't know what is that
+    ) {
+      if (!self.activeConversationId) {
+        console.error("No active conversation found");
+        return;
+      }
+
+      const conversation = self.getActiveConversation();
+      if (!conversation) {
+        console.error(
+          "No active conversation found with id",
+          self.activeConversationId
+        );
+        return;
+      }
+
+      conversation.setWaitingForModelResponse(true);
+
+      const imageUrl = yield controlNetRequest("", prompt, negPrompt, file);
+      if (!imageUrl || !imageUrl.startsWith("https://")) {
+        console.error(
+          "Failed to invoking control net",
+          self.activeConversationId
+        );
+        return;
+      }
+      const message = `${prompt}. Negative: ${negPrompt}`;
+      const createMessageResult = yield api.createNewImageChatMessage(
+        conversation.id,
+        MessageSenderType.Ai,
+        conversation.aiModel.modelId,
+        conversation.aiModel.name,
+        conversation.aiModel.avatarUrl ?? "",
+        message,
+        imageUrl,
+        MessageType.ImageWithText
+      );
+
+      if (createMessageResult.kind !== "ok") {
+        // TODO: display error
+        console.error(
+          "Error creating user message",
+          JSON.stringify(createMessageResult)
+        );
+        conversation.setWaitingForModelResponse(false);
+        return;
+      }
+
+      const chatMessage = ChatMessage.create({
+        id: createMessageResult.messageId,
+        conversationId: self.activeConversationId,
+        messageType: MessageType.ImageWithText,
+        messageSenderType: MessageSenderType.Ai,
+        senderUid: conversation.aiModel.modelId,
+        senderName: conversation.aiModel.name,
+        senderAvatarUrl: conversation.aiModel.avatarUrl ?? "",
+        text: message,
+        imageUrls: [imageUrl],
+        createdAt: Date.now(),
+      });
+      conversation.addMessage(chatMessage);
+      conversation.setProp("lastTextMessage", message);
+      conversation.setProp("lastImageUrl", imageUrl);
+      conversation.setWaitingForModelResponse(false);
+    });
+
     const createConversation = flow(function* (
-      product: Product,
+      product: ProductV2,
       userId: string,
       displayName: string,
       avatarUrl?: string
     ) {
-      const textPrompts: string[] = [];
-      product.action.params.suggestedPrompts?.map((p) => {
-        if (typeof p === "string") {
-          textPrompts.push(p);
-        }
-      });
-
-      let modelType = AiModelType.LLM;
-      if (product.decoration.tags.includes("Awesome Art")) {
+      let modelType: AiModelType | undefined = undefined;
+      if (product.inputs.slug === "llm") {
+        modelType = AiModelType.LLM;
+      } else if (product.inputs.slug === "sd") {
         modelType = AiModelType.GenerativeArt;
-      }
-
-      const modelId = product.action.params.models[0].name;
-      if (!modelId) {
-        console.error("No model id found");
+      } else if (product.inputs.slug === "controlnet") {
+        modelType = AiModelType.ControlNet;
+      } else {
+        console.error("Model type not supported");
         return;
       }
 
       const newAiModel = AiModel.create({
         name: product.name,
-        modelId: modelId,
-        title: product.decoration.title,
+        modelId: product.slug,
         aiModelType: modelType,
-        description: product.decoration.technicalDescription,
-        modelUrl: product.decoration.technicalURL,
-        modelVersion: product.decoration.technicalVersion,
-        avatarUrl: product.decoration.images[0],
-        defaultPrompts: textPrompts,
+        description: product.description,
+        modelUrl: product.source_url,
+        modelVersion: product.version,
+        avatarUrl: product.image_url,
       });
 
-      const createConvoResult = yield api.createConversation(modelId);
+      const createConvoResult = yield api.createConversation(product.slug);
       if (createConvoResult.kind !== "ok") {
         // TODO showing error dialog
         console.error(`Error`, JSON.stringify(createConvoResult));
@@ -476,6 +538,7 @@ export const History = types
 
     return {
       sendMessage,
+      sendControlNetPrompt,
       createConversation,
     };
   });

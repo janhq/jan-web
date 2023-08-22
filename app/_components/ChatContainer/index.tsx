@@ -10,10 +10,9 @@ import Gleap from "gleap";
 import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
 import { ModelDetailSideBar } from "../ModelDetailSideBar";
 import NewChatBlankState from "../NewChatBlankState";
-import { ProductsProps } from "@/_services/products";
-import { useAuth } from "../../_contexts/authContext";
+import { useAuth } from "@/_contexts/authContext";
 
-const ChatContainer: React.FC<ProductsProps> = observer((props) => {
+const ChatContainer: React.FC = observer(() => {
   const [prefillPrompt, setPrefillPrompt] = useState("");
   const { historyStore } = useStore();
   const { isReady, currentUser } = useAuth();
@@ -26,8 +25,9 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
       historyStore.clearAllConversations();
     }
   }, [isReady, currentUser, historyStore]);
+
   useEffect(() => {
-    Gleap.showFeedbackButton(conversation ? false : true);
+    Gleap.showFeedbackButton(!conversation);
   }, [conversation]);
 
   const [open, setOpen] = useState(false);
@@ -69,11 +69,9 @@ const ChatContainer: React.FC<ProductsProps> = observer((props) => {
               />
             </div>
           </div>
-          <div className="w-full h-full overflow-hidden">
-            <div className="flex flex-col h-full px-1 sm:px-2 lg:px-3">
-              <ChatBody onPromptSelected={onSuggestPromptClick} />
-              <InputToolbar prefillPrompt={prefillPrompt} />
-            </div>
+          <div className="flex flex-col h-full px-1 sm:px-2 lg:px-3 overflow-hidden">
+            <ChatBody onPromptSelected={onSuggestPromptClick} />
+            <InputToolbar prefillPrompt={prefillPrompt} />
           </div>
         </div>
       ) : (

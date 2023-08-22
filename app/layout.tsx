@@ -1,9 +1,10 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import classNames from "classnames";
-import MobileShowcase from "@/_screens/MobileShowcase";
+import MobileShowcase from "@/_components/MobileShowcase";
 import { Metadata } from "next";
 const inter = Inter({ subsets: ["latin"] });
+
 export const metadata: Metadata = {
   title: "Free AI Image Generator and Interact with Ai Chat - Jan.ai",
   description:
@@ -22,7 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={classNames(inter.className, "flex flex-col w-full h-screen")}
+        className={classNames(
+          inter.className,
+          "flex flex-col w-full h-screen overflow-hidden"
+        )}
       >
         <div className="hidden md:flex flex-col w-full h-screen">
           {children}

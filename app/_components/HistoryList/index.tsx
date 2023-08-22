@@ -12,7 +12,7 @@ const HistoryList: React.FC<IHistoryListProps> = observer((props) => {
   const [showHistory, setShowHistory] = useState(true);
 
   return (
-    <div className="flex flex-col w-full px-1 pt-3">
+    <div className="flex flex-col w-full pl-1 pt-3">
       <button
         onClick={() => setShowHistory(!showHistory)}
         className="flex items-center justify-between px-2"
@@ -29,27 +29,27 @@ const HistoryList: React.FC<IHistoryListProps> = observer((props) => {
         />
       </button>
       <div className={`flex-col gap-1 ${showHistory ? "flex" : "hidden"}`}>
-      {historyStore.conversations
-        .filter(
-          (e) =>
-            props.searchText === "" ||
-            e.aiModel.title
-              .toLowerCase()
-              .includes(props.searchText.toLowerCase()) ||
-            e.aiModel.description
-              ?.toLowerCase()
-              .includes(props.searchText.toLowerCase())
-        )
-        .sort((n1, n2) => (n2.updatedAt || 0) - (n1.updatedAt || 0))
-        .map(({ id, aiModel, updatedAt }) => (
-          <HistoryItem
-            key={id}
-            conversationId={id}
-            avatarUrl={aiModel.avatarUrl || ""}
-            name={aiModel.title}
-            updatedAt={updatedAt}
-          />
-        ))}
+        {historyStore.conversations
+          .filter(
+            (e) =>
+              props.searchText === "" ||
+              e.aiModel.name
+                .toLowerCase()
+                .includes(props.searchText.toLowerCase()) ||
+              e.aiModel.description
+                ?.toLowerCase()
+                .includes(props.searchText.toLowerCase())
+          )
+          .sort((n1, n2) => (n2.updatedAt || 0) - (n1.updatedAt || 0))
+          .map(({ id, aiModel, updatedAt }) => (
+            <HistoryItem
+              key={id}
+              conversationId={id}
+              avatarUrl={aiModel.avatarUrl || ""}
+              name={aiModel.name}
+              updatedAt={updatedAt}
+            />
+          ))}
       </div>
     </div>
   );

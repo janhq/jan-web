@@ -11,8 +11,7 @@ import type {
   StreamMessageOptions,
 } from "./api.types";
 import { GeneralApiProblem, getGeneralApiProblem } from "./api.problems";
-import { ConversationResponse } from "./models/conversation.response";
-import { ChatMessage, MessageType } from "../../_models/ChatMessage";
+import { ChatMessage, MessageType } from "@/_models/ChatMessage";
 import { MessageResponse } from "./models/message.response";
 import { Instance } from "mobx-state-tree";
 
@@ -144,7 +143,7 @@ export class Api {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
           Authorization: `Bearer ${authToken}`,
-          be_key: process.env.NEXT_PUBLIC_BE_KEY || "",
+          be_key: process.env.NEXT_PUBLIC_BE_KEY ?? "",
         },
         debug: false,
         pollingInterval: 100000,
@@ -248,38 +247,6 @@ export class Api {
     }
   }
 
-  async getConversations(): Promise<
-    { kind: "ok"; conversations: ConversationResponse[] } | GeneralApiProblem
-  > {
-    // make the api call
-    const response: ApiResponse<ConversationResponse[]> =
-      await this.apisauce.get(`/conversation`);
-
-    // the typical ways to die when calling an api
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response);
-      if (problem) {
-        return problem;
-      }
-    }
-
-    if (!response.data) {
-      return { kind: "bad-data" };
-    }
-
-    // transform the data into the format we are expecting
-    const convos = response.data.filter((c) => {
-      return c.ai_model != null && c.ai_model.trim().length > 0;
-    });
-
-    try {
-      return { kind: "ok", conversations: convos };
-    } catch (e) {
-      console.error("getConversations error", e);
-      return { kind: "bad-data" };
-    }
-  }
-
   async createNewTextChatMessage(
     conversationId: string,
     messageSenderType: string,
@@ -327,11 +294,12 @@ export class Api {
     senderName: string,
     senderAvatarUrl: string,
     content: string,
-    image: string
+    image: string,
+    messageType: MessageType
   ): Promise<{ kind: "ok"; messageId: string } | GeneralApiProblem> {
     const response: ApiResponse<any> = await this.apisauce.post("message", {
       conversation_id: conversationId,
-      message_type: MessageType.Image,
+      message_type: messageType,
       message_sender_type: messageSenderType,
       sender_uuid: senderUuid,
       sender_name: senderName,
@@ -409,12 +377,7 @@ export class Api {
       }
     }
 
-    try {
-      return { kind: "ok" };
-    } catch (e) {
-      console.error("updateChatMessage error", e);
-      return { kind: "bad-data" };
-    }
+    return { kind: "ok" };
   }
 
   async deleteConversation(convoId: string) {
@@ -430,12 +393,7 @@ export class Api {
       }
     }
 
-    try {
-      return { kind: "ok" };
-    } catch (e) {
-      console.error("createNewImageChatMessage error", e);
-      return { kind: "bad-data" };
-    }
+    return { kind: "ok" };
   }
 }
 

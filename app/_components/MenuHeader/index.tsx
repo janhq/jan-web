@@ -1,4 +1,4 @@
-import { useAuth } from "../../_contexts/authContext";
+import { useAuth } from "@/_contexts/authContext";
 import { DefaultUser } from "@/_models/User";
 import Image from "next/image";
 import Link from "next/link";

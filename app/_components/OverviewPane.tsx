@@ -1,20 +1,17 @@
-import classNames from "classnames";
-import Link from "next/link";
+import useGetPrompts from "@/_hooks/useGetPrompts";
 import { useLayoutEffect, useRef, useState } from "react";
 
-interface IOverviewPanelProps {
-  productId?: string;
+type Props = {
+  slug: string;
   description?: string | null;
   technicalVersion?: string | null;
-  technicalDescription?: string | null;
   technicalURL?: string | null;
-  samples?: string[];
   onPromptClick?: (prompt: string) => void;
   inAIModel?: number;
-}
+};
 
-const OverviewPane: React.FC<IOverviewPanelProps> = ({
-  samples = [],
+const OverviewPane: React.FC<Props> = ({
+  slug,
   description,
   technicalVersion,
   technicalURL,
@@ -23,21 +20,17 @@ const OverviewPane: React.FC<IOverviewPanelProps> = ({
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [read, setRead] = useState<boolean>(true);
-  const [readMoreTechnical, setReadMoreTechnical] = useState<boolean>(true);
   const [height, setHeight] = useState<number>(0);
+  const { prompts } = useGetPrompts(slug);
 
   useLayoutEffect(() => {
     if (!ref.current) return;
     setHeight(ref.current?.offsetHeight);
   }, [read]);
-  useLayoutEffect(() => {
-    if (!ref.current) return;
-    setHeight(ref.current?.offsetHeight);
-  }, []);
 
   return (
     <div
-      className="w-full flex flex-auto flex-col gap-6 overflow-x-hidden"
+      className="w-full flex flex-auto flex-col gap-6 overflow-x-hidden scroll"
       ref={ref}
       style={!inAIModel ? { height: `${height}px` } : { height: "100%" }}
     >
@@ -72,17 +65,17 @@ const OverviewPane: React.FC<IOverviewPanelProps> = ({
       <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-base">
         <h2 className="font-bold">Try it yourself</h2>
         <ul className="border-[1px] border-[#D1D5DB] rounded-[12px]">
-          {samples?.map((item, index) => {
-            const showBorder = index === samples.length - 1 ? false : true;
+          {prompts.map((prompt, index) => {
+            const showBorder = index !== prompts.length - 1;
             return (
               <button
-                onClick={() => onPromptClick?.(item)}
-                key={index}
+                onClick={() => onPromptClick?.(prompt.content)}
+                key={prompt.slug}
                 className={`text-sm text-gray-500 leading-[20px] flex gap-[10px] border-b-[${
                   showBorder ? "1" : "0"
                 }px] border-[#E5E7EB] hover:text-blue-400 text-left p-3 w-full`}
               >
-                {item}
+                {prompt.content}
               </button>
             );
           })}

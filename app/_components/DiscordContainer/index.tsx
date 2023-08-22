@@ -19,7 +19,7 @@ const DiscordContainer = () => (
     </Link>
     <Link
       className="flex items-center rounded-lg text-purple-700 text-xs leading-[18px] font-semibold gap-2"
-      href={process.env.NEXT_PUBLIC_DISCORD_INVITATION_URL || ""}
+      href={process.env.NEXT_PUBLIC_DISCORD_INVITATION_URL ?? "#"}
       target="_blank_"
     >
       <Image src={"/icons/ico_Discord.svg"} width={20} height={20} alt="" />
