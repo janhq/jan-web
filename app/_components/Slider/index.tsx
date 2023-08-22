@@ -2,10 +2,10 @@ import { FC, useCallback, useEffect, useState } from "react";
 import Slide from "../Slide";
 import useEmblaCarousel, { EmblaCarouselType } from "embla-carousel-react";
 import { NextButton, PrevButton } from "../ButtonSlider";
-import { ProductV2 } from "@/_models/ProductV2";
+import { ProductDetailFragment } from "@/graphql";
 
 type Props = {
-  products: ProductV2[];
+  products: ProductDetailFragment[];
 };
 
 const Slider: FC<Props> = ({ products }) => {

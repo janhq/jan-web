@@ -1,9 +1,9 @@
 import Image from "next/image";
 import GenerateImageCard from "../GenerateImageCard";
-import { ProductV2 } from "@/_models/ProductV2";
+import { ProductDetailFragment } from "@/graphql";
 
 type Props = {
-  products: ProductV2[];
+  products: ProductDetailFragment[];
 };
 
 const GenerateImageList: React.FC<Props> = ({ products }) => (

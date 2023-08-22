@@ -27,6 +27,7 @@ const documents = {
     "query getConversations {\n  conversations {\n    ...ConversationDetail\n    conversation_messages {\n      ...MessageDetail\n      message_medias {\n        ...MessageMedia\n      }\n    }\n  }\n}": types.GetConversationsDocument,
     "query getProductsByCollectionSlug($slug: String = \"\") {\n  products(where: {product_collections: {collections: {slug: {_eq: $slug}}}}) {\n    ...ProductDetail\n    product_prompts {\n      prompts {\n        ...PromptDetail\n      }\n    }\n    product_collections {\n      collections {\n        ...CollectionDetail\n      }\n    }\n  }\n}": types.GetProductsByCollectionSlugDocument,
     "query getProducts {\n  products {\n    ...ProductDetail\n    product_prompts {\n      prompts {\n        ...PromptDetail\n      }\n    }\n    product_collections {\n      collections {\n        ...CollectionDetail\n      }\n    }\n  }\n}": types.GetProductsDocument,
+    "query getProductsIn($_in: [String!] = \"\") {\n  products(where: {slug: {_in: $_in}}) {\n    ...ProductDetail\n  }\n}": types.GetProductsInDocument,
 };
 
 /**
@@ -99,6 +100,10 @@ export function gql(source: "query getProductsByCollectionSlug($slug: String = \
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "query getProducts {\n  products {\n    ...ProductDetail\n    product_prompts {\n      prompts {\n        ...PromptDetail\n      }\n    }\n    product_collections {\n      collections {\n        ...CollectionDetail\n      }\n    }\n  }\n}"): (typeof documents)["query getProducts {\n  products {\n    ...ProductDetail\n    product_prompts {\n      prompts {\n        ...PromptDetail\n      }\n    }\n    product_collections {\n      collections {\n        ...CollectionDetail\n      }\n    }\n  }\n}"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "query getProductsIn($_in: [String!] = \"\") {\n  products(where: {slug: {_in: $_in}}) {\n    ...ProductDetail\n  }\n}"): (typeof documents)["query getProductsIn($_in: [String!] = \"\") {\n  products(where: {slug: {_in: $_in}}) {\n    ...ProductDetail\n  }\n}"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

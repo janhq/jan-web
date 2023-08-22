@@ -1,10 +1,10 @@
 import useCreateConversation from "@/_hooks/useCreateConversation";
-import { ProductV2 } from "@/_models/ProductV2";
 import React from "react";
 import Image from "next/image";
+import { ProductDetailFragment } from "@/graphql";
 
 type Props = {
-  product: ProductV2;
+  product: ProductDetailFragment;
 };
 
 const ConversationalCard: React.FC<Props> = ({ product }) => {
@@ -20,7 +20,7 @@ const ConversationalCard: React.FC<Props> = ({ product }) => {
         <Image
           width={32}
           height={32}
-          src={image_url}
+          src={image_url || ""}
           className="rounded-full"
           alt=""
         />
