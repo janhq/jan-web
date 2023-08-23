@@ -8,7 +8,7 @@ import { Role } from "../_services/api/api.types";
 import { MessageResponse } from "@/_services/api/models/message.response";
 import { MESSAGE_PER_PAGE } from "../_utils/const";
 import { controlNetRequest } from "@/_services/controlnet";
-import { ProductDetailFragment } from "@/graphql";
+import { ConversationDetailFragment, ProductDetailFragment } from "@/graphql";
 
 export const History = types
   .model("History", {
@@ -418,11 +418,12 @@ export const History = types
     });
 
     const createConversation = flow(function* (
+      conversation: ConversationDetailFragment,
       product: ProductDetailFragment,
       userId: string,
       displayName: string,
-      avatarUrl?: string
-    ) {
+      avatarUrl?: string,
+      ) {
       let modelType: AiModelType | undefined = undefined;
       if (product.inputs.slug === "llm") {
         modelType = AiModelType.LLM;
@@ -445,15 +446,8 @@ export const History = types
         avatarUrl: product.image_url,
       });
 
-      const createConvoResult = yield api.createConversation(product.slug);
-      if (createConvoResult.kind !== "ok") {
-        // TODO showing error dialog
-        console.error(`Error`, JSON.stringify(createConvoResult));
-        return;
-      }
-
       const newConvo = Conversation.create({
-        id: createConvoResult.conversationId,
+        id: conversation.id,
         aiModel: newAiModel,
         user: User.create({
           id: userId,

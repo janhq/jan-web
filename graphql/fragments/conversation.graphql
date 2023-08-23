@@ -4,5 +4,6 @@ fragment ConversationDetail on conversations {
   user_id
   last_image_url
   last_text_message
+  created_at
   updated_at
 }

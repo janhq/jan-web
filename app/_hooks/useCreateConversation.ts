@@ -1,12 +1,21 @@
-import { ProductDetailFragment } from "@/graphql";
+import {
+  ProductDetailFragment,
+  CreateConversationMutation,
+  CreateConversationDocument,
+  CreateConversationMutationVariables,
+} from "@/graphql";
 import { useStore } from "../_models/RootStore";
 import useGetCurrentUser from "./useGetCurrentUser";
+import { useMutation } from "@apollo/client";
 
 const useCreateConversation = () => {
   const { historyStore } = useStore();
   const { user } = useGetCurrentUser();
+  const [createConversation] = useMutation<CreateConversationMutation>(
+    CreateConversationDocument
+  );
 
-  const requestCreateConvo = (
+  const requestCreateConvo = async (
     product: ProductDetailFragment,
     forceCreate: boolean = false
   ) => {
@@ -25,8 +34,23 @@ const useCreateConversation = () => {
       return;
     }
 
+    const variables: CreateConversationMutationVariables = {
+      product_id: product.id,
+      user_id: user.id,
+    };
+    const result = await createConversation({
+      variables,
+    });
+
+    if (result.data?.insert_conversations_one) {
+      historyStore.createConversation(
+        result.data.insert_conversations_one,
+        product,
+        user.id,
+        user.displayName
+      );
+    }
     // if not found, create new convo and set it as current
-    historyStore.createConversation(product, user.id, user.displayName);
   };
 
   return {

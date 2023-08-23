@@ -4,16 +4,22 @@ import { AiModel, AiModelType } from "../_models/AiModel";
 import { Conversation } from "../_models/Conversation";
 import { User } from "../_models/User";
 import { fetchProducts } from "@/_services/products";
-import { fetchConversations } from "@/_services/conversations";
+import { GetConversationsQuery, GetConversationsDocument } from "@/graphql";
+import { useLazyQuery } from "@apollo/client";
 
 const useGetUserConversations = () => {
   const { historyStore } = useStore();
+  const [getConvos] = useLazyQuery<GetConversationsQuery>(
+    GetConversationsDocument
+  );
 
   const getUserConversations = async (user: Instance<typeof User>) => {
-    const convos = await fetchConversations();
-    if (!convos || convos.length === 0) {
+    const results = await getConvos();
+    if (!results.data || results.data.conversations.length === 0) {
       return;
     }
+
+    const convos = results.data.conversations;
 
     // getting ai models
     const products = await fetchProducts();
@@ -58,9 +64,9 @@ const useGetUserConversations = () => {
     );
     // mapping
     convos.forEach((convo) => {
-      const modelId = convo.ai_model;
+      const product_id = convo.product_id;
       const correspondingAiModel = aiModels.find(
-        (model) => model.modelId === modelId
+        (model) => model.modelId === product_id
       );
 
       if (correspondingAiModel) {
@@ -71,8 +77,8 @@ const useGetUserConversations = () => {
           user: user,
           createdAt: new Date(convo.created_at).getTime(),
           updatedAt: new Date(convo.updated_at).getTime(),
-          lastImageUrl: convo.last_image_url,
-          lastTextMessage: convo.last_text_message,
+          lastImageUrl: convo.last_image_url || "",
+          lastTextMessage: convo.last_text_message || "",
         });
 
         finalConvo.push(conversation);

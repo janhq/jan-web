@@ -18,11 +18,11 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION-22.0.0}
-    command: ["start-dev", "--import-realm"]
+    command: ["start-dev", "--import-realm", "--http-port", "8088"]
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN-admin}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD-admin}
     volumes:
       - ./keycloak-realm-config:/opt/keycloak/data/import
     ports:
-      - "8080:8080"
+      - "8088:8088"

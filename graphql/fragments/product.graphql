@@ -1,4 +1,5 @@
 fragment ProductDetail on products {
+  id
   name
   slug
   description
