@@ -1,19 +1,19 @@
-import { getServerSession } from "next-auth";
-import { decrypt } from "./encryption";
-import { authOptions } from "@/api/auth/[...nextauth]/route";
+import { getSession } from "next-auth/react";
 
 export async function getAccessToken() {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();
   if (session) {
-    return decrypt(session.access_token);
+    // @ts-ignore
+    return session.access_token;
   }
   return null;
 }
 
 export async function getIdToken() {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();
   if (session) {
-    return decrypt(session.id_token);
+    // @ts-ignore
+    return session.id_token;
   }
   return null;
 }
