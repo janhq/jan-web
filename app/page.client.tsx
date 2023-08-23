@@ -6,30 +6,42 @@ import { CompactSideBar } from "@/_components/CompactSideBar";
 import { SidebarLeft } from "@/_components/SidebarLeft";
 import { withAnalytics } from "@/_helpers/withAnalytics";
 import { Provider, RootInstance, initializeStore } from "@/_models/RootStore";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { ThemeProvider } from "next-themes";
-import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
+import {
+  ApolloProvider,
+  ApolloClient,
+  InMemoryCache,
+  ApolloLink,
+  from,
+  HttpLink,
+} from "@apollo/client";
 import { getAccessToken } from "./_utils/tokenAccessor";
+
+const authMiddleware = new ApolloLink((operation, forward) => {
+  operation.setContext(async ({ headers = {} }) => {
+    const token = await getAccessToken();
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : "",
+      },
+    };
+  });
+  return forward(operation);
+});
+const httpLink = new HttpLink({
+  uri: process.env.NEXT_PUBLIC_GRAPHQL_ENGINE_URL,
+});
 
 const PageClient: React.FC = () => {
   const store = useRef<RootInstance>(initializeStore());
-  const [token, setToken] = useState();
+
   const client = new ApolloClient({
-    uri: process.env.NEXT_PUBLIC_GRAPHQL_ENGINE_URL,
+    link: from([authMiddleware, httpLink]),
     cache: new InMemoryCache(),
-    headers: token
-      ? {
-          // @ts-ignore
-          Authorization: `Bearer ${token}`,
-        }
-      : {},
   });
 
-  useEffect(() => {
-    getAccessToken().then((token) => {
-      setToken(token);
-    });
-  }, []);
   return (
     <ApolloProvider client={client}>
       <ThemeProvider enableSystem={true} attribute="class">

@@ -15,7 +15,7 @@ const useGetUserConversations = () => {
 
   const getUserConversations = async (user: Instance<typeof User>) => {
     const results = await getConvos();
-    if (!results.data || results.data.conversations.length === 0) {
+    if (!results || !results.data || results.data.conversations.length === 0) {
       return;
     }
 
