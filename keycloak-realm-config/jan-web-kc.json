@@ -1,27 +1,81 @@
 {
-    "id": "jan-web-kc",
-    "realm": "jan-web-kc",
+    "id": "new-realm",
+    "realm": "new-realm",
     "enabled": true,
     "users": [
       {
-        "username": "myuser",
+        "username": "username",
         "enabled": true,
         "emailVerified": true,
         "credentials": [
           {
             "type": "password",
-            "value": "mypassword"
+            "value": "password"
           }
         ]
       }
     ],
     "clients": [
       {
-        "clientId": "my-client-id",
-        "name": "My Client",
+        "clientId": "new-realm",
+        "name": "new-realm",
+        "description": "",
+        "rootUrl": "",
+        "adminUrl": "",
+        "baseUrl": "",
+        "surrogateAuthRequired": false,
         "enabled": true,
+        "alwaysDisplayInConsole": false,
         "clientAuthenticatorType": "client-secret",
-        "secret": "my-client-secret"
+        "secret": "oMtCPAV7diKpE564SBspgKj4HqlKM4Hy",
+        "redirectUris": [],
+        "webOrigins": [],
+        "notBefore": 0,
+        "bearerOnly": false,
+        "consentRequired": false,
+        "standardFlowEnabled": true,
+        "implicitFlowEnabled": false,
+        "directAccessGrantsEnabled": false,
+        "serviceAccountsEnabled": false,
+        "publicClient": false,
+        "frontchannelLogout": false,
+        "protocol": "openid-connect",
+        "attributes": {
+          "post.logout.redirect.uris": "+",
+          "oauth2.device.authorization.grant.enabled": "false",
+          "logoUri": "http://localhost:3000/*",
+          "backchannel.logout.revoke.offline.tokens": "false",
+          "use.refresh.tokens": "true",
+          "oidc.ciba.grant.enabled": "false",
+          "backchannel.logout.session.required": "true",
+          "client_credentials.use_refresh_token": "false",
+          "tls.client.certificate.bound.access.tokens": "false",
+          "require.pushed.authorization.requests": "false",
+          "acr.loa.map": "{}",
+          "display.on.consent.screen": "false",
+          "token.response.type.bearer.lower-case": "false"
+        },
+        "authenticationFlowBindingOverrides": {},
+        "fullScopeAllowed": true,
+        "nodeReRegistrationTimeout": -1,
+        "defaultClientScopes": [
+          "web-origins",
+          "acr",
+          "roles",
+          "profile",
+          "email"
+        ],
+        "optionalClientScopes": [
+          "address",
+          "phone",
+          "offline_access",
+          "microprofile-jwt"
+        ],
+        "access": {
+          "view": true,
+          "configure": true,
+          "manage": true
+        }
       }
     ]
   }
