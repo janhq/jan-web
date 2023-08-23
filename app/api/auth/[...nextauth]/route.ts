@@ -8,8 +8,8 @@ async function refreshAccessToken(token) {
   const resp = await fetch(`${process.env.REFRESH_TOKEN_URL}`, {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
-      client_id: process.env.DEMO_FRONTEND_CLIENT_ID,
-      client_secret: process.env.DEMO_FRONTEND_CLIENT_SECRET,
+      client_id: process.env.KEYCLOAK_CLIENT_ID,
+      client_secret: process.env.KEYCLOAK_CLIENT_SECRET,
       grant_type: "refresh_token",
       refresh_token: token.refresh_token,
     }),
@@ -30,8 +30,8 @@ async function refreshAccessToken(token) {
 export const authOptions = {
   providers: [
     KeycloakProvider({
-      clientId: `${process.env.DEMO_FRONTEND_CLIENT_ID}`,
-      clientSecret: `${process.env.DEMO_FRONTEND_CLIENT_SECRET}`,
+      clientId: `${process.env.KEYCLOAK_CLIENT_ID}`,
+      clientSecret: `${process.env.KEYCLOAK_CLIENT_SECRET}`,
       issuer: `${process.env.AUTH_ISSUER}`,
     }),
   ],
