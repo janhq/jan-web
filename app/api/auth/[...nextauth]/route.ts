@@ -2,7 +2,6 @@
 import NextAuth from "next-auth/next";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import jwt_decode from "jwt-decode";
-import { encrypt } from "@/_utils/encryption";
 
 async function refreshAccessToken(token) {
   const resp = await fetch(`${process.env.REFRESH_TOKEN_URL}`, {
@@ -60,8 +59,8 @@ export const authOptions = {
       }
     },
     async session({ session, token }) {
-      session.access_token = encrypt(token.access_token);
-      session.id_token = encrypt(token.id_token);
+      session.access_token = token.access_token;
+      session.id_token = token.id_token;
       session.user.user_id = token.sub;
       session.error = token.error;
       return session;
