@@ -1,0 +1,8 @@
+fragment ConversationDetail on conversations {
+  id
+  product_id
+  user_id
+  last_image_url
+  last_text_message
+  updated_at
+}

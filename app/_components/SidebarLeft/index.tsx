@@ -11,7 +11,8 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/_contexts/authContext";
 import useGetUserConversations from "@/_hooks/useGetUserConversations";
 import DiscordContainer from "../DiscordContainer";
-import useGetCollections from "@/_hooks/useGetCollections";
+import { useQuery } from "@apollo/client";
+import { GetProductsQuery, GetProductsDocument } from "@/graphql";
 
 export const SidebarLeft: React.FC = observer(() => {
   const router = usePathname();
@@ -21,7 +22,9 @@ export const SidebarLeft: React.FC = observer(() => {
 
   const { historyStore } = useStore();
   const navigation = ["pricing", "docs", "about"];
-  const { featuredProducts } = useGetCollections();
+
+  const { loading, error, data } =
+    useQuery<GetProductsQuery>(GetProductsDocument);
 
   const checkRouter = () =>
     navigation.map((item) => router?.includes(item)).includes(true);
@@ -65,15 +68,30 @@ export const SidebarLeft: React.FC = observer(() => {
             <SearchBar onTextChanged={onSearching} />
           </div>
           <div className="flex flex-col h-full overflow-x-hidden scroll gap-3">
-            <ShortcutList
-              products={
-                featuredProducts?.filter(
-                  (e) =>
-                    searchText === "" ||
-                    e.name.toLowerCase().includes(searchText.toLowerCase())
-                ) || []
-              }
-            />
+            {data && (
+              <ShortcutList
+                products={
+                  [...(data.products || [])]
+                    .sort(() => 0.5 - Math.random())
+                    .slice(0, 3)
+                    .filter(
+                      (e) =>
+                        searchText === "" ||
+                        e.name.toLowerCase().includes(searchText.toLowerCase())
+                    ) || []
+                }
+              />
+            )}
+            {loading && (
+              <div className="w-full flex flex-row justify-center items-center">
+                <Image
+                  src="/icons/loading.svg"
+                  width={32}
+                  height={32}
+                  alt="loading"
+                />
+              </div>
+            )}
             {showHistoryList ? (
               <HistoryList searchText={searchText} />
             ) : (

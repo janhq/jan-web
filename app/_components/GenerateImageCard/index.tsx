@@ -1,9 +1,9 @@
 import useCreateConversation from "@/_hooks/useCreateConversation";
-import { ProductV2 } from "@/_models/ProductV2";
+import { ProductDetailFragment } from "@/graphql";
 import { useCallback } from "react";
 
 type Props = {
-  product: ProductV2;
+  product: ProductDetailFragment;
 };
 
 const GenerateImageCard: React.FC<Props> = ({ product }) => {
@@ -17,7 +17,7 @@ const GenerateImageCard: React.FC<Props> = ({ product }) => {
   return (
     <button onClick={onClick} className="relative active:opacity-50 text-left">
       <img
-        src={image_url}
+        src={image_url || ""}
         alt=""
         className="w-full h-full rounded-[8px] bg-gray-200 group-hover:opacity-75 object-cover object-center"
       />

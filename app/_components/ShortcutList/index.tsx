@@ -2,10 +2,10 @@ import Image from "next/image";
 import React from "react";
 import ShortcutItem from "../ShortcutItem";
 import { observer } from "mobx-react-lite";
-import { ProductV2 } from "@/_models/ProductV2";
+import { ProductDetailFragment } from "@/graphql";
 
 type Props = {
-  products: ProductV2[];
+  products: ProductDetailFragment[];
 };
 
 const ShortcutList: React.FC<Props> = observer(({ products }) => {

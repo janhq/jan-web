@@ -1,0 +1,15 @@
+fragment ProductDetail on products {
+  name
+  slug
+  description
+  long_description
+  technical_description
+  image_url
+  author
+  greeting
+  source_url
+  version
+  inputs
+  outputs
+  nsfw
+}

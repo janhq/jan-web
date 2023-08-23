@@ -1,14 +1,14 @@
-import { ProductV2 } from "@/_models/ProductV2";
 import { useAuth } from "../_contexts/authContext";
 import { useStore } from "../_models/RootStore";
 import { DefaultUser } from "../_models/User";
+import { ProductDetailFragment } from "@/graphql";
 
 const useCreateConversation = () => {
   const { historyStore } = useStore();
   const { currentUser, setShowLogin } = useAuth();
 
   const requestCreateConvo = (
-    product: ProductV2,
+    product: ProductDetailFragment,
     forceCreate: boolean = false
   ) => {
     if (!currentUser || currentUser.isAnonymous) {

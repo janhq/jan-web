@@ -1,14 +1,14 @@
 import { Instance, castToSnapshot, flow, types } from "mobx-state-tree";
 import { Conversation } from "./Conversation";
-import { AiModel, AiModelType, PromptModel } from "./AiModel";
+import { AiModel, AiModelType } from "./AiModel";
 import { User } from "./User";
 import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
 import { api } from "../_services/api";
 import { Role } from "../_services/api/api.types";
 import { MessageResponse } from "@/_services/api/models/message.response";
 import { MESSAGE_PER_PAGE } from "../_utils/const";
-import { ProductV2 } from "./ProductV2";
 import { controlNetRequest } from "@/_services/controlnet";
+import { ProductDetailFragment } from "@/graphql";
 
 export const History = types
   .model("History", {
@@ -418,7 +418,7 @@ export const History = types
     });
 
     const createConversation = flow(function* (
-      product: ProductV2,
+      product: ProductDetailFragment,
       userId: string,
       displayName: string,
       avatarUrl?: string

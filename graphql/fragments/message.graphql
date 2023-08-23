@@ -1,0 +1,11 @@
+fragment MessageDetail on messages {
+  id
+  conversation_id
+  sender
+  sender_name
+  sender_avatar_url
+  content
+  message_type
+  message_sender_type
+  updated_at
+}

@@ -2,22 +2,51 @@ import React from "react";
 import Slider from "../Slider";
 import ConversationalList from "../ConversationalList";
 import GenerateImageList from "../GenerateImageList";
-import useGetCollections from "@/_hooks/useGetCollections";
+import { GetProductsQuery, GetProductsDocument } from "@/graphql";
+import { useQuery } from "@apollo/client";
+import Image from "next/image";
 
 const NewChatBlankState: React.FC = () => {
-  const { isLoading, llmProducts, imageGenProducts, featuredProducts } =
-    useGetCollections();
+  // This can be achieved by separating queries using GetProductsByCollectionSlugQuery
+  const { loading, error, data } = useQuery<GetProductsQuery>(
+    GetProductsDocument,
+    {
+      variables: { slug: "conversational" },
+    }
+  );
 
-  if (isLoading) {
-    return <div></div>;
+  const featured = [...(data?.products || [])]
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 3);
+
+  const conversational =
+    data?.products.filter((e) =>
+      e.product_collections.some((c) =>
+        c.collections.some((s) => s.slug == "conversational")
+      )
+    ) || [];
+
+  const generativeArts =
+    data?.products.filter((e) =>
+      e.product_collections.some((c) =>
+        c.collections.some((s) => s.slug == "text-to-image")
+      )
+    ) || [];
+
+  if (loading) {
+    return (
+      <div className="w-full flex flex-row justify-center items-center">
+        <Image src="/icons/loading.svg" width={32} height={32} alt="loading" />
+      </div>
+    );
   }
 
   return (
     <div className="grid">
       <div className="bg-gray-100 px-6 pt-8 w-full h-full overflow-y-scroll scroll">
-        {featuredProducts.length > 0 && <Slider products={featuredProducts} />}
-        <ConversationalList products={llmProducts} />
-        <GenerateImageList products={imageGenProducts} />
+        <Slider products={featured} />
+        <ConversationalList products={conversational} />
+        <GenerateImageList products={generativeArts} />
       </div>
     </div>
   );
