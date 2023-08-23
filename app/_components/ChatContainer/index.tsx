@@ -10,21 +10,20 @@ import Gleap from "gleap";
 import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
 import { ModelDetailSideBar } from "../ModelDetailSideBar";
 import NewChatBlankState from "../NewChatBlankState";
-import { useAuth } from "@/_contexts/authContext";
+import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
 
 const ChatContainer: React.FC = observer(() => {
   const [prefillPrompt, setPrefillPrompt] = useState("");
   const { historyStore } = useStore();
-  const { isReady, currentUser } = useAuth();
+  const { user } = useGetCurrentUser();
   const showBodyChat = historyStore.activeConversationId != null;
-
   const conversation = historyStore.getActiveConversation();
 
   useEffect(() => {
-    if (isReady && !currentUser) {
+    if (!user) {
       historyStore.clearAllConversations();
     }
-  }, [isReady, currentUser, historyStore]);
+  }, [user]);
 
   useEffect(() => {
     Gleap.showFeedbackButton(!conversation);

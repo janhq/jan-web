@@ -1,24 +1,16 @@
-import { Instance, cast } from "mobx-state-tree";
+import { Instance } from "mobx-state-tree";
 import { useStore } from "../_models/RootStore";
 import { AiModel, AiModelType } from "../_models/AiModel";
 import { Conversation } from "../_models/Conversation";
-import { DefaultUser, User } from "../_models/User";
+import { User } from "../_models/User";
 import { fetchProducts } from "@/_services/products";
-import { useAuth } from "@/_contexts/authContext";
 import { fetchConversations } from "@/_services/conversations";
 
 const useGetUserConversations = () => {
   const { historyStore } = useStore();
-  const { currentUser } = useAuth();
 
-  const getUserConversations = async () => {
-    if (!currentUser) {
-      console.error("User not logged in");
-      return;
-    }
-
-    const token = await currentUser.getIdToken();
-    const convos = await fetchConversations(token);
+  const getUserConversations = async (user: Instance<typeof User>) => {
+    const convos = await fetchConversations();
     if (!convos || convos.length === 0) {
       return;
     }
@@ -72,12 +64,6 @@ const useGetUserConversations = () => {
       );
 
       if (correspondingAiModel) {
-        const user: Instance<typeof User> = {
-          id: currentUser.uid,
-          displayName: currentUser.displayName ?? DefaultUser.displayName,
-          avatarUrl: currentUser.photoURL ?? DefaultUser.avatarUrl,
-        };
-
         const conversation = Conversation.create({
           id: convo.id!!,
           aiModel: correspondingAiModel,

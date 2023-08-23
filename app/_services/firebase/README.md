@@ -1,0 +1,1 @@
+Please remove this directory when we finished remove Firebase

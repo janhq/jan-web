@@ -14,7 +14,6 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  JSON: { input: any; output: any; }
   jsonb: { input: any; output: any; }
   timestamptz: { input: any; output: any; }
   uuid: { input: any; output: any; }
@@ -33,112 +32,6 @@ export type Boolean_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['Boolean']['input']>>;
 };
 
-export type ChatCompletion = {
-  __typename?: 'ChatCompletion';
-  choices: Array<Maybe<ChatCompletionChoice>>;
-  created: Scalars['Int']['output'];
-  id: Scalars['String']['output'];
-  model: Scalars['String']['output'];
-  object: Scalars['JSON']['output'];
-  usage: CompletionUsage;
-};
-
-export type ChatCompletionChoice = {
-  __typename?: 'ChatCompletionChoice';
-  finishReason: Scalars['JSON']['output'];
-  index: Scalars['Int']['output'];
-  message: ChatCompletionMessage;
-};
-
-export type ChatCompletionMessage = {
-  __typename?: 'ChatCompletionMessage';
-  content: Scalars['String']['output'];
-  role: Role2;
-  user: Scalars['String']['output'];
-};
-
-export type ChatCompletionRequestMessageInput = {
-  content?: InputMaybe<Scalars['String']['input']>;
-  role?: InputMaybe<Role>;
-};
-
-export type Completion = {
-  __typename?: 'Completion';
-  choices: Array<Maybe<CompletionChoice>>;
-  created: Scalars['Int']['output'];
-  id: Scalars['String']['output'];
-  model: Scalars['String']['output'];
-  object: Scalars['JSON']['output'];
-  usage: CompletionUsage;
-};
-
-export type CompletionChoice = {
-  __typename?: 'CompletionChoice';
-  finishReason: Scalars['JSON']['output'];
-  index: Scalars['Int']['output'];
-  logprobs: Logprobs;
-  text: Scalars['String']['output'];
-};
-
-export type CompletionUsage = {
-  __typename?: 'CompletionUsage';
-  completionTokens: Scalars['Int']['output'];
-  promptTokens: Scalars['Int']['output'];
-  totalTokens: Scalars['Int']['output'];
-};
-
-export type CreateChatCompletionRequestInput = {
-  frequencyPenalty?: InputMaybe<Scalars['JSON']['input']>;
-  logitBias?: InputMaybe<Scalars['JSON']['input']>;
-  logitBiasType?: InputMaybe<Scalars['JSON']['input']>;
-  maxTokens?: InputMaybe<Scalars['Int']['input']>;
-  messages?: InputMaybe<Array<InputMaybe<ChatCompletionRequestMessageInput>>>;
-  mirostatEta?: InputMaybe<Scalars['Float']['input']>;
-  mirostatMode?: InputMaybe<Scalars['Int']['input']>;
-  mirostatTau?: InputMaybe<Scalars['Float']['input']>;
-  model?: InputMaybe<Scalars['JSON']['input']>;
-  n?: InputMaybe<Scalars['JSON']['input']>;
-  presencePenalty?: InputMaybe<Scalars['JSON']['input']>;
-  repeatPenalty?: InputMaybe<Scalars['Float']['input']>;
-  stop?: InputMaybe<Scalars['JSON']['input']>;
-  stream?: InputMaybe<Scalars['Boolean']['input']>;
-  temperature?: InputMaybe<Scalars['Float']['input']>;
-  topK?: InputMaybe<Scalars['Int']['input']>;
-  topP?: InputMaybe<Scalars['Float']['input']>;
-  user?: InputMaybe<Scalars['JSON']['input']>;
-};
-
-export type CreateCompletionRequestInput = {
-  bestOf?: InputMaybe<Scalars['JSON']['input']>;
-  echo?: InputMaybe<Scalars['Boolean']['input']>;
-  frequencyPenalty?: InputMaybe<Scalars['JSON']['input']>;
-  logitBias?: InputMaybe<Scalars['JSON']['input']>;
-  logitBiasType?: InputMaybe<Scalars['JSON']['input']>;
-  logprobs?: InputMaybe<Scalars['JSON']['input']>;
-  maxTokens?: InputMaybe<Scalars['Int']['input']>;
-  mirostatEta?: InputMaybe<Scalars['Float']['input']>;
-  mirostatMode?: InputMaybe<Scalars['Int']['input']>;
-  mirostatTau?: InputMaybe<Scalars['Float']['input']>;
-  model?: InputMaybe<Scalars['JSON']['input']>;
-  n?: InputMaybe<Scalars['JSON']['input']>;
-  presencePenalty?: InputMaybe<Scalars['JSON']['input']>;
-  prompt?: InputMaybe<Scalars['JSON']['input']>;
-  repeatPenalty?: InputMaybe<Scalars['Float']['input']>;
-  stop?: InputMaybe<Scalars['JSON']['input']>;
-  stream?: InputMaybe<Scalars['Boolean']['input']>;
-  suffix?: InputMaybe<Scalars['JSON']['input']>;
-  temperature?: InputMaybe<Scalars['Float']['input']>;
-  topK?: InputMaybe<Scalars['Int']['input']>;
-  topP?: InputMaybe<Scalars['Float']['input']>;
-  user?: InputMaybe<Scalars['JSON']['input']>;
-};
-
-export type CreateEmbeddingRequestInput = {
-  input: Scalars['JSON']['input'];
-  model?: InputMaybe<Scalars['JSON']['input']>;
-  user?: InputMaybe<Scalars['JSON']['input']>;
-};
-
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['Int']['input']>;
@@ -151,40 +44,6 @@ export type Int_Comparison_Exp = {
   _neq?: InputMaybe<Scalars['Int']['input']>;
   _nin?: InputMaybe<Array<Scalars['Int']['input']>>;
 };
-
-export type Logprobs = {
-  __typename?: 'Logprobs';
-  textOffset?: Maybe<Array<Maybe<Scalars['Int']['output']>>>;
-  tokenLogprobs?: Maybe<Array<Maybe<Scalars['JSON']['output']>>>;
-  tokens?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  topLogprobs?: Maybe<Array<Maybe<Scalars['JSON']['output']>>>;
-};
-
-export type ModelData = {
-  __typename?: 'ModelData';
-  id: Scalars['String']['output'];
-  object: Scalars['JSON']['output'];
-  ownedBy: Scalars['String']['output'];
-  permissions: Array<Maybe<Scalars['String']['output']>>;
-};
-
-export type ModelList = {
-  __typename?: 'ModelList';
-  data: Array<Maybe<ModelData>>;
-  object: Scalars['JSON']['output'];
-};
-
-export enum Role {
-  Assistant = 'assistant',
-  System = 'system',
-  User = 'user'
-}
-
-export enum Role2 {
-  Assistant = 'assistant',
-  System = 'system',
-  User = 'user'
-}
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
 export type String_Comparison_Exp = {
@@ -1575,9 +1434,6 @@ export type Messages_Updates = {
 /** mutation root */
 export type Mutation_Root = {
   __typename?: 'mutation_root';
-  createChatCompletionV1ChatCompletionsPost?: Maybe<ChatCompletion>;
-  createCompletionV1CompletionsPost?: Maybe<Completion>;
-  createEmbeddingV1EmbeddingsPost: Scalars['JSON']['output'];
   /** delete data from the table: "collection_products" */
   delete_collection_products?: Maybe<Collection_Products_Mutation_Response>;
   /** delete single row from the table: "collection_products" */
@@ -1690,24 +1546,6 @@ export type Mutation_Root = {
   update_prompts_by_pk?: Maybe<Prompts>;
   /** update multiples rows of table: "prompts" */
   update_prompts_many?: Maybe<Array<Maybe<Prompts_Mutation_Response>>>;
-};
-
-
-/** mutation root */
-export type Mutation_RootCreateChatCompletionV1ChatCompletionsPostArgs = {
-  createChatCompletionRequestInput: CreateChatCompletionRequestInput;
-};
-
-
-/** mutation root */
-export type Mutation_RootCreateCompletionV1CompletionsPostArgs = {
-  createCompletionRequestInput: CreateCompletionRequestInput;
-};
-
-
-/** mutation root */
-export type Mutation_RootCreateEmbeddingV1EmbeddingsPostArgs = {
-  createEmbeddingRequestInput: CreateEmbeddingRequestInput;
 };
 
 
@@ -3152,7 +2990,6 @@ export type Query_Root = {
   conversations_aggregate: Conversations_Aggregate;
   /** fetch data from the table: "conversations" using primary key columns */
   conversations_by_pk?: Maybe<Conversations>;
-  getModelsV1ModelsGet?: Maybe<ModelList>;
   /** An array relationship */
   message_medias: Array<Message_Medias>;
   /** An aggregate relationship */

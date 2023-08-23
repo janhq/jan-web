@@ -1,13 +1,13 @@
 import SendButton from "../SendButton";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useStore } from "@/_models/RootStore";
-import { useAuth } from "@/_contexts/authContext";
-import { DefaultUser } from "@/_models/User";
 import { AiModelType } from "@/_models/AiModel";
 import { api } from "@/_services/api";
 import ActionButton from "../ActionButton";
 import Image from "next/image";
 import { observer } from "mobx-react-lite";
+import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
+import useSignIn from "@/_hooks/useSignIn";
 
 type Props = {
   prefillPrompt: string;
@@ -17,7 +17,8 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
   const { historyStore } = useStore();
   const [text, setText] = useState(prefillPrompt);
   const [promptGenerating, setPromptGenerating] = useState(false);
-  const { currentUser, setShowLogin } = useAuth();
+  const { user } = useGetCurrentUser();
+  const { signInWithKeyCloak } = useSignIn();
 
   const shouldShowEnhanceButton =
     historyStore.getActiveConversation()?.aiModel.aiModelType ===
@@ -58,18 +59,13 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
   };
 
   const onSubmitClick = () => {
-    if (!currentUser || currentUser.isAnonymous) {
-      setShowLogin(true);
+    if (!user) {
+      signInWithKeyCloak();
       return;
     }
 
     if (text.trim().length === 0) return;
-    historyStore.sendMessage(
-      text,
-      currentUser?.uid ?? DefaultUser.id,
-      currentUser?.displayName ?? DefaultUser.displayName,
-      currentUser?.photoURL ?? DefaultUser.avatarUrl
-    );
+    historyStore.sendMessage(text, user.id, user.displayName, user.avatarUrl);
     setText("");
   };
 
@@ -89,9 +85,9 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
   if (text.length === 0) {
     shouldDisableSubmitButton = true;
   }
-  const onAdvancedPrompt = useCallback(() => {
+  const onAdvancedPrompt = () => {
     historyStore.toggleAdvancedPrompt();
-  }, []);
+  };
 
   const handleResize = (event: ChangeEvent<HTMLTextAreaElement>) => {
     event.target.style.height = "auto";

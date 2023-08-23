@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import classNames from "classnames";
 import MobileShowcase from "@/_components/MobileShowcase";
 import { Metadata } from "next";
+import SessionProviderWrapper from "@/_components/SessionProviderWrapper";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,18 +23,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body
-        className={classNames(
-          inter.className,
-          "flex flex-col w-full h-screen overflow-hidden"
-        )}
-      >
-        <div className="hidden md:flex flex-col w-full h-screen">
-          {children}
-        </div>
-        <MobileShowcase />
-      </body>
-    </html>
+    <SessionProviderWrapper>
+      <html lang="en">
+        <body
+          className={classNames(
+            inter.className,
+            "flex flex-col w-full h-screen"
+          )}
+        >
+          <div className="hidden md:flex flex-col w-full h-screen">
+            {children}
+          </div>
+          <MobileShowcase />
+        </body>
+      </html>
+    </SessionProviderWrapper>
   );
 }
