@@ -10,7 +10,6 @@ export default function useGetCurrentUser() {
   const { signOut } = useSignOut();
   const [loading, setLoading] = useState(status === "loading");
   const [user, setUser] = useState<Instance<typeof User>>();
-
   useEffect(() => {
     if (
       status !== "loading" &&

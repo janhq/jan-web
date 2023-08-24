@@ -1,4 +1,5 @@
-import useGetPrompts from "@/_hooks/useGetPrompts";
+import { GetProductPromptsDocument, GetProductPromptsQuery } from "@/graphql";
+import { useQuery } from "@apollo/client";
 import { useLayoutEffect, useRef, useState } from "react";
 
 type Props = {
@@ -21,7 +22,12 @@ const OverviewPane: React.FC<Props> = ({
   const ref = useRef<HTMLDivElement>(null);
   const [read, setRead] = useState<boolean>(true);
   const [height, setHeight] = useState<number>(0);
-  const { prompts } = useGetPrompts(slug);
+  const { loading, error, data } = useQuery<GetProductPromptsQuery>(
+    GetProductPromptsDocument,
+    {
+      variables: { productSlug: slug },
+    }
+  );
 
   useLayoutEffect(() => {
     if (!ref.current) return;
@@ -65,11 +71,11 @@ const OverviewPane: React.FC<Props> = ({
       <div className="flex flex-col gap-4 tracking-[-0.4px] leading-[22px] text-base">
         <h2 className="font-bold">Try it yourself</h2>
         <ul className="border-[1px] border-[#D1D5DB] rounded-[12px]">
-          {prompts.map((prompt, index) => {
-            const showBorder = index !== prompts.length - 1;
+          {data?.prompts.map((prompt, index) => {
+            const showBorder = index !== data?.prompts.length - 1;
             return (
               <button
-                onClick={() => onPromptClick?.(prompt.content)}
+                onClick={() => onPromptClick?.(prompt.content || "")}
                 key={prompt.slug}
                 className={`text-sm text-gray-500 leading-[20px] flex gap-[10px] border-b-[${
                   showBorder ? "1" : "0"

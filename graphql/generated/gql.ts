@@ -14,10 +14,10 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "fragment CollectionDetail on collections {\n  slug\n  name\n}": types.CollectionDetailFragmentDoc,
-    "fragment ConversationDetail on conversations {\n  id\n  product_id\n  user_id\n  last_image_url\n  last_text_message\n  updated_at\n}": types.ConversationDetailFragmentDoc,
+    "fragment ConversationDetail on conversations {\n  id\n  product_id\n  user_id\n  last_image_url\n  last_text_message\n  created_at\n  updated_at\n}": types.ConversationDetailFragmentDoc,
     "fragment MessageMedia on message_medias {\n  id\n  message_id\n  media_url\n  mime_type\n  updated_at\n}": types.MessageMediaFragmentDoc,
     "fragment MessageDetail on messages {\n  id\n  conversation_id\n  sender\n  sender_name\n  sender_avatar_url\n  content\n  message_type\n  message_sender_type\n  updated_at\n}": types.MessageDetailFragmentDoc,
-    "fragment ProductDetail on products {\n  name\n  slug\n  description\n  long_description\n  technical_description\n  image_url\n  author\n  greeting\n  source_url\n  version\n  inputs\n  outputs\n  nsfw\n}": types.ProductDetailFragmentDoc,
+    "fragment ProductDetail on products {\n  id\n  name\n  slug\n  description\n  long_description\n  technical_description\n  image_url\n  author\n  greeting\n  source_url\n  version\n  inputs\n  outputs\n  nsfw\n}": types.ProductDetailFragmentDoc,
     "fragment PromptDetail on prompts {\n  slug\n  content\n  image_url\n}": types.PromptDetailFragmentDoc,
     "mutation createConversation($product_id: uuid = \"\", $user_id: String = \"\") {\n  insert_conversations_one(object: {product_id: $product_id, user_id: $user_id}) {\n    ...ConversationDetail\n  }\n}": types.CreateConversationDocument,
     "mutation createMessage($convId: uuid, $content: String, $sender: String, $messageType: String, $senderType: String, $mediaUrl: String) {\n  insert_messages_one(\n    object: {conversation_id: $convId, content: $content, sender: $sender, message_type: $messageType, message_sender_type: $senderType, message_medias: {data: {media_url: $mediaUrl}}}\n  ) {\n    ...MessageDetail\n  }\n}": types.CreateMessageDocument,
@@ -52,7 +52,7 @@ export function gql(source: "fragment CollectionDetail on collections {\n  slug\
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "fragment ConversationDetail on conversations {\n  id\n  product_id\n  user_id\n  last_image_url\n  last_text_message\n  updated_at\n}"): (typeof documents)["fragment ConversationDetail on conversations {\n  id\n  product_id\n  user_id\n  last_image_url\n  last_text_message\n  updated_at\n}"];
+export function gql(source: "fragment ConversationDetail on conversations {\n  id\n  product_id\n  user_id\n  last_image_url\n  last_text_message\n  created_at\n  updated_at\n}"): (typeof documents)["fragment ConversationDetail on conversations {\n  id\n  product_id\n  user_id\n  last_image_url\n  last_text_message\n  created_at\n  updated_at\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -64,7 +64,7 @@ export function gql(source: "fragment MessageDetail on messages {\n  id\n  conve
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "fragment ProductDetail on products {\n  name\n  slug\n  description\n  long_description\n  technical_description\n  image_url\n  author\n  greeting\n  source_url\n  version\n  inputs\n  outputs\n  nsfw\n}"): (typeof documents)["fragment ProductDetail on products {\n  name\n  slug\n  description\n  long_description\n  technical_description\n  image_url\n  author\n  greeting\n  source_url\n  version\n  inputs\n  outputs\n  nsfw\n}"];
+export function gql(source: "fragment ProductDetail on products {\n  id\n  name\n  slug\n  description\n  long_description\n  technical_description\n  image_url\n  author\n  greeting\n  source_url\n  version\n  inputs\n  outputs\n  nsfw\n}"): (typeof documents)["fragment ProductDetail on products {\n  id\n  name\n  slug\n  description\n  long_description\n  technical_description\n  image_url\n  author\n  greeting\n  source_url\n  version\n  inputs\n  outputs\n  nsfw\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
