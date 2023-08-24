@@ -9,7 +9,12 @@ import { observer } from "mobx-react-lite";
 import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
 import useSignIn from "@/_hooks/useSignIn";
 import { useMutation } from "@apollo/client";
-import { CreateMessageDocument, CreateMessageMutation } from "@/graphql";
+import {
+  CreateMessageDocument,
+  CreateMessageMutation,
+  UpdateMessageMutation,
+  UpdateConversationDocument,
+} from "@/graphql";
 
 type Props = {
   prefillPrompt: string;
@@ -24,6 +29,10 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
 
   const [createMessageMutation] = useMutation<CreateMessageMutation>(
     CreateMessageDocument
+  );
+
+  const [updateMessageMutation] = useMutation<UpdateMessageMutation>(
+    UpdateConversationDocument
   );
   const shouldShowEnhanceButton =
     historyStore.getActiveConversation()?.product.type ===
@@ -72,6 +81,7 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
     if (text.trim().length === 0) return;
     historyStore.sendMessage(
       createMessageMutation,
+      updateMessageMutation,
       text,
       user.id,
       user.displayName,

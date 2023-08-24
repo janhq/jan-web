@@ -23,6 +23,7 @@ const documents = {
     "mutation createMessage($data: messages_insert_input!) {\n  insert_messages_one(object: $data) {\n    ...MessageDetail\n  }\n}": types.CreateMessageDocument,
     "mutation deleteConversation($id: uuid!) {\n  delete_conversations_by_pk(id: $id) {\n    id\n  }\n}": types.DeleteConversationDocument,
     "mutation updateConversation($id: uuid!, $lastMessageText: String, $lastMessageUrl: String) {\n  update_conversations_by_pk(\n    pk_columns: {id: $id}\n    _set: {last_text_message: $lastMessageText, last_image_url: $lastMessageUrl}\n  ) {\n    ...ConversationDetail\n  }\n}": types.UpdateConversationDocument,
+    "mutation updateMessage($id: uuid = \"\", $data: messages_set_input!) {\n  update_messages_by_pk(pk_columns: {id: $id}, _set: $data) {\n    ...MessageDetail\n  }\n}": types.UpdateMessageDocument,
     "query getCollections {\n  collections {\n    ...CollectionDetail\n    collection_products {\n      products {\n        ...ProductDetail\n        product_prompts {\n          prompts {\n            ...PromptDetail\n          }\n        }\n      }\n    }\n  }\n}": types.GetCollectionsDocument,
     "query getConversationMessages($conversation_id: uuid = \"\", $limit: Int = 100, $offset: Int = 100) {\n  messages(\n    offset: $offset\n    limit: $limit\n    where: {conversation_id: {_eq: $conversation_id}}\n    order_by: {updated_at: desc}\n  ) {\n    ...MessageDetail\n  }\n}": types.GetConversationMessagesDocument,
     "query getConversations {\n  conversations {\n    ...ConversationDetail\n    conversation_messages {\n      ...MessageDetail\n      message_medias {\n        ...MessageMedia\n      }\n    }\n  }\n}": types.GetConversationsDocument,
@@ -86,6 +87,10 @@ export function gql(source: "mutation deleteConversation($id: uuid!) {\n  delete
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "mutation updateConversation($id: uuid!, $lastMessageText: String, $lastMessageUrl: String) {\n  update_conversations_by_pk(\n    pk_columns: {id: $id}\n    _set: {last_text_message: $lastMessageText, last_image_url: $lastMessageUrl}\n  ) {\n    ...ConversationDetail\n  }\n}"): (typeof documents)["mutation updateConversation($id: uuid!, $lastMessageText: String, $lastMessageUrl: String) {\n  update_conversations_by_pk(\n    pk_columns: {id: $id}\n    _set: {last_text_message: $lastMessageText, last_image_url: $lastMessageUrl}\n  ) {\n    ...ConversationDetail\n  }\n}"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "mutation updateMessage($id: uuid = \"\", $data: messages_set_input!) {\n  update_messages_by_pk(pk_columns: {id: $id}, _set: $data) {\n    ...MessageDetail\n  }\n}"): (typeof documents)["mutation updateMessage($id: uuid = \"\", $data: messages_set_input!) {\n  update_messages_by_pk(pk_columns: {id: $id}, _set: $data) {\n    ...MessageDetail\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

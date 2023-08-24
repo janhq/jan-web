@@ -5,6 +5,8 @@ import { useStore } from "@/_models/RootStore";
 import { observer } from "mobx-react-lite";
 import { MenuAdvancedPrompt } from "../MenuAdvancedPrompt";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@apollo/client";
+import { CreateMessageDocument, CreateMessageMutation } from "@/graphql";
 
 export const AdvancedPrompt: React.FC = observer(() => {
   const { register, handleSubmit } = useForm();
@@ -14,8 +16,12 @@ export const AdvancedPrompt: React.FC = observer(() => {
     historyStore.toggleAdvancedPrompt();
   }, []);
 
+  const [createMessageMutation] = useMutation<CreateMessageMutation>(
+    CreateMessageDocument
+  );
   const onSubmit = (data: any) => {
     historyStore.sendControlNetPrompt(
+      createMessageMutation,
       data.prompt,
       data.negativePrompt,
       data.fileInput[0]
