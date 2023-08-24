@@ -171,3 +171,204 @@ body {
   width: 65%;
   height: 65%;
 }
+
+/* TODO: Move to a separated css later */
+/* Typography Utilities */
+@layer utilities {
+  /* Regular */
+  .text-xs-regular {
+    /* text-xs/leading-4/font-normal */
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px; /* 133.333% */
+  }
+  .text-sm-regular {
+    /* text-sm/leading-5/font-normal */
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+  }
+  .text-base-regular {
+    /* text-base/leading-6/font-normal */
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px; /* 150% */
+  }
+  .text-lg-regular {
+    /* text-lg/leading-7/font-normal */
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 28px; /* 155.556% */
+  }
+  .text-xl-regular {
+    /* text-xl/leading-7/font-normal */
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 28px; /* 140% */
+  }
+  .text-2xl-regular {
+    /* text-2xl/leading-8/font-normal */
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 32px; /* 133.333% */
+  }
+  .text-3xl-regular {
+    /* text-3xl/leading-9/font-normal */
+    font-family: Inter;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 36px; /* 120% */
+  }
+  .text-4xl-regular {
+    /* text-4xl/leading-10/font-normal */
+    font-family: Inter;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 40px; /* 111.111% */
+  }
+  /* Medium */
+  .text-xs-medium {
+    /* text-xs/leading-4/font-normal */
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px; /* 133.333% */
+  }
+  .text-sm-medium {
+    /* text-sm/leading-5/font-normal */
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+  }
+  .text-base-medium {
+    /* text-base/leading-6/font-normal */
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px; /* 150% */
+  }
+  .text-lg-medium {
+    /* text-lg/leading-7/font-normal */
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 28px; /* 155.556% */
+  }
+  .text-xl-medium {
+    /* text-xl/leading-7/font-normal */
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 28px; /* 140% */
+  }
+  .text-2xl-medium {
+    /* text-2xl/leading-8/font-normal */
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 32px; /* 133.333% */
+  }
+  .text-3xl-medium {
+    /* text-3xl/leading-9/font-normal */
+    font-family: Inter;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 36px; /* 120% */
+  }
+  .text-4xl-medium {
+    /* text-4xl/leading-10/font-normal */
+    font-family: Inter;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 40px; /* 111.111% */
+  }
+
+  /* Semibold */
+  .text-xs-semibold {
+    /* text-xs/leading-4/font-normal */
+    font-family: Inter;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 16px; /* 133.333% */
+  }
+  .text-sm-semibold {
+    /* text-sm/leading-5/font-normal */
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px; /* 142.857% */
+  }
+  .text-base-semibold {
+    /* text-base/leading-6/font-normal */
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px; /* 150% */
+  }
+  .text-lg-semibold {
+    /* text-lg/leading-7/font-normal */
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 28px; /* 155.556% */
+  }
+  .text-xl-semibold {
+    /* text-xl/leading-7/font-normal */
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 28px; /* 140% */
+  }
+  .text-2xl-semibold {
+    /* text-2xl/leading-8/font-normal */
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 32px; /* 133.333% */
+  }
+  .text-3xl-semibold {
+    /* text-3xl/leading-9/font-normal */
+    font-family: Inter;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 36px; /* 120% */
+  }
+  .text-4xl-semibold {
+    /* text-4xl/leading-10/font-normal */
+    font-family: Inter;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 40px; /* 111.111% */
+  }
+}
