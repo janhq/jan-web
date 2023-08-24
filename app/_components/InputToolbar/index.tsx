@@ -14,6 +14,8 @@ import {
   CreateMessageMutation,
   UpdateMessageMutation,
   UpdateConversationDocument,
+  GenerateImageMutation,
+  GenerateImageDocument,
 } from "@/graphql";
 
 type Props = {
@@ -34,6 +36,11 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
   const [updateMessageMutation] = useMutation<UpdateMessageMutation>(
     UpdateConversationDocument
   );
+
+  const [imageGenerationMutation] = useMutation<GenerateImageMutation>(
+    GenerateImageDocument
+  );
+
   const shouldShowEnhanceButton =
     historyStore.getActiveConversation()?.product.type ===
       AiModelType.GenerativeArt ?? false;
@@ -82,6 +89,7 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
     historyStore.sendMessage(
       createMessageMutation,
       updateMessageMutation,
+      imageGenerationMutation,
       text,
       user.id,
       user.displayName,

@@ -26,7 +26,7 @@ const useGetUserConversations = () => {
       const conversation = Conversation.create({
         id: convo.id!!,
         product: {
-          id: convo.conversation_product?.id,
+          id: convo.conversation_product?.slug || convo.conversation_product?.id,
           name: convo.conversation_product?.name ?? "",
           type:
             convo.conversation_product?.inputs.slug === "llm"

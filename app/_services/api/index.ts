@@ -79,46 +79,7 @@ export class Api {
     };
   }
 
-  /**
-   *  Request to generate image from text
-   * @param model  model name
-   * @param prompt  prompt content
-   * @returns
-   */
-  async textToImage(
-    model: string,
-    prompt: string
-  ): Promise<
-    { kind: "ok"; outputs: string[] | undefined } | GeneralApiProblem
-  > {
-    // make the api call
-    const response: ApiResponse<string[]> = await this.apisauce.post(
-      "/inference/text-to-image",
-      {
-        model: model,
-        prompt,
-      }
-    );
-
-    // the typical ways to die when calling an api
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response);
-      if (problem) {
-        return problem;
-      }
-    }
-
-    // transform the data into the format we are expecting
-    try {
-      const rawData = response.data;
-      // This is where we transform the data into the shape we expect for our MST model.
-      const outputs: string[] | undefined = rawData;
-      return { kind: "ok", outputs: outputs };
-    } catch (e) {
-      return { kind: "bad-data" };
-    }
-  }
-
+  
   /**
    * Sending messages to Cloudflare SSE.
    * @description Using callbacks to decouple sending message from modifying DOM / data store

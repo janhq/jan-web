@@ -21,6 +21,8 @@ import {
   ConversationDetailFragment,
   CreateMessageMutation,
   CreateMessageMutationVariables,
+  GenerateImageMutation,
+  GenerateImageMutationVariables,
   GetConversationMessagesQuery,
   GetConversationMessagesQueryVariables,
   MessageDetailFragment,
@@ -50,6 +52,17 @@ type UpdateMessageMutationFunc = (
       >
     | undefined
 ) => Promise<FetchResult<UpdateMessageMutation>>;
+
+type ImageGenerationMutationFunc = (
+  options?:
+    | MutationFunctionOptions<
+        GenerateImageMutation,
+        OperationVariables,
+        DefaultContext,
+        ApolloCache<any>
+      >
+    | undefined
+) => Promise<FetchResult<GenerateImageMutation>>;
 
 export const History = types
   .model("History", {
@@ -338,76 +351,86 @@ export const History = types
     });
 
     const sendTextToImageMessage = flow(function* (
-      func: CreateMessageMutationFunc,
+      create: CreateMessageMutationFunc,
+      generateImage: ImageGenerationMutationFunc,
       message: string,
       conversation: Instance<typeof Conversation>
     ) {
       // TODO: handle case timeout using higher order function
-      const data = yield api.textToImage(conversation.product.id, message);
+      // const data = yield api.textToImage(conversation.product.id, message);
+      const variables: GenerateImageMutationVariables = {
+        model: conversation.product.id,
+        prompt: message,
+        neg_prompt: "",
+        seed: Math.floor(Math.random() * 429496729),
+        steps: 30,
+      };
+      const data: FetchResult<GenerateImageMutation> = yield generateImage({
+        variables,
+      });
 
-      if (data.kind !== "ok") {
-        console.error(`Error`, JSON.stringify(data));
+      if (!data.data?.imageGeneration?.url) {
+        // TODO: display error
+        console.error(
+          "Error creating user message",
+          JSON.stringify(data.errors)
+        );
         conversation.setWaitingForModelResponse(false);
         return;
       }
 
-      if (
-        data.outputs &&
-        data.outputs.length > 0 &&
-        data.outputs[0].startsWith("https://")
-      ) {
-        const imageUrl: string = data.outputs[0];
+      const imageUrl: string = data.data.imageGeneration.url;
 
-        const variables: CreateMessageMutationVariables = {
-          data: {
-            conversation_id: conversation.id,
-            content: message,
-            sender: MessageSenderType.Ai,
-            message_sender_type: MessageSenderType.Ai,
-            message_type: MessageType.Image,
-            sender_avatar_url: conversation.product.avatarUrl,
-            sender_name: conversation.product.name,
-            message_medias: {
-              data: [
-                {
-                  media_url: imageUrl,
-                  mime_type: "image/jpeg",
-                },
-              ],
-            },
+      const createMessageVariables: CreateMessageMutationVariables = {
+        data: {
+          conversation_id: conversation.id,
+          content: message,
+          sender: MessageSenderType.Ai,
+          message_sender_type: MessageSenderType.Ai,
+          message_type: MessageType.Image,
+          sender_avatar_url: conversation.product.avatarUrl,
+          sender_name: conversation.product.name,
+          message_medias: {
+            data: [
+              {
+                media_url: imageUrl,
+                mime_type: "image/jpeg",
+              },
+            ],
           },
-        };
-        const result: FetchResult<CreateMessageMutation> = yield func({
-          variables,
-        });
+        },
+      };
+      const result: FetchResult<CreateMessageMutation> = yield create({
+        variables: createMessageVariables,
+      });
 
-        if (!result.data?.insert_messages_one?.id) {
-          // TODO: display error
-          console.error(
-            "Error creating user message",
-            JSON.stringify(result.errors)
-          );
-          conversation.setWaitingForModelResponse(false);
-          return;
-        }
-
-        const imageResponseMessage = ChatMessage.create({
-          id: result.data.insert_messages_one.id,
-          conversationId: conversation.id,
-          messageType: MessageType.Image,
-          messageSenderType: MessageSenderType.Ai,
-          senderUid: conversation.product.id,
-          senderName: conversation.product.name,
-          senderAvatarUrl: conversation.product.avatarUrl,
-          text: message,
-          imageUrls: data.outputs,
-          createdAt: Date.now(),
-        });
-
-        conversation.addMessage(imageResponseMessage);
-        conversation.setProp("updatedAt", Date.now());
-        conversation.setProp("lastImageUrl", data.outputs[0]);
+      if (!result.data?.insert_messages_one?.id) {
+        // TODO: display error
+        console.error(
+          "Error creating user message",
+          JSON.stringify(result.errors)
+        );
+        conversation.setWaitingForModelResponse(false);
+        return;
       }
+
+      const imageResponseMessage = ChatMessage.create({
+        id: result.data.insert_messages_one.id,
+        conversationId: conversation.id,
+        messageType: MessageType.Image,
+        messageSenderType: MessageSenderType.Ai,
+        senderUid: conversation.product.id,
+        senderName: conversation.product.name,
+        senderAvatarUrl: conversation.product.avatarUrl,
+        text: message,
+        imageUrls: [imageUrl],
+        createdAt: Date.now(),
+      });
+
+      conversation.addMessage(imageResponseMessage);
+      conversation.setProp("updatedAt", Date.now());
+      conversation.setProp("lastImageUrl", imageUrl);
+
       conversation.setWaitingForModelResponse(false);
     });
 
@@ -548,6 +571,7 @@ export const History = types
     const sendMessage = flow(function* (
       create: CreateMessageMutationFunc,
       update: UpdateMessageMutationFunc,
+      generateImage: ImageGenerationMutationFunc,
       message: string,
       userId: string,
       displayName: string,
@@ -609,7 +633,12 @@ export const History = types
       if (conversation.product.type === AiModelType.LLM) {
         yield self.sendTextToTextMessage(create, update, conversation);
       } else if (conversation.product.type === AiModelType.GenerativeArt) {
-        yield self.sendTextToImageMessage(create, message, conversation);
+        yield self.sendTextToImageMessage(
+          create,
+          generateImage,
+          message,
+          conversation
+        );
       } else {
         console.error(
           "We do not support this model type yet:",
