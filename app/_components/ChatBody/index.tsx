@@ -134,6 +134,7 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
 const renderItem = (
   index: number,
   {
+    id,
     messageType,
     senderAvatarUrl,
     senderName,
@@ -168,6 +169,7 @@ const renderItem = (
     case MessageType.Text:
       return (
         <SimpleTextMessage
+          uuid={id}
           key={index}
           avatarUrl={senderAvatarUrl ?? "/icons/app_icon.svg"}
           senderName={senderName}

@@ -32,6 +32,7 @@ const documents = {
     "query getProductPrompts($productSlug: String = \"\") {\n  prompts(where: {prompt_products: {products: {slug: {_eq: $productSlug}}}}) {\n    ...PromptDetail\n  }\n}": types.GetProductPromptsDocument,
     "query getProducts {\n  products {\n    ...ProductDetail\n    product_prompts {\n      prompts {\n        ...PromptDetail\n      }\n    }\n    product_collections {\n      collections {\n        ...CollectionDetail\n      }\n    }\n  }\n}": types.GetProductsDocument,
     "query getProductsIn($_in: [String!] = \"\") {\n  products(where: {slug: {_in: $_in}}) {\n    ...ProductDetail\n  }\n}": types.GetProductsInDocument,
+    "subscription subscribeMessage($id: uuid = \"\") {\n  messages_by_pk(id: $id) {\n    content\n    status\n  }\n}": types.SubscribeMessageDocument,
 };
 
 /**
@@ -124,6 +125,10 @@ export function gql(source: "query getProducts {\n  products {\n    ...ProductDe
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "query getProductsIn($_in: [String!] = \"\") {\n  products(where: {slug: {_in: $_in}}) {\n    ...ProductDetail\n  }\n}"): (typeof documents)["query getProductsIn($_in: [String!] = \"\") {\n  products(where: {slug: {_in: $_in}}) {\n    ...ProductDetail\n  }\n}"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "subscription subscribeMessage($id: uuid = \"\") {\n  messages_by_pk(id: $id) {\n    content\n    status\n  }\n}"): (typeof documents)["subscription subscribeMessage($id: uuid = \"\") {\n  messages_by_pk(id: $id) {\n    content\n    status\n  }\n}"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

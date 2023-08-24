@@ -7,8 +7,6 @@ import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
 import {
   CreateMessageMutation,
   CreateMessageDocument,
-  UpdateMessageMutation,
-  UpdateConversationDocument,
   GenerateImageMutation,
   GenerateImageDocument,
 } from "@/graphql";
@@ -34,9 +32,6 @@ const SimpleImageMessage: React.FC<Props> = ({
   const [createMessageMutation] = useMutation<CreateMessageMutation>(
     CreateMessageDocument
   );
-  const [updateMessageMutation] = useMutation<UpdateMessageMutation>(
-    UpdateConversationDocument
-  );
   const [imageGenerationMutation] = useMutation<GenerateImageMutation>(
     GenerateImageDocument
   );
@@ -49,7 +44,6 @@ const SimpleImageMessage: React.FC<Props> = ({
 
     historyStore.sendMessage(
       createMessageMutation,
-      updateMessageMutation,
       imageGenerationMutation,
       text ?? "",
       user.id,

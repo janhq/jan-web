@@ -242,7 +242,6 @@ export const History = types
   .actions((self) => {
     const sendTextToTextMessage = flow(function* (
       create: CreateMessageMutationFunc,
-      update: UpdateMessageMutationFunc,
       conversation: Instance<typeof Conversation>
     ) {
       // TODO: handle case timeout using higher order function
@@ -254,9 +253,6 @@ export const History = types
         content: e.text,
       }));
 
-      const modelName =
-        self.getActiveConversation()?.product.id ?? "gpt-3.5-turbo";
-
       const variables: CreateMessageMutationVariables = {
         data: {
           conversation_id: conversation.id,
@@ -266,6 +262,7 @@ export const History = types
           message_type: MessageType.Text,
           sender_avatar_url: conversation.product.avatarUrl,
           sender_name: conversation.product.name,
+          prompt_cache: latestMessages
         },
       };
       const result: FetchResult<CreateMessageMutation> = yield create({
@@ -273,7 +270,6 @@ export const History = types
       });
 
       if (!result.data?.insert_messages_one?.id) {
-        // TODO: display error
         console.error(
           "Error creating user message",
           JSON.stringify(result.errors)
@@ -293,61 +289,8 @@ export const History = types
         text: "",
         createdAt: Date.now(),
       });
-
-      let timeoutId: NodeJS.Timeout | undefined = undefined;
-      api.streamMessageChat({
-        stream: true,
-        model: modelName,
-        max_tokens: 500,
-        messages: latestMessages,
-        onOpen: () => {
-          conversation.addMessage(aiResponseMessage);
-        },
-        onUpdate: (message: string) => {
-          aiResponseMessage.setProp("text", message);
-          conversation.setProp("updatedAt", Date.now());
-
-          // we don't need to wait for the response to be finished, it will
-          // make the chat feels laggy
-          if (timeoutId) {
-            // optimize to reduce invoking api
-            clearTimeout(timeoutId);
-          }
-          timeoutId = setTimeout(() => {
-            const variables: UpdateMessageMutationVariables = {
-              id: aiResponseMessage.id,
-              data: {
-                content: aiResponseMessage.text,
-              },
-            };
-            update({
-              variables,
-            });
-          }, 100);
-        },
-        onFinish: (message: string) => {
-          conversation.setProp("updatedAt", Date.now());
-          conversation.setProp("lastTextMessage", message);
-          conversation.setWaitingForModelResponse(false);
-          aiResponseMessage.setProp("text", message);
-
-          setTimeout(() => {
-            //TODO: Deprecate soon - update from Hasura Action
-            const variables: UpdateMessageMutationVariables = {
-              id: aiResponseMessage.id,
-              data: {
-                content: aiResponseMessage.text,
-              },
-            };
-            update({
-              variables,
-            });
-          }, 1000);
-        },
-        onError: (err: Error) => {
-          console.error("error", err);
-        },
-      });
+      conversation.addMessage(aiResponseMessage);
+      conversation.setWaitingForModelResponse(false);
     });
 
     const sendTextToImageMessage = flow(function* (
@@ -570,7 +513,6 @@ export const History = types
 
     const sendMessage = flow(function* (
       create: CreateMessageMutationFunc,
-      update: UpdateMessageMutationFunc,
       generateImage: ImageGenerationMutationFunc,
       message: string,
       userId: string,
@@ -631,7 +573,10 @@ export const History = types
       conversation.setProp("lastTextMessage", message);
 
       if (conversation.product.type === AiModelType.LLM) {
-        yield self.sendTextToTextMessage(create, update, conversation);
+        yield self.sendTextToTextMessage(
+          create,
+          conversation
+        );
       } else if (conversation.product.type === AiModelType.GenerativeArt) {
         yield self.sendTextToImageMessage(
           create,

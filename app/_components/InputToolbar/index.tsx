@@ -12,8 +12,6 @@ import { useMutation } from "@apollo/client";
 import {
   CreateMessageDocument,
   CreateMessageMutation,
-  UpdateMessageMutation,
-  UpdateConversationDocument,
   GenerateImageMutation,
   GenerateImageDocument,
 } from "@/graphql";
@@ -31,10 +29,6 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
 
   const [createMessageMutation] = useMutation<CreateMessageMutation>(
     CreateMessageDocument
-  );
-
-  const [updateMessageMutation] = useMutation<UpdateMessageMutation>(
-    UpdateConversationDocument
   );
 
   const [imageGenerationMutation] = useMutation<GenerateImageMutation>(
@@ -88,7 +82,6 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
     if (text.trim().length === 0) return;
     historyStore.sendMessage(
       createMessageMutation,
-      updateMessageMutation,
       imageGenerationMutation,
       text,
       user.id,

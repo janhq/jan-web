@@ -1136,9 +1136,11 @@ export type Messages = {
   message_medias_aggregate: Message_Medias_Aggregate;
   message_sender_type?: Maybe<Scalars['String']['output']>;
   message_type?: Maybe<Scalars['String']['output']>;
+  prompt_cache?: Maybe<Scalars['jsonb']['output']>;
   sender: Scalars['String']['output'];
   sender_avatar_url?: Maybe<Scalars['String']['output']>;
   sender_name?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
   updated_at: Scalars['timestamptz']['output'];
 };
 
@@ -1160,6 +1162,12 @@ export type MessagesMessage_Medias_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   order_by?: InputMaybe<Array<Message_Medias_Order_By>>;
   where?: InputMaybe<Message_Medias_Bool_Exp>;
+};
+
+
+/** columns and relationships of "messages" */
+export type MessagesPrompt_CacheArgs = {
+  path?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregated selection of "messages" */
@@ -1202,6 +1210,11 @@ export type Messages_Aggregate_Order_By = {
   min?: InputMaybe<Messages_Min_Order_By>;
 };
 
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Messages_Append_Input = {
+  prompt_cache?: InputMaybe<Scalars['jsonb']['input']>;
+};
+
 /** input type for inserting array relation for remote table "messages" */
 export type Messages_Arr_Rel_Insert_Input = {
   data: Array<Messages_Insert_Input>;
@@ -1223,9 +1236,11 @@ export type Messages_Bool_Exp = {
   message_medias_aggregate?: InputMaybe<Message_Medias_Aggregate_Bool_Exp>;
   message_sender_type?: InputMaybe<String_Comparison_Exp>;
   message_type?: InputMaybe<String_Comparison_Exp>;
+  prompt_cache?: InputMaybe<Jsonb_Comparison_Exp>;
   sender?: InputMaybe<String_Comparison_Exp>;
   sender_avatar_url?: InputMaybe<String_Comparison_Exp>;
   sender_name?: InputMaybe<String_Comparison_Exp>;
+  status?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
@@ -1234,6 +1249,21 @@ export enum Messages_Constraint {
   /** unique or primary key constraint on columns "id" */
   MessagesPkey = 'messages_pkey'
 }
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Messages_Delete_At_Path_Input = {
+  prompt_cache?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Messages_Delete_Elem_Input = {
+  prompt_cache?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Messages_Delete_Key_Input = {
+  prompt_cache?: InputMaybe<Scalars['String']['input']>;
+};
 
 /** input type for inserting data into table "messages" */
 export type Messages_Insert_Input = {
@@ -1245,9 +1275,11 @@ export type Messages_Insert_Input = {
   message_medias?: InputMaybe<Message_Medias_Arr_Rel_Insert_Input>;
   message_sender_type?: InputMaybe<Scalars['String']['input']>;
   message_type?: InputMaybe<Scalars['String']['input']>;
+  prompt_cache?: InputMaybe<Scalars['jsonb']['input']>;
   sender?: InputMaybe<Scalars['String']['input']>;
   sender_avatar_url?: InputMaybe<Scalars['String']['input']>;
   sender_name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
@@ -1263,6 +1295,7 @@ export type Messages_Max_Fields = {
   sender?: Maybe<Scalars['String']['output']>;
   sender_avatar_url?: Maybe<Scalars['String']['output']>;
   sender_name?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
@@ -1277,6 +1310,7 @@ export type Messages_Max_Order_By = {
   sender?: InputMaybe<Order_By>;
   sender_avatar_url?: InputMaybe<Order_By>;
   sender_name?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
 
@@ -1292,6 +1326,7 @@ export type Messages_Min_Fields = {
   sender?: Maybe<Scalars['String']['output']>;
   sender_avatar_url?: Maybe<Scalars['String']['output']>;
   sender_name?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
@@ -1306,6 +1341,7 @@ export type Messages_Min_Order_By = {
   sender?: InputMaybe<Order_By>;
   sender_avatar_url?: InputMaybe<Order_By>;
   sender_name?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
 
@@ -1342,15 +1378,22 @@ export type Messages_Order_By = {
   message_medias_aggregate?: InputMaybe<Message_Medias_Aggregate_Order_By>;
   message_sender_type?: InputMaybe<Order_By>;
   message_type?: InputMaybe<Order_By>;
+  prompt_cache?: InputMaybe<Order_By>;
   sender?: InputMaybe<Order_By>;
   sender_avatar_url?: InputMaybe<Order_By>;
   sender_name?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: messages */
 export type Messages_Pk_Columns_Input = {
   id: Scalars['uuid']['input'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Messages_Prepend_Input = {
+  prompt_cache?: InputMaybe<Scalars['jsonb']['input']>;
 };
 
 /** select columns of table "messages" */
@@ -1368,11 +1411,15 @@ export enum Messages_Select_Column {
   /** column name */
   MessageType = 'message_type',
   /** column name */
+  PromptCache = 'prompt_cache',
+  /** column name */
   Sender = 'sender',
   /** column name */
   SenderAvatarUrl = 'sender_avatar_url',
   /** column name */
   SenderName = 'sender_name',
+  /** column name */
+  Status = 'status',
   /** column name */
   UpdatedAt = 'updated_at'
 }
@@ -1385,9 +1432,11 @@ export type Messages_Set_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   message_sender_type?: InputMaybe<Scalars['String']['input']>;
   message_type?: InputMaybe<Scalars['String']['input']>;
+  prompt_cache?: InputMaybe<Scalars['jsonb']['input']>;
   sender?: InputMaybe<Scalars['String']['input']>;
   sender_avatar_url?: InputMaybe<Scalars['String']['input']>;
   sender_name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
@@ -1407,9 +1456,11 @@ export type Messages_Stream_Cursor_Value_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   message_sender_type?: InputMaybe<Scalars['String']['input']>;
   message_type?: InputMaybe<Scalars['String']['input']>;
+  prompt_cache?: InputMaybe<Scalars['jsonb']['input']>;
   sender?: InputMaybe<Scalars['String']['input']>;
   sender_avatar_url?: InputMaybe<Scalars['String']['input']>;
   sender_name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
@@ -1428,16 +1479,30 @@ export enum Messages_Update_Column {
   /** column name */
   MessageType = 'message_type',
   /** column name */
+  PromptCache = 'prompt_cache',
+  /** column name */
   Sender = 'sender',
   /** column name */
   SenderAvatarUrl = 'sender_avatar_url',
   /** column name */
   SenderName = 'sender_name',
   /** column name */
+  Status = 'status',
+  /** column name */
   UpdatedAt = 'updated_at'
 }
 
 export type Messages_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<Messages_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<Messages_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<Messages_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<Messages_Delete_Key_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<Messages_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Messages_Set_Input>;
   /** filter the rows which have to be updated */
@@ -1859,6 +1924,11 @@ export type Mutation_RootUpdate_Message_Medias_ManyArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_MessagesArgs = {
+  _append?: InputMaybe<Messages_Append_Input>;
+  _delete_at_path?: InputMaybe<Messages_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Messages_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Messages_Delete_Key_Input>;
+  _prepend?: InputMaybe<Messages_Prepend_Input>;
   _set?: InputMaybe<Messages_Set_Input>;
   where: Messages_Bool_Exp;
 };
@@ -1866,6 +1936,11 @@ export type Mutation_RootUpdate_MessagesArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Messages_By_PkArgs = {
+  _append?: InputMaybe<Messages_Append_Input>;
+  _delete_at_path?: InputMaybe<Messages_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Messages_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Messages_Delete_Key_Input>;
+  _prepend?: InputMaybe<Messages_Prepend_Input>;
   _set?: InputMaybe<Messages_Set_Input>;
   pk_columns: Messages_Pk_Columns_Input;
 };
@@ -3666,6 +3741,13 @@ export type GetProductsInQueryVariables = Exact<{
 
 export type GetProductsInQuery = { __typename?: 'query_root', products: Array<{ __typename?: 'products', id: any, name: string, slug: string, description?: string | null, long_description?: string | null, technical_description?: string | null, image_url?: string | null, author?: string | null, greeting?: string | null, source_url?: string | null, version?: string | null, inputs?: any | null, outputs?: any | null, nsfw: boolean }> };
 
+export type SubscribeMessageSubscriptionVariables = Exact<{
+  id?: InputMaybe<Scalars['uuid']['input']>;
+}>;
+
+
+export type SubscribeMessageSubscription = { __typename?: 'subscription_root', messages_by_pk?: { __typename?: 'messages', content?: string | null, status?: string | null } | null };
+
 export const CollectionDetailFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CollectionDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"collections"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]} as unknown as DocumentNode<CollectionDetailFragment, unknown>;
 export const ProductDetailFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"products"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"long_description"}},{"kind":"Field","name":{"kind":"Name","value":"technical_description"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}},{"kind":"Field","name":{"kind":"Name","value":"source_url"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"inputs"}},{"kind":"Field","name":{"kind":"Name","value":"outputs"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}}]}}]} as unknown as DocumentNode<ProductDetailFragment, unknown>;
 export const ConversationDetailFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ConversationDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"conversations"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"product_id"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"last_image_url"}},{"kind":"Field","name":{"kind":"Name","value":"last_text_message"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"products"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"long_description"}},{"kind":"Field","name":{"kind":"Name","value":"technical_description"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}},{"kind":"Field","name":{"kind":"Name","value":"source_url"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"inputs"}},{"kind":"Field","name":{"kind":"Name","value":"outputs"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}}]}}]} as unknown as DocumentNode<ConversationDetailFragment, unknown>;
@@ -3685,3 +3767,4 @@ export const GetProductsByCollectionSlugDocument = {"kind":"Document","definitio
 export const GetProductPromptsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProductPrompts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"productSlug"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"prompts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"prompt_products"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"products"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"slug"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"productSlug"}}}]}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PromptDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PromptDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"prompts"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}}]}}]} as unknown as DocumentNode<GetProductPromptsQuery, GetProductPromptsQueryVariables>;
 export const GetProductsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProducts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductDetail"}},{"kind":"Field","name":{"kind":"Name","value":"product_prompts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"prompts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PromptDetail"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"product_collections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CollectionDetail"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"products"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"long_description"}},{"kind":"Field","name":{"kind":"Name","value":"technical_description"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}},{"kind":"Field","name":{"kind":"Name","value":"source_url"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"inputs"}},{"kind":"Field","name":{"kind":"Name","value":"outputs"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PromptDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"prompts"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CollectionDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"collections"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]} as unknown as DocumentNode<GetProductsQuery, GetProductsQueryVariables>;
 export const GetProductsInDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProductsIn"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"_in"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},"defaultValue":{"kind":"StringValue","value":"","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"slug"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"_in"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"products"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"long_description"}},{"kind":"Field","name":{"kind":"Name","value":"technical_description"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}},{"kind":"Field","name":{"kind":"Name","value":"source_url"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"inputs"}},{"kind":"Field","name":{"kind":"Name","value":"outputs"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}}]}}]} as unknown as DocumentNode<GetProductsInQuery, GetProductsInQueryVariables>;
+export const SubscribeMessageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"subscribeMessage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}},"defaultValue":{"kind":"StringValue","value":"","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"messages_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<SubscribeMessageSubscription, SubscribeMessageSubscriptionVariables>;
