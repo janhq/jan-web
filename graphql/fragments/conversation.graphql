@@ -6,4 +6,7 @@ fragment ConversationDetail on conversations {
   last_text_message
   created_at
   updated_at
+  conversation_product {
+    ...ProductDetail
+  }
 }

@@ -7,6 +7,7 @@ import {
 import { useStore } from "../_models/RootStore";
 import useGetCurrentUser from "./useGetCurrentUser";
 import { useMutation } from "@apollo/client";
+import { MessageSenderType } from "@/_models/ChatMessage";
 
 const useCreateConversation = () => {
   const { historyStore } = useStore();
@@ -26,17 +27,30 @@ const useCreateConversation = () => {
     // search if any fresh convo with particular product id
     const convo = historyStore.conversations.find(
       (convo) =>
-        convo.aiModel.modelId === product.slug && convo.chatMessages.length <= 1
+        convo.product.id === product.slug && convo.chatMessages.length <= 1
     );
 
     if (convo && !forceCreate) {
       historyStore.setActiveConversationId(convo.id);
       return;
     }
-
     const variables: CreateConversationMutationVariables = {
-      product_id: product.id,
-      user_id: user.id,
+      data: {
+        product_id: product.id,
+        user_id: user.id,
+        last_image_url: "",
+        last_text_message: product.greeting,
+        conversation_messages: {
+          data: [
+            {
+              content: product.greeting || "Hello there 👋",
+              sender: MessageSenderType.Ai,
+              sender_name: product.name,
+              sender_avatar_url: product.image_url ?? "",
+            },
+          ],
+        },
+      },
     };
     const result = await createConversation({
       variables,

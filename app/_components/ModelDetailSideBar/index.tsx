@@ -17,7 +17,7 @@ export const ModelDetailSideBar: FC<Props> = observer(({ onPromptClick }) => {
   const [tab, setTab] = useState<"description" | "api">("description");
   const conversation = useStore().historyStore.getActiveConversation();
 
-  const modelName = conversation?.aiModel.name ?? "";
+  const modelName = conversation?.product.name ?? "";
 
   const onTabClick = (clickedTab: "description" | "api") => {
     if (clickedTab === tab) {
@@ -54,11 +54,11 @@ export const ModelDetailSideBar: FC<Props> = observer(({ onPromptClick }) => {
           <ApiPane />
         ) : (
           <OverviewPane
-            slug={conversation?.aiModel.modelId ?? ""}
+            slug={conversation?.product.id ?? ""}
             onPromptClick={onPromptClick}
-            description={conversation?.aiModel.description}
-            technicalURL={conversation?.aiModel.modelUrl}
-            technicalVersion={conversation?.aiModel.modelVersion}
+            description={conversation?.product.description}
+            technicalURL={conversation?.product.modelUrl}
+            technicalVersion={conversation?.product.modelVersion}
           />
         )}
       </div>

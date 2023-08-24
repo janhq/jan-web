@@ -21,7 +21,7 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
   const { signInWithKeyCloak } = useSignIn();
 
   const shouldShowEnhanceButton =
-    historyStore.getActiveConversation()?.aiModel.aiModelType ===
+    historyStore.getActiveConversation()?.product.type ===
       AiModelType.GenerativeArt ?? false;
 
   useEffect(() => {
@@ -95,7 +95,7 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
   };
 
   const shouldShowAdvancedPrompt =
-    historyStore.getActiveConversation()?.aiModel?.aiModelType ===
+    historyStore.getActiveConversation()?.product?.type ===
       AiModelType.ControlNet ?? false;
 
   return (

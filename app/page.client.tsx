@@ -13,23 +13,22 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloLink,
-  from,
   HttpLink,
+  concat,
 } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import { getAccessToken } from "./_utils/tokenAccessor";
 
-const authMiddleware = new ApolloLink((operation, forward) => {
-  operation.setContext(async ({ headers = {} }) => {
-    const token = await getAccessToken();
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : "",
-      },
-    };
-  });
-  return forward(operation);
+const authMiddleware = setContext(async (_, { headers }) => {
+  const token = await getAccessToken();
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
 });
+
 const httpLink = new HttpLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_ENGINE_URL,
 });
@@ -38,7 +37,7 @@ const PageClient: React.FC = () => {
   const store = useRef<RootInstance>(initializeStore());
 
   const client = new ApolloClient({
-    link: from([authMiddleware, httpLink]),
+    link: concat(authMiddleware, httpLink),
     cache: new InMemoryCache(),
   });
 

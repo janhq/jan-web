@@ -18,10 +18,10 @@ export const PromptModel = types.model("Prompt", {
   imageUrl: types.maybeNull(types.string),
 });
 
-export const AiModel = types.model("AiModel", {
-  modelId: types.string, // TODO change to slug
+export const Product = types.model("Product", {
+  id: types.string, // TODO change to slug
   name: types.string,
-  aiModelType: types.enumeration(Object.values(AiModelType)),
+  type: types.enumeration(Object.values(AiModelType)),
   description: types.maybeNull(types.string),
   avatarUrl: types.maybeNull(types.string),
   modelVersion: types.maybeNull(types.string),

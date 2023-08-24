@@ -54,9 +54,9 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
   const shouldShowImageSampleContainer =
     shouldShowSampleContainer &&
     convo &&
-    convo.aiModel.aiModelType === AiModelType.GenerativeArt;
+    convo.product.type === AiModelType.GenerativeArt;
 
-  const model = convo?.aiModel;
+  const model = convo?.product;
 
   const handleScroll = () => {
     if (!scrollRef.current) return;
@@ -81,12 +81,12 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
       {shouldShowSampleContainer && model ? (
         shouldShowImageSampleContainer ? (
           <GenerativeSampleContainer
-            model={convo?.aiModel}
+            model={convo?.product}
             onPromptSelected={onPromptSelected}
           />
         ) : (
           <SampleLlmContainer
-            model={convo?.aiModel}
+            model={convo?.product}
             onPromptSelected={onPromptSelected}
           />
         )

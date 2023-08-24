@@ -1,6 +1,6 @@
 import { Instance, castToSnapshot, flow, types } from "mobx-state-tree";
 import { Conversation } from "./Conversation";
-import { AiModel, AiModelType } from "./AiModel";
+import { Product, AiModelType } from "./AiModel";
 import { User } from "./User";
 import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
 import { api } from "../_services/api";
@@ -211,14 +211,14 @@ export const History = types
       }));
 
       const modelName =
-        self.getActiveConversation()?.aiModel.modelId ?? "gpt-3.5-turbo";
+        self.getActiveConversation()?.product.id ?? "gpt-3.5-turbo";
 
       const result = yield api.createNewTextChatMessage(
         conversation.id,
         MessageSenderType.Ai,
-        conversation.aiModel.modelId,
-        conversation.aiModel.name,
-        conversation.aiModel.avatarUrl ?? "",
+        conversation.product.id,
+        conversation.product.name,
+        conversation.product.avatarUrl ?? "",
         ""
       );
 
@@ -236,9 +236,9 @@ export const History = types
         conversationId: conversation.id,
         messageType: MessageType.Text,
         messageSenderType: MessageSenderType.Ai,
-        senderUid: conversation.aiModel.modelId,
-        senderName: conversation.aiModel.name,
-        senderAvatarUrl: conversation.aiModel.avatarUrl ?? "",
+        senderUid: conversation.product.id,
+        senderName: conversation.product.name,
+        senderAvatarUrl: conversation.product.avatarUrl ?? "",
         text: "",
         createdAt: Date.now(),
       });
@@ -291,7 +291,7 @@ export const History = types
       conversation: Instance<typeof Conversation>
     ) {
       // TODO: handle case timeout using higher order function
-      const data = yield api.textToImage(conversation.aiModel.modelId, message);
+      const data = yield api.textToImage(conversation.product.id, message);
 
       if (data.kind !== "ok") {
         console.error(`Error`, JSON.stringify(data));
@@ -308,9 +308,9 @@ export const History = types
         const result = yield api.createNewImageChatMessage(
           conversation.id,
           MessageSenderType.Ai,
-          conversation.aiModel.modelId,
-          conversation.aiModel.name,
-          conversation.aiModel.avatarUrl ?? "",
+          conversation.product.id,
+          conversation.product.name,
+          conversation.product.avatarUrl ?? "",
           message || "",
           imageUrl,
           MessageType.Image
@@ -327,9 +327,9 @@ export const History = types
           conversationId: conversation.id,
           messageType: MessageType.Image,
           messageSenderType: MessageSenderType.Ai,
-          senderUid: conversation.aiModel.modelId,
-          senderName: conversation.aiModel.name,
-          senderAvatarUrl: conversation.aiModel.avatarUrl ?? "",
+          senderUid: conversation.product.id,
+          senderName: conversation.product.name,
+          senderAvatarUrl: conversation.product.avatarUrl ?? "",
           text: message,
           imageUrls: data.outputs,
           createdAt: Date.now(),
@@ -381,9 +381,9 @@ export const History = types
       const createMessageResult = yield api.createNewImageChatMessage(
         conversation.id,
         MessageSenderType.Ai,
-        conversation.aiModel.modelId,
-        conversation.aiModel.name,
-        conversation.aiModel.avatarUrl ?? "",
+        conversation.product.id,
+        conversation.product.name,
+        conversation.product.avatarUrl ?? "",
         message,
         imageUrl,
         MessageType.ImageWithText
@@ -404,9 +404,9 @@ export const History = types
         conversationId: self.activeConversationId,
         messageType: MessageType.ImageWithText,
         messageSenderType: MessageSenderType.Ai,
-        senderUid: conversation.aiModel.modelId,
-        senderName: conversation.aiModel.name,
-        senderAvatarUrl: conversation.aiModel.avatarUrl ?? "",
+        senderUid: conversation.product.id,
+        senderName: conversation.product.name,
+        senderAvatarUrl: conversation.product.avatarUrl ?? "",
         text: message,
         imageUrls: [imageUrl],
         createdAt: Date.now(),
@@ -422,8 +422,8 @@ export const History = types
       product: ProductDetailFragment,
       userId: string,
       displayName: string,
-      avatarUrl?: string,
-      ) {
+      avatarUrl?: string
+    ) {
       let modelType: AiModelType | undefined = undefined;
       if (product.inputs.slug === "llm") {
         modelType = AiModelType.LLM;
@@ -436,10 +436,10 @@ export const History = types
         return;
       }
 
-      const newAiModel = AiModel.create({
+      const productModel = Product.create({
         name: product.name,
-        modelId: product.slug,
-        aiModelType: modelType,
+        id: product.slug,
+        type: modelType,
         description: product.description,
         modelUrl: product.source_url,
         modelVersion: product.version,
@@ -448,7 +448,8 @@ export const History = types
 
       const newConvo = Conversation.create({
         id: conversation.id,
-        aiModel: newAiModel,
+        product: productModel,
+        lastTextMessage: conversation.last_text_message || "",
         user: User.create({
           id: userId,
           displayName,
@@ -516,16 +517,14 @@ export const History = types
       conversation.addMessage(userMesssage);
       conversation.setProp("lastTextMessage", message);
 
-      if (conversation.aiModel.aiModelType === AiModelType.LLM) {
+      if (conversation.product.type === AiModelType.LLM) {
         yield self.sendTextToTextMessage(conversation);
-      } else if (
-        conversation.aiModel.aiModelType === AiModelType.GenerativeArt
-      ) {
+      } else if (conversation.product.type === AiModelType.GenerativeArt) {
         yield self.sendTextToImageMessage(message, conversation);
       } else {
         console.error(
           "We do not support this model type yet:",
-          conversation.aiModel.aiModelType
+          conversation.product.type
         );
       }
     });

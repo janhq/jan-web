@@ -1,5 +1,5 @@
 import { Instance, castToSnapshot, types } from "mobx-state-tree";
-import { AiModel } from "./AiModel";
+import { Product } from "./AiModel";
 import { ChatMessage } from "./ChatMessage";
 import { User } from "./User";
 import { withSetPropAction } from "../_helpers/withSetPropAction";
@@ -15,7 +15,7 @@ export const Conversation = types
     /**
      * AI model that the conversation is using
      */
-    aiModel: AiModel,
+    product: Product,
 
     /**
      * Conversation's messages, should ordered by time (createdAt)

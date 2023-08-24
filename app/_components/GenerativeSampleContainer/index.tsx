@@ -1,11 +1,11 @@
 import JanWelcomeTitle from "../JanWelcomeTitle";
-import { AiModel } from "@/_models/AiModel";
+import { Product } from "@/_models/AiModel";
 import { Instance } from "mobx-state-tree";
 import { GetProductPromptsQuery, GetProductPromptsDocument } from "@/graphql";
 import { useQuery } from "@apollo/client";
 
 type Props = {
-  model: Instance<typeof AiModel>;
+  model: Instance<typeof Product>;
   onPromptSelected: (prompt: string) => void;
 };
 
@@ -16,7 +16,7 @@ export const GenerativeSampleContainer: React.FC<Props> = ({
   const { loading, error, data } = useQuery<GetProductPromptsQuery>(
     GetProductPromptsDocument,
     {
-      variables: { productSlug: model.modelId },
+      variables: { productSlug: model.id },
     }
   );
 
