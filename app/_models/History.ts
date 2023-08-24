@@ -146,12 +146,6 @@ export const History = types
     });
 
     const deleteConversationById = flow(function* (convoId: string) {
-      const result = yield api.deleteConversation(convoId);
-      if (result.kind !== "ok") {
-        console.error(`Error`, JSON.stringify(result));
-        return;
-      }
-
       const updateConversations = self.conversations.filter(
         (c) => c.id !== convoId
       );
@@ -191,11 +185,6 @@ export const History = types
       self.conversations = castToSnapshot([]);
     },
 
-    deleteActiveConversation() {
-      if (self.activeConversationId) {
-        self.deleteConversationById(self.activeConversationId);
-      }
-    },
   }))
   .actions((self) => {
     const sendTextToTextMessage = flow(function* (

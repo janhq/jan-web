@@ -346,21 +346,6 @@ export class Api {
     return { kind: "ok" };
   }
 
-  async deleteConversation(convoId: string) {
-    const response: ApiResponse<any> = await this.apisauce.delete(
-      `conversation/${convoId}`
-    );
-
-    // the typical ways to die when calling an api
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response);
-      if (problem) {
-        return problem;
-      }
-    }
-
-    return { kind: "ok" };
-  }
 }
 
 // Singleton instance of the API for convenience
