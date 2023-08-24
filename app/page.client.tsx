@@ -12,7 +12,6 @@ import {
   ApolloProvider,
   ApolloClient,
   InMemoryCache,
-  ApolloLink,
   HttpLink,
   concat,
 } from "@apollo/client";
@@ -24,7 +23,7 @@ const authMiddleware = setContext(async (_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : "",
+      ...(token && { authorization: token ? `Bearer ${token}` : "" }),
     },
   };
 });
