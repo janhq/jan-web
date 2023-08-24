@@ -32,7 +32,7 @@ const HistoryItem: React.FC<Props> = observer(
       rightImageUrl = "/icons/loading.svg";
     } else if (
       conversation &&
-      conversation.aiModel.aiModelType === AiModelType.GenerativeArt &&
+      conversation.product.type === AiModelType.GenerativeArt &&
       conversation.lastImageUrl &&
       conversation.lastImageUrl.trim().startsWith("https://")
     ) {

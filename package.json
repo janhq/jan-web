@@ -16,7 +16,6 @@
     "@apollo/client": "^3.8.1",
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
-    "@microsoft/fetch-event-source": "^2.0.1",
     "@sentry/nextjs": "^7.63.0",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "20.4.2",
@@ -26,14 +25,15 @@
     "apisauce": "^3.0.1",
     "autoprefixer": "10.4.14",
     "classnames": "^2.3.2",
+    "cryptr": "^6.2.0",
     "embla-carousel": "^8.0.0-rc11",
     "embla-carousel-react": "^8.0.0-rc11",
-    "cryptr": "^6.2.0",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.10",
     "firebase": "^10.0.0",
     "gleap": "^11.0.8",
     "graphql": "^16.8.0",
+    "graphql-ws": "^5.14.0",
     "jwt-decode": "^3.1.2",
     "lottie-react": "^2.4.0",
     "mobx": "^6.10.0",
@@ -54,8 +54,8 @@
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/client-preset": "4.1.0",
+    "@graphql-codegen/introspection": "4.0.0",
     "@tailwindcss/forms": "^0.5.4",
-    "encoding": "^0.1.13",
-    "@graphql-codegen/introspection": "4.0.0"
+    "encoding": "^0.1.13"
   }
 }

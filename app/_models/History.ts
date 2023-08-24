@@ -1,14 +1,68 @@
 import { Instance, castToSnapshot, flow, types } from "mobx-state-tree";
 import { Conversation } from "./Conversation";
-import { AiModel, AiModelType } from "./AiModel";
+import { Product, AiModelType } from "./AiModel";
 import { User } from "./User";
 import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
 import { api } from "../_services/api";
 import { Role } from "../_services/api/api.types";
-import { MessageResponse } from "@/_services/api/models/message.response";
 import { MESSAGE_PER_PAGE } from "../_utils/const";
 import { controlNetRequest } from "@/_services/controlnet";
-import { ConversationDetailFragment, ProductDetailFragment } from "@/graphql";
+
+import {
+  ApolloCache,
+  DefaultContext,
+  FetchResult,
+  LazyQueryExecFunction,
+  MutationFunctionOptions,
+  OperationVariables,
+  QueryResult,
+} from "@apollo/client";
+import {
+  ConversationDetailFragment,
+  CreateMessageMutation,
+  CreateMessageMutationVariables,
+  GenerateImageMutation,
+  GenerateImageMutationVariables,
+  GetConversationMessagesQuery,
+  GetConversationMessagesQueryVariables,
+  MessageDetailFragment,
+  ProductDetailFragment,
+  UpdateMessageMutation,
+  UpdateMessageMutationVariables,
+} from "@/graphql";
+
+type CreateMessageMutationFunc = (
+  options?:
+    | MutationFunctionOptions<
+        CreateMessageMutation,
+        OperationVariables,
+        DefaultContext,
+        ApolloCache<any>
+      >
+    | undefined
+) => Promise<FetchResult<CreateMessageMutation>>;
+
+type UpdateMessageMutationFunc = (
+  options?:
+    | MutationFunctionOptions<
+        UpdateMessageMutation,
+        OperationVariables,
+        DefaultContext,
+        ApolloCache<any>
+      >
+    | undefined
+) => Promise<FetchResult<UpdateMessageMutation>>;
+
+type ImageGenerationMutationFunc = (
+  options?:
+    | MutationFunctionOptions<
+        GenerateImageMutation,
+        OperationVariables,
+        DefaultContext,
+        ApolloCache<any>
+      >
+    | undefined
+) => Promise<FetchResult<GenerateImageMutation>>;
 
 export const History = types
   .model("History", {
@@ -45,80 +99,6 @@ export const History = types
       return self.conversations.find((c) => c.id === conversationId);
     },
   }))
-  .actions((self) => {
-    const fetchConversationMessages = flow(function* (convoId: string) {
-      const convo = self.getConversationById(convoId);
-      if (!convo) {
-        console.error("Could not get convo", convoId);
-        return;
-      }
-      if (convo?.isFetching) {
-        return;
-      }
-
-      if (!convo.hasMore) {
-        console.info("Already load all messages of convo", convoId);
-        return;
-      }
-      convo.isFetching = true;
-
-      const result = yield api.getConversationMessages(
-        convoId,
-        MESSAGE_PER_PAGE,
-        convo.offset
-      );
-
-      if (result.kind !== "ok") {
-        convo.isFetching = false;
-        console.error(`Error`, JSON.stringify(result));
-        return;
-      }
-
-      if (result.messages.length < MESSAGE_PER_PAGE) {
-        convo.setHasMore(false);
-      }
-
-      convo.offset += result.messages.length;
-
-      const messages: Instance<typeof ChatMessage>[] = [];
-      result.messages.forEach((m: MessageResponse) => {
-        const createdAt = new Date(m.created_at).getTime();
-        const imageUrls: string[] = [];
-        const imageUrl = m.images.length > 0 ? m.images[0].image_url : null;
-        if (imageUrl) {
-          imageUrls.push(imageUrl);
-        }
-
-        const messageType =
-          MessageType[m.message_type as keyof typeof MessageType];
-        const messageSenderType =
-          MessageSenderType[
-            m.message_sender_type as keyof typeof MessageSenderType
-          ];
-        messages.push(
-          ChatMessage.create({
-            id: m.id,
-            conversationId: m.conversation_id,
-            messageType: messageType,
-            messageSenderType: messageSenderType,
-            senderUid: m.sender_uuid,
-            senderName: m.sender_name,
-            senderAvatarUrl: m.sender_avatar_url,
-            text: m.content,
-            imageUrls: imageUrls,
-            createdAt: createdAt,
-          })
-        );
-      });
-      convo.setProp(
-        "chatMessages",
-        messages.reverse().concat(convo.chatMessages)
-      );
-      convo.isFetching = false;
-    });
-
-    return { fetchConversationMessages };
-  })
   .actions((self) => ({
     // Model detail
     toggleModelDetail() {
@@ -136,22 +116,93 @@ export const History = types
     },
   }))
   .actions((self) => {
-    const fetchMoreMessages = flow(function* () {
-      const activeId = self.activeConversationId;
-      if (!activeId) {
+    const fetchMoreMessages = flow(function* (
+      func: LazyQueryExecFunction<
+        GetConversationMessagesQuery,
+        OperationVariables
+      >
+    ) {
+      const convoId = self.activeConversationId;
+      if (!convoId) {
         console.error("No active conversation found");
         return;
       }
-      yield self.fetchConversationMessages(activeId);
-    });
 
-    const deleteConversationById = flow(function* (convoId: string) {
-      const result = yield api.deleteConversation(convoId);
-      if (result.kind !== "ok") {
-        console.error(`Error`, JSON.stringify(result));
+      const convo = self.getConversationById(convoId);
+      if (!convo) {
+        console.error("Could not get convo", convoId);
+        return;
+      }
+      if (convo?.isFetching) {
         return;
       }
 
+      if (!convo.hasMore) {
+        console.info("Already load all messages of convo", convoId);
+        return;
+      }
+      convo.isFetching = true;
+      const variables: GetConversationMessagesQueryVariables = {
+        conversation_id: convoId,
+        limit: MESSAGE_PER_PAGE,
+        offset: convo.offset,
+      };
+      const result: QueryResult<
+        GetConversationMessagesQuery,
+        OperationVariables
+      > = yield func({ variables });
+
+      if (!result.data?.messages) {
+        return;
+      }
+
+      if (result.data?.messages.length < MESSAGE_PER_PAGE) {
+        convo.setHasMore(false);
+      }
+
+      convo.offset += result.data.messages.length;
+
+      const messages: Instance<typeof ChatMessage>[] = [];
+      result.data.messages.forEach((m: MessageDetailFragment) => {
+        const createdAt = new Date(m.created_at).getTime();
+        const imageUrls: string[] = [];
+        const imageUrl =
+          m.message_medias.length > 0 ? m.message_medias[0].media_url : null;
+        if (imageUrl) {
+          imageUrls.push(imageUrl);
+        }
+
+        const messageType = m.message_type
+          ? MessageType[m.message_type as keyof typeof MessageType]
+          : MessageType.Text;
+        const messageSenderType = m.message_sender_type
+          ? MessageSenderType[
+              m.message_sender_type as keyof typeof MessageSenderType
+            ]
+          : MessageSenderType.Ai;
+        messages.push(
+          ChatMessage.create({
+            id: m.id,
+            conversationId: m.conversation_id,
+            messageType: messageType,
+            messageSenderType: messageSenderType,
+            senderUid: m.sender,
+            senderName: m.sender_name ?? "",
+            senderAvatarUrl: m.sender_avatar_url,
+            text: m.content ?? "",
+            imageUrls: imageUrls,
+            createdAt: createdAt,
+          })
+        );
+      });
+      convo.setProp(
+        "chatMessages",
+        messages.reverse().concat(convo.chatMessages)
+      );
+      convo.isFetching = false;
+    });
+
+    const deleteConversationById = flow(function* (convoId: string) {
       const updateConversations = self.conversations.filter(
         (c) => c.id !== convoId
       );
@@ -169,9 +220,6 @@ export const History = types
       convoId: string | undefined
     ) {
       self.activeConversationId = convoId;
-      if (convoId) {
-        yield self.fetchConversationMessages(convoId);
-      }
     });
 
     return { setActiveConversationId };
@@ -190,15 +238,10 @@ export const History = types
     clearAllConversations() {
       self.conversations = castToSnapshot([]);
     },
-
-    deleteActiveConversation() {
-      if (self.activeConversationId) {
-        self.deleteConversationById(self.activeConversationId);
-      }
-    },
   }))
   .actions((self) => {
     const sendTextToTextMessage = flow(function* (
+      create: CreateMessageMutationFunc,
       conversation: Instance<typeof Conversation>
     ) {
       // TODO: handle case timeout using higher order function
@@ -210,135 +253,127 @@ export const History = types
         content: e.text,
       }));
 
-      const modelName =
-        self.getActiveConversation()?.aiModel.modelId ?? "gpt-3.5-turbo";
+      const variables: CreateMessageMutationVariables = {
+        data: {
+          conversation_id: conversation.id,
+          content: "",
+          sender: MessageSenderType.Ai,
+          message_sender_type: MessageSenderType.Ai,
+          message_type: MessageType.Text,
+          sender_avatar_url: conversation.product.avatarUrl,
+          sender_name: conversation.product.name,
+          prompt_cache: latestMessages
+        },
+      };
+      const result: FetchResult<CreateMessageMutation> = yield create({
+        variables,
+      });
 
-      const result = yield api.createNewTextChatMessage(
-        conversation.id,
-        MessageSenderType.Ai,
-        conversation.aiModel.modelId,
-        conversation.aiModel.name,
-        conversation.aiModel.avatarUrl ?? "",
-        ""
-      );
-
-      if (result.kind !== "ok") {
-        // TODO: show error message
+      if (!result.data?.insert_messages_one?.id) {
         console.error(
-          `Error while creating response message`,
-          JSON.stringify(result)
+          "Error creating user message",
+          JSON.stringify(result.errors)
         );
-        return;
-      }
-
-      const aiResponseMessage = ChatMessage.create({
-        id: result.messageId,
-        conversationId: conversation.id,
-        messageType: MessageType.Text,
-        messageSenderType: MessageSenderType.Ai,
-        senderUid: conversation.aiModel.modelId,
-        senderName: conversation.aiModel.name,
-        senderAvatarUrl: conversation.aiModel.avatarUrl ?? "",
-        text: "",
-        createdAt: Date.now(),
-      });
-
-      let timeoutId: NodeJS.Timeout | undefined = undefined;
-      api.streamMessageChat({
-        stream: true,
-        model: modelName,
-        max_tokens: 500,
-        messages: latestMessages,
-        onOpen: () => {
-          conversation.addMessage(aiResponseMessage);
-        },
-        onUpdate: (message: string) => {
-          aiResponseMessage.setProp("text", message);
-          conversation.setProp("updatedAt", Date.now());
-
-          // we don't need to wait for the response to be finished, it will
-          // make the chat feels laggy
-          if (timeoutId) {
-            // optimize to reduce invoking api
-            clearTimeout(timeoutId);
-          }
-          timeoutId = setTimeout(() => {
-            api.updateChatMessage(aiResponseMessage).catch((error) => {
-              console.error(`Update chat message error`, error);
-            });
-          }, 100);
-        },
-        onFinish: (message: string) => {
-          conversation.setProp("updatedAt", Date.now());
-          conversation.setProp("lastTextMessage", message);
-          conversation.setWaitingForModelResponse(false);
-          aiResponseMessage.setProp("text", message);
-
-          setTimeout(() => {
-            api.updateChatMessage(aiResponseMessage).catch((error) => {
-              console.error(`Update chat message on finish error`, error);
-            });
-          }, 1000);
-        },
-        onError: (err: Error) => {
-          console.error("error", err);
-        },
-      });
-    });
-
-    const sendTextToImageMessage = flow(function* (
-      message: string,
-      conversation: Instance<typeof Conversation>
-    ) {
-      // TODO: handle case timeout using higher order function
-      const data = yield api.textToImage(conversation.aiModel.modelId, message);
-
-      if (data.kind !== "ok") {
-        console.error(`Error`, JSON.stringify(data));
         conversation.setWaitingForModelResponse(false);
         return;
       }
 
-      if (
-        data.outputs &&
-        data.outputs.length > 0 &&
-        data.outputs[0].startsWith("https://")
-      ) {
-        const imageUrl: string = data.outputs[0];
-        const result = yield api.createNewImageChatMessage(
-          conversation.id,
-          MessageSenderType.Ai,
-          conversation.aiModel.modelId,
-          conversation.aiModel.name,
-          conversation.aiModel.avatarUrl ?? "",
-          message || "",
-          imageUrl,
-          MessageType.Image
+      const aiResponseMessage = ChatMessage.create({
+        id: result.data.insert_messages_one.id,
+        conversationId: conversation.id,
+        messageType: MessageType.Text,
+        messageSenderType: MessageSenderType.Ai,
+        senderUid: conversation.product.id,
+        senderName: conversation.product.name,
+        senderAvatarUrl: conversation.product.avatarUrl ?? "",
+        text: "",
+        createdAt: Date.now(),
+      });
+      conversation.addMessage(aiResponseMessage);
+      conversation.setWaitingForModelResponse(false);
+    });
+
+    const sendTextToImageMessage = flow(function* (
+      create: CreateMessageMutationFunc,
+      generateImage: ImageGenerationMutationFunc,
+      message: string,
+      conversation: Instance<typeof Conversation>
+    ) {
+      // TODO: handle case timeout using higher order function
+      // const data = yield api.textToImage(conversation.product.id, message);
+      const variables: GenerateImageMutationVariables = {
+        model: conversation.product.id,
+        prompt: message,
+        neg_prompt: "",
+        seed: Math.floor(Math.random() * 429496729),
+        steps: 30,
+      };
+      const data: FetchResult<GenerateImageMutation> = yield generateImage({
+        variables,
+      });
+
+      if (!data.data?.imageGeneration?.url) {
+        // TODO: display error
+        console.error(
+          "Error creating user message",
+          JSON.stringify(data.errors)
         );
-
-        if (result.kind !== "ok") {
-          // TODO: showing error dialog
-          console.error("Error while create message", JSON.stringify(result));
-          return;
-        }
-
-        const imageResponseMessage = ChatMessage.create({
-          id: result.messageId,
-          conversationId: conversation.id,
-          messageType: MessageType.Image,
-          messageSenderType: MessageSenderType.Ai,
-          senderUid: conversation.aiModel.modelId,
-          senderName: conversation.aiModel.name,
-          senderAvatarUrl: conversation.aiModel.avatarUrl ?? "",
-          text: message,
-          imageUrls: data.outputs,
-          createdAt: Date.now(),
-        });
-
-        conversation.addMessage(imageResponseMessage);
-        conversation.setProp("updatedAt", Date.now());
-        conversation.setProp("lastImageUrl", data.outputs[0]);
+        conversation.setWaitingForModelResponse(false);
+        return;
       }
+
+      const imageUrl: string = data.data.imageGeneration.url;
+
+      const createMessageVariables: CreateMessageMutationVariables = {
+        data: {
+          conversation_id: conversation.id,
+          content: message,
+          sender: MessageSenderType.Ai,
+          message_sender_type: MessageSenderType.Ai,
+          message_type: MessageType.Image,
+          sender_avatar_url: conversation.product.avatarUrl,
+          sender_name: conversation.product.name,
+          message_medias: {
+            data: [
+              {
+                media_url: imageUrl,
+                mime_type: "image/jpeg",
+              },
+            ],
+          },
+        },
+      };
+      const result: FetchResult<CreateMessageMutation> = yield create({
+        variables: createMessageVariables,
+      });
+
+      if (!result.data?.insert_messages_one?.id) {
+        // TODO: display error
+        console.error(
+          "Error creating user message",
+          JSON.stringify(result.errors)
+        );
+        conversation.setWaitingForModelResponse(false);
+        return;
+      }
+
+      const imageResponseMessage = ChatMessage.create({
+        id: result.data.insert_messages_one.id,
+        conversationId: conversation.id,
+        messageType: MessageType.Image,
+        messageSenderType: MessageSenderType.Ai,
+        senderUid: conversation.product.id,
+        senderName: conversation.product.name,
+        senderAvatarUrl: conversation.product.avatarUrl,
+        text: message,
+        imageUrls: [imageUrl],
+        createdAt: Date.now(),
+      });
+
+      conversation.addMessage(imageResponseMessage);
+      conversation.setProp("updatedAt", Date.now());
+      conversation.setProp("lastImageUrl", imageUrl);
+
       conversation.setWaitingForModelResponse(false);
     });
 
@@ -349,6 +384,7 @@ export const History = types
   })
   .actions((self) => {
     const sendControlNetPrompt = flow(function* (
+      create: CreateMessageMutationFunc,
       prompt: string,
       negPrompt: string,
       file: any // TODO: file type, for now I don't know what is that
@@ -378,35 +414,47 @@ export const History = types
         return;
       }
       const message = `${prompt}. Negative: ${negPrompt}`;
-      const createMessageResult = yield api.createNewImageChatMessage(
-        conversation.id,
-        MessageSenderType.Ai,
-        conversation.aiModel.modelId,
-        conversation.aiModel.name,
-        conversation.aiModel.avatarUrl ?? "",
-        message,
-        imageUrl,
-        MessageType.ImageWithText
-      );
 
-      if (createMessageResult.kind !== "ok") {
+      const variables: CreateMessageMutationVariables = {
+        data: {
+          conversation_id: conversation.id,
+          content: message,
+          sender: MessageSenderType.Ai,
+          message_sender_type: MessageSenderType.Ai,
+          message_type: MessageType.ImageWithText,
+          sender_avatar_url: conversation.product.avatarUrl,
+          sender_name: conversation.product.name,
+          message_medias: {
+            data: [
+              {
+                media_url: imageUrl,
+              },
+            ],
+          },
+        },
+      };
+      const result: FetchResult<CreateMessageMutation> = yield create({
+        variables,
+      });
+
+      if (!result.data?.insert_messages_one?.id) {
         // TODO: display error
         console.error(
           "Error creating user message",
-          JSON.stringify(createMessageResult)
+          JSON.stringify(result.errors)
         );
         conversation.setWaitingForModelResponse(false);
         return;
       }
 
       const chatMessage = ChatMessage.create({
-        id: createMessageResult.messageId,
+        id: result.data.insert_messages_one.id,
         conversationId: self.activeConversationId,
         messageType: MessageType.ImageWithText,
         messageSenderType: MessageSenderType.Ai,
-        senderUid: conversation.aiModel.modelId,
-        senderName: conversation.aiModel.name,
-        senderAvatarUrl: conversation.aiModel.avatarUrl ?? "",
+        senderUid: conversation.product.id,
+        senderName: conversation.product.name,
+        senderAvatarUrl: conversation.product.avatarUrl,
         text: message,
         imageUrls: [imageUrl],
         createdAt: Date.now(),
@@ -422,8 +470,8 @@ export const History = types
       product: ProductDetailFragment,
       userId: string,
       displayName: string,
-      avatarUrl?: string,
-      ) {
+      avatarUrl?: string
+    ) {
       let modelType: AiModelType | undefined = undefined;
       if (product.inputs.slug === "llm") {
         modelType = AiModelType.LLM;
@@ -436,10 +484,10 @@ export const History = types
         return;
       }
 
-      const newAiModel = AiModel.create({
+      const productModel = Product.create({
         name: product.name,
-        modelId: product.slug,
-        aiModelType: modelType,
+        id: product.slug,
+        type: modelType,
         description: product.description,
         modelUrl: product.source_url,
         modelVersion: product.version,
@@ -448,7 +496,8 @@ export const History = types
 
       const newConvo = Conversation.create({
         id: conversation.id,
-        aiModel: newAiModel,
+        product: productModel,
+        lastTextMessage: conversation.last_text_message ?? "",
         user: User.create({
           id: userId,
           displayName,
@@ -463,6 +512,8 @@ export const History = types
     });
 
     const sendMessage = flow(function* (
+      create: CreateMessageMutationFunc,
+      generateImage: ImageGenerationMutationFunc,
       message: string,
       userId: string,
       displayName: string,
@@ -482,28 +533,33 @@ export const History = types
         return;
       }
       conversation.setWaitingForModelResponse(true);
+      const variables: CreateMessageMutationVariables = {
+        data: {
+          conversation_id: conversation.id,
+          content: message,
+          sender: userId,
+          message_sender_type: MessageSenderType.User,
+          message_type: MessageType.Text,
+          sender_avatar_url: avatarUrl,
+          sender_name: displayName,
+        },
+      };
+      const result: FetchResult<CreateMessageMutation> = yield create({
+        variables,
+      });
 
-      const createMessageResult = yield api.createNewTextChatMessage(
-        conversation.id,
-        MessageSenderType.User,
-        userId,
-        displayName,
-        avatarUrl ?? "",
-        message
-      );
-
-      if (createMessageResult.kind !== "ok") {
+      if (!result.data?.insert_messages_one?.id) {
         // TODO: display error
         console.error(
           "Error creating user message",
-          JSON.stringify(createMessageResult)
+          JSON.stringify(result.errors)
         );
         conversation.setWaitingForModelResponse(false);
         return;
       }
 
       const userMesssage = ChatMessage.create({
-        id: createMessageResult.messageId,
+        id: result.data.insert_messages_one.id,
         conversationId: self.activeConversationId,
         messageType: MessageType.Text,
         messageSenderType: MessageSenderType.User,
@@ -516,16 +572,22 @@ export const History = types
       conversation.addMessage(userMesssage);
       conversation.setProp("lastTextMessage", message);
 
-      if (conversation.aiModel.aiModelType === AiModelType.LLM) {
-        yield self.sendTextToTextMessage(conversation);
-      } else if (
-        conversation.aiModel.aiModelType === AiModelType.GenerativeArt
-      ) {
-        yield self.sendTextToImageMessage(message, conversation);
+      if (conversation.product.type === AiModelType.LLM) {
+        yield self.sendTextToTextMessage(
+          create,
+          conversation
+        );
+      } else if (conversation.product.type === AiModelType.GenerativeArt) {
+        yield self.sendTextToImageMessage(
+          create,
+          generateImage,
+          message,
+          conversation
+        );
       } else {
         console.error(
           "We do not support this model type yet:",
-          conversation.aiModel.aiModelType
+          conversation.product.type
         );
       }
     });

@@ -12,33 +12,66 @@ import {
   ApolloProvider,
   ApolloClient,
   InMemoryCache,
-  ApolloLink,
-  from,
   HttpLink,
+  concat,
+  split,
 } from "@apollo/client";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { setContext } from "@apollo/client/link/context";
+import { createClient } from "graphql-ws";
 import { getAccessToken } from "./_utils/tokenAccessor";
+import { getMainDefinition } from "@apollo/client/utilities";
 
-const authMiddleware = new ApolloLink((operation, forward) => {
-  operation.setContext(async ({ headers = {} }) => {
-    const token = await getAccessToken();
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : "",
-      },
-    };
-  });
-  return forward(operation);
+const authMiddleware = setContext(async (_, { headers }) => {
+  const token = await getAccessToken();
+  return {
+    headers: {
+      ...headers,
+      ...(token && { authorization: token ? `Bearer ${token}` : "" }),
+    },
+  };
 });
+
+const wsLink =
+  typeof window !== "undefined"
+    ? new GraphQLWsLink(
+        createClient({
+          url: `ws://${process.env.NEXT_PUBLIC_GRAPHQL_ENGINE_URL}/v1/graphql`,
+          connectionParams: async () => {
+            const token = await getAccessToken();
+            return {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            };
+          },
+        })
+      )
+    : null;
 const httpLink = new HttpLink({
-  uri: process.env.NEXT_PUBLIC_GRAPHQL_ENGINE_URL,
+  uri: `http://${process.env.NEXT_PUBLIC_GRAPHQL_ENGINE_URL}/v1/graphql`,
 });
+
+const link =
+  typeof window !== "undefined" && wsLink != null
+    ? split(
+        ({ query }) => {
+          const definition = getMainDefinition(query);
+          return (
+            definition.kind === "OperationDefinition" &&
+            definition.operation === "subscription"
+          );
+        },
+        wsLink,
+        httpLink
+      )
+    : httpLink;
 
 const PageClient: React.FC = () => {
   const store = useRef<RootInstance>(initializeStore());
 
   const client = new ApolloClient({
-    link: from([authMiddleware, httpLink]),
+    link: concat(authMiddleware, link),
     cache: new InMemoryCache(),
   });
 

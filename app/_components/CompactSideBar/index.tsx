@@ -19,11 +19,11 @@ export const CompactSideBar: React.FC = observer(() => {
     >
       <CompactLogo onClick={onLogoClick} />
       <div className="flex flex-col gap-1 mx-1 mt-3 overflow-x-hidden">
-        {historyStore.conversations.map(({ id, aiModel }) => (
+        {historyStore.conversations.map(({ id, product: aiModel }) => (
           <CompactHistoryItem
             key={id}
             conversationId={id}
-            imageUrl={aiModel.avatarUrl || ""}
+            imageUrl={aiModel.avatarUrl ?? ""}
             isSelected={historyStore.activeConversationId === id}
           />
         ))}

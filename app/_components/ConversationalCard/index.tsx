@@ -25,7 +25,7 @@ const ConversationalCard: React.FC<Props> = ({ product }) => {
         <Image
           width={32}
           height={32}
-          src={image_url || ""}
+          src={image_url ?? ""}
           className="rounded-full"
           alt=""
         />

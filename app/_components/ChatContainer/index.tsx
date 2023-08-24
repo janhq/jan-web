@@ -11,6 +11,12 @@ import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
 import { ModelDetailSideBar } from "../ModelDetailSideBar";
 import NewChatBlankState from "../NewChatBlankState";
 import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
+import {
+  DeleteConversationMutation,
+  DeleteConversationDocument,
+  DeleteConversationMutationVariables,
+} from "@/graphql";
+import { useMutation } from "@apollo/client";
 
 const ChatContainer: React.FC = observer(() => {
   const [prefillPrompt, setPrefillPrompt] = useState("");
@@ -18,6 +24,9 @@ const ChatContainer: React.FC = observer(() => {
   const { user } = useGetCurrentUser();
   const showBodyChat = historyStore.activeConversationId != null;
   const conversation = historyStore.getActiveConversation();
+  const [deleteConversation] = useMutation<DeleteConversationMutation>(
+    DeleteConversationDocument
+  );
 
   useEffect(() => {
     if (!user) {
@@ -34,7 +43,11 @@ const ChatContainer: React.FC = observer(() => {
   const onConfirmDelete = () => {
     setPrefillPrompt("");
     historyStore.closeModelDetail();
-    historyStore.deleteActiveConversation();
+    if (conversation?.id) {
+      deleteConversation({ variables: { id: conversation.id } }).then(() =>
+        historyStore.deleteConversationById(conversation.id)
+      );
+    }
     setOpen(false);
   };
 

@@ -1,11 +1,11 @@
 import { Instance } from "mobx-state-tree";
-import { AiModel } from "@/_models/AiModel";
+import { Product } from "@/_models/AiModel";
 import JanWelcomeTitle from "../JanWelcomeTitle";
 import { useQuery } from "@apollo/client";
 import { GetProductPromptsDocument, GetProductPromptsQuery } from "@/graphql";
 
 type Props = {
-  model: Instance<typeof AiModel>;
+  model: Instance<typeof Product>;
   onPromptSelected: (prompt: string) => void;
 };
 
@@ -13,7 +13,7 @@ const SampleLlmContainer: React.FC<Props> = ({ model, onPromptSelected }) => {
   const { loading, error, data } = useQuery<GetProductPromptsQuery>(
     GetProductPromptsDocument,
     {
-      variables: { productSlug: model.modelId },
+      variables: { productSlug: model.id },
     }
   );
 
@@ -30,7 +30,7 @@ const SampleLlmContainer: React.FC<Props> = ({ model, onPromptSelected }) => {
         <div className="flex flex-col">
           {data?.prompts.map((item) => (
             <button
-              onClick={() => onPromptSelected(item.content || "")}
+              onClick={() => onPromptSelected(item.content ?? "")}
               key={item.slug}
               className="rounded p-2 hover:bg-[#0000000F] text-xs leading-[18px] text-gray-500 text-left"
             >

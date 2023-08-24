@@ -17,7 +17,7 @@ const GenerateImageCard: React.FC<Props> = ({ product }) => {
   return (
     <button onClick={onClick} className="relative active:opacity-50 text-left">
       <img
-        src={image_url || ""}
+        src={image_url ?? ""}
         alt=""
         className="w-full h-full rounded-[8px] bg-gray-200 group-hover:opacity-75 object-cover object-center"
       />

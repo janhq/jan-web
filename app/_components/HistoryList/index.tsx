@@ -33,19 +33,19 @@ const HistoryList: React.FC<IHistoryListProps> = observer((props) => {
           .filter(
             (e) =>
               props.searchText === "" ||
-              e.aiModel.name
+              e.product.name
                 .toLowerCase()
                 .includes(props.searchText.toLowerCase()) ||
-              e.aiModel.description
+              e.product.description
                 ?.toLowerCase()
                 .includes(props.searchText.toLowerCase())
           )
           .sort((n1, n2) => (n2.updatedAt || 0) - (n1.updatedAt || 0))
-          .map(({ id, aiModel, updatedAt }) => (
+          .map(({ id, product: aiModel, updatedAt }) => (
             <HistoryItem
               key={id}
               conversationId={id}
-              avatarUrl={aiModel.avatarUrl || ""}
+              avatarUrl={aiModel.avatarUrl ?? ""}
               name={aiModel.name}
               updatedAt={updatedAt}
             />

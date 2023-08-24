@@ -32,6 +32,19 @@ export type Boolean_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['Boolean']['input']>>;
 };
 
+export type ImageGenerationInput = {
+  model: Scalars['String']['input'];
+  neg_prompt: Scalars['String']['input'];
+  prompt: Scalars['String']['input'];
+  seed: Scalars['Int']['input'];
+  steps: Scalars['Int']['input'];
+};
+
+export type ImageGenerationOutput = {
+  __typename?: 'ImageGenerationOutput';
+  url: Scalars['String']['output'];
+};
+
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['Int']['input']>;
@@ -1123,9 +1136,11 @@ export type Messages = {
   message_medias_aggregate: Message_Medias_Aggregate;
   message_sender_type?: Maybe<Scalars['String']['output']>;
   message_type?: Maybe<Scalars['String']['output']>;
+  prompt_cache?: Maybe<Scalars['jsonb']['output']>;
   sender: Scalars['String']['output'];
   sender_avatar_url?: Maybe<Scalars['String']['output']>;
   sender_name?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
   updated_at: Scalars['timestamptz']['output'];
 };
 
@@ -1147,6 +1162,12 @@ export type MessagesMessage_Medias_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   order_by?: InputMaybe<Array<Message_Medias_Order_By>>;
   where?: InputMaybe<Message_Medias_Bool_Exp>;
+};
+
+
+/** columns and relationships of "messages" */
+export type MessagesPrompt_CacheArgs = {
+  path?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregated selection of "messages" */
@@ -1189,6 +1210,11 @@ export type Messages_Aggregate_Order_By = {
   min?: InputMaybe<Messages_Min_Order_By>;
 };
 
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Messages_Append_Input = {
+  prompt_cache?: InputMaybe<Scalars['jsonb']['input']>;
+};
+
 /** input type for inserting array relation for remote table "messages" */
 export type Messages_Arr_Rel_Insert_Input = {
   data: Array<Messages_Insert_Input>;
@@ -1210,9 +1236,11 @@ export type Messages_Bool_Exp = {
   message_medias_aggregate?: InputMaybe<Message_Medias_Aggregate_Bool_Exp>;
   message_sender_type?: InputMaybe<String_Comparison_Exp>;
   message_type?: InputMaybe<String_Comparison_Exp>;
+  prompt_cache?: InputMaybe<Jsonb_Comparison_Exp>;
   sender?: InputMaybe<String_Comparison_Exp>;
   sender_avatar_url?: InputMaybe<String_Comparison_Exp>;
   sender_name?: InputMaybe<String_Comparison_Exp>;
+  status?: InputMaybe<String_Comparison_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
@@ -1221,6 +1249,21 @@ export enum Messages_Constraint {
   /** unique or primary key constraint on columns "id" */
   MessagesPkey = 'messages_pkey'
 }
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Messages_Delete_At_Path_Input = {
+  prompt_cache?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Messages_Delete_Elem_Input = {
+  prompt_cache?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Messages_Delete_Key_Input = {
+  prompt_cache?: InputMaybe<Scalars['String']['input']>;
+};
 
 /** input type for inserting data into table "messages" */
 export type Messages_Insert_Input = {
@@ -1232,9 +1275,11 @@ export type Messages_Insert_Input = {
   message_medias?: InputMaybe<Message_Medias_Arr_Rel_Insert_Input>;
   message_sender_type?: InputMaybe<Scalars['String']['input']>;
   message_type?: InputMaybe<Scalars['String']['input']>;
+  prompt_cache?: InputMaybe<Scalars['jsonb']['input']>;
   sender?: InputMaybe<Scalars['String']['input']>;
   sender_avatar_url?: InputMaybe<Scalars['String']['input']>;
   sender_name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
@@ -1250,6 +1295,7 @@ export type Messages_Max_Fields = {
   sender?: Maybe<Scalars['String']['output']>;
   sender_avatar_url?: Maybe<Scalars['String']['output']>;
   sender_name?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
@@ -1264,6 +1310,7 @@ export type Messages_Max_Order_By = {
   sender?: InputMaybe<Order_By>;
   sender_avatar_url?: InputMaybe<Order_By>;
   sender_name?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
 
@@ -1279,6 +1326,7 @@ export type Messages_Min_Fields = {
   sender?: Maybe<Scalars['String']['output']>;
   sender_avatar_url?: Maybe<Scalars['String']['output']>;
   sender_name?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
@@ -1293,6 +1341,7 @@ export type Messages_Min_Order_By = {
   sender?: InputMaybe<Order_By>;
   sender_avatar_url?: InputMaybe<Order_By>;
   sender_name?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
 
@@ -1329,15 +1378,22 @@ export type Messages_Order_By = {
   message_medias_aggregate?: InputMaybe<Message_Medias_Aggregate_Order_By>;
   message_sender_type?: InputMaybe<Order_By>;
   message_type?: InputMaybe<Order_By>;
+  prompt_cache?: InputMaybe<Order_By>;
   sender?: InputMaybe<Order_By>;
   sender_avatar_url?: InputMaybe<Order_By>;
   sender_name?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: messages */
 export type Messages_Pk_Columns_Input = {
   id: Scalars['uuid']['input'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Messages_Prepend_Input = {
+  prompt_cache?: InputMaybe<Scalars['jsonb']['input']>;
 };
 
 /** select columns of table "messages" */
@@ -1355,11 +1411,15 @@ export enum Messages_Select_Column {
   /** column name */
   MessageType = 'message_type',
   /** column name */
+  PromptCache = 'prompt_cache',
+  /** column name */
   Sender = 'sender',
   /** column name */
   SenderAvatarUrl = 'sender_avatar_url',
   /** column name */
   SenderName = 'sender_name',
+  /** column name */
+  Status = 'status',
   /** column name */
   UpdatedAt = 'updated_at'
 }
@@ -1372,9 +1432,11 @@ export type Messages_Set_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   message_sender_type?: InputMaybe<Scalars['String']['input']>;
   message_type?: InputMaybe<Scalars['String']['input']>;
+  prompt_cache?: InputMaybe<Scalars['jsonb']['input']>;
   sender?: InputMaybe<Scalars['String']['input']>;
   sender_avatar_url?: InputMaybe<Scalars['String']['input']>;
   sender_name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
@@ -1394,9 +1456,11 @@ export type Messages_Stream_Cursor_Value_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   message_sender_type?: InputMaybe<Scalars['String']['input']>;
   message_type?: InputMaybe<Scalars['String']['input']>;
+  prompt_cache?: InputMaybe<Scalars['jsonb']['input']>;
   sender?: InputMaybe<Scalars['String']['input']>;
   sender_avatar_url?: InputMaybe<Scalars['String']['input']>;
   sender_name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
@@ -1415,16 +1479,30 @@ export enum Messages_Update_Column {
   /** column name */
   MessageType = 'message_type',
   /** column name */
+  PromptCache = 'prompt_cache',
+  /** column name */
   Sender = 'sender',
   /** column name */
   SenderAvatarUrl = 'sender_avatar_url',
   /** column name */
   SenderName = 'sender_name',
   /** column name */
+  Status = 'status',
+  /** column name */
   UpdatedAt = 'updated_at'
 }
 
 export type Messages_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<Messages_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<Messages_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<Messages_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<Messages_Delete_Key_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<Messages_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Messages_Set_Input>;
   /** filter the rows which have to be updated */
@@ -1466,6 +1544,7 @@ export type Mutation_Root = {
   delete_prompts?: Maybe<Prompts_Mutation_Response>;
   /** delete single row from the table: "prompts" */
   delete_prompts_by_pk?: Maybe<Prompts>;
+  imageGeneration?: Maybe<ImageGenerationOutput>;
   /** insert data into the table: "collection_products" */
   insert_collection_products?: Maybe<Collection_Products_Mutation_Response>;
   /** insert a single row into the table: "collection_products" */
@@ -1642,6 +1721,12 @@ export type Mutation_RootDelete_PromptsArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Prompts_By_PkArgs = {
   id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootImageGenerationArgs = {
+  input: ImageGenerationInput;
 };
 
 
@@ -1839,6 +1924,11 @@ export type Mutation_RootUpdate_Message_Medias_ManyArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_MessagesArgs = {
+  _append?: InputMaybe<Messages_Append_Input>;
+  _delete_at_path?: InputMaybe<Messages_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Messages_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Messages_Delete_Key_Input>;
+  _prepend?: InputMaybe<Messages_Prepend_Input>;
   _set?: InputMaybe<Messages_Set_Input>;
   where: Messages_Bool_Exp;
 };
@@ -1846,6 +1936,11 @@ export type Mutation_RootUpdate_MessagesArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Messages_By_PkArgs = {
+  _append?: InputMaybe<Messages_Append_Input>;
+  _delete_at_path?: InputMaybe<Messages_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Messages_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Messages_Delete_Key_Input>;
+  _prepend?: InputMaybe<Messages_Prepend_Input>;
   _set?: InputMaybe<Messages_Set_Input>;
   pk_columns: Messages_Pk_Columns_Input;
 };
@@ -3542,35 +3637,29 @@ export type Uuid_Comparison_Exp = {
 
 export type CollectionDetailFragment = { __typename?: 'collections', slug: string, name: string };
 
-export type ConversationDetailFragment = { __typename?: 'conversations', id: any, product_id: any, user_id: string, last_image_url?: string | null, last_text_message?: string | null, created_at: any, updated_at: any };
+export type ConversationDetailFragment = { __typename?: 'conversations', id: any, product_id: any, user_id: string, last_image_url?: string | null, last_text_message?: string | null, created_at: any, updated_at: any, conversation_product?: { __typename?: 'products', id: any, name: string, slug: string, description?: string | null, long_description?: string | null, technical_description?: string | null, image_url?: string | null, author?: string | null, greeting?: string | null, source_url?: string | null, version?: string | null, inputs?: any | null, outputs?: any | null, nsfw: boolean } | null };
 
 export type MessageMediaFragment = { __typename?: 'message_medias', id: any, message_id: any, media_url?: string | null, mime_type?: string | null, updated_at: any };
 
-export type MessageDetailFragment = { __typename?: 'messages', id: any, conversation_id: any, sender: string, sender_name?: string | null, sender_avatar_url?: string | null, content?: string | null, message_type?: string | null, message_sender_type?: string | null, updated_at: any };
+export type MessageDetailFragment = { __typename?: 'messages', id: any, conversation_id: any, sender: string, sender_name?: string | null, sender_avatar_url?: string | null, content?: string | null, message_type?: string | null, message_sender_type?: string | null, created_at: any, updated_at: any, message_medias: Array<{ __typename?: 'message_medias', id: any, message_id: any, media_url?: string | null, mime_type?: string | null, updated_at: any }> };
 
 export type ProductDetailFragment = { __typename?: 'products', id: any, name: string, slug: string, description?: string | null, long_description?: string | null, technical_description?: string | null, image_url?: string | null, author?: string | null, greeting?: string | null, source_url?: string | null, version?: string | null, inputs?: any | null, outputs?: any | null, nsfw: boolean };
 
 export type PromptDetailFragment = { __typename?: 'prompts', slug: string, content?: string | null, image_url?: string | null };
 
 export type CreateConversationMutationVariables = Exact<{
-  product_id?: InputMaybe<Scalars['uuid']['input']>;
-  user_id?: InputMaybe<Scalars['String']['input']>;
+  data: Conversations_Insert_Input;
 }>;
 
 
-export type CreateConversationMutation = { __typename?: 'mutation_root', insert_conversations_one?: { __typename?: 'conversations', id: any, product_id: any, user_id: string, last_image_url?: string | null, last_text_message?: string | null, created_at: any, updated_at: any } | null };
+export type CreateConversationMutation = { __typename?: 'mutation_root', insert_conversations_one?: { __typename?: 'conversations', id: any, product_id: any, user_id: string, last_image_url?: string | null, last_text_message?: string | null, created_at: any, updated_at: any, conversation_product?: { __typename?: 'products', id: any, name: string, slug: string, description?: string | null, long_description?: string | null, technical_description?: string | null, image_url?: string | null, author?: string | null, greeting?: string | null, source_url?: string | null, version?: string | null, inputs?: any | null, outputs?: any | null, nsfw: boolean } | null } | null };
 
 export type CreateMessageMutationVariables = Exact<{
-  convId?: InputMaybe<Scalars['uuid']['input']>;
-  content?: InputMaybe<Scalars['String']['input']>;
-  sender?: InputMaybe<Scalars['String']['input']>;
-  messageType?: InputMaybe<Scalars['String']['input']>;
-  senderType?: InputMaybe<Scalars['String']['input']>;
-  mediaUrl?: InputMaybe<Scalars['String']['input']>;
+  data: Messages_Insert_Input;
 }>;
 
 
-export type CreateMessageMutation = { __typename?: 'mutation_root', insert_messages_one?: { __typename?: 'messages', id: any, conversation_id: any, sender: string, sender_name?: string | null, sender_avatar_url?: string | null, content?: string | null, message_type?: string | null, message_sender_type?: string | null, updated_at: any } | null };
+export type CreateMessageMutation = { __typename?: 'mutation_root', insert_messages_one?: { __typename?: 'messages', id: any, conversation_id: any, sender: string, sender_name?: string | null, sender_avatar_url?: string | null, content?: string | null, message_type?: string | null, message_sender_type?: string | null, created_at: any, updated_at: any, message_medias: Array<{ __typename?: 'message_medias', id: any, message_id: any, media_url?: string | null, mime_type?: string | null, updated_at: any }> } | null };
 
 export type DeleteConversationMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -3579,6 +3668,17 @@ export type DeleteConversationMutationVariables = Exact<{
 
 export type DeleteConversationMutation = { __typename?: 'mutation_root', delete_conversations_by_pk?: { __typename?: 'conversations', id: any } | null };
 
+export type GenerateImageMutationVariables = Exact<{
+  model?: InputMaybe<Scalars['String']['input']>;
+  neg_prompt?: InputMaybe<Scalars['String']['input']>;
+  prompt?: InputMaybe<Scalars['String']['input']>;
+  seed?: InputMaybe<Scalars['Int']['input']>;
+  steps?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GenerateImageMutation = { __typename?: 'mutation_root', imageGeneration?: { __typename?: 'ImageGenerationOutput', url: string } | null };
+
 export type UpdateConversationMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
   lastMessageText?: InputMaybe<Scalars['String']['input']>;
@@ -3586,17 +3686,34 @@ export type UpdateConversationMutationVariables = Exact<{
 }>;
 
 
-export type UpdateConversationMutation = { __typename?: 'mutation_root', update_conversations_by_pk?: { __typename?: 'conversations', id: any, product_id: any, user_id: string, last_image_url?: string | null, last_text_message?: string | null, created_at: any, updated_at: any } | null };
+export type UpdateConversationMutation = { __typename?: 'mutation_root', update_conversations_by_pk?: { __typename?: 'conversations', id: any, product_id: any, user_id: string, last_image_url?: string | null, last_text_message?: string | null, created_at: any, updated_at: any, conversation_product?: { __typename?: 'products', id: any, name: string, slug: string, description?: string | null, long_description?: string | null, technical_description?: string | null, image_url?: string | null, author?: string | null, greeting?: string | null, source_url?: string | null, version?: string | null, inputs?: any | null, outputs?: any | null, nsfw: boolean } | null } | null };
+
+export type UpdateMessageMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  data: Messages_Set_Input;
+}>;
+
+
+export type UpdateMessageMutation = { __typename?: 'mutation_root', update_messages_by_pk?: { __typename?: 'messages', id: any, conversation_id: any, sender: string, sender_name?: string | null, sender_avatar_url?: string | null, content?: string | null, message_type?: string | null, message_sender_type?: string | null, created_at: any, updated_at: any, message_medias: Array<{ __typename?: 'message_medias', id: any, message_id: any, media_url?: string | null, mime_type?: string | null, updated_at: any }> } | null };
 
 export type GetCollectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetCollectionsQuery = { __typename?: 'query_root', collections: Array<{ __typename?: 'collections', slug: string, name: string, collection_products: Array<{ __typename?: 'collection_products', products: Array<{ __typename?: 'products', id: any, name: string, slug: string, description?: string | null, long_description?: string | null, technical_description?: string | null, image_url?: string | null, author?: string | null, greeting?: string | null, source_url?: string | null, version?: string | null, inputs?: any | null, outputs?: any | null, nsfw: boolean, product_prompts: Array<{ __typename?: 'product_prompts', prompts: Array<{ __typename?: 'prompts', slug: string, content?: string | null, image_url?: string | null }> }> }> }> }> };
 
+export type GetConversationMessagesQueryVariables = Exact<{
+  conversation_id?: InputMaybe<Scalars['uuid']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetConversationMessagesQuery = { __typename?: 'query_root', messages: Array<{ __typename?: 'messages', id: any, conversation_id: any, sender: string, sender_name?: string | null, sender_avatar_url?: string | null, content?: string | null, message_type?: string | null, message_sender_type?: string | null, created_at: any, updated_at: any, message_medias: Array<{ __typename?: 'message_medias', id: any, message_id: any, media_url?: string | null, mime_type?: string | null, updated_at: any }> }> };
+
 export type GetConversationsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetConversationsQuery = { __typename?: 'query_root', conversations: Array<{ __typename?: 'conversations', id: any, product_id: any, user_id: string, last_image_url?: string | null, last_text_message?: string | null, created_at: any, updated_at: any, conversation_messages: Array<{ __typename?: 'messages', id: any, conversation_id: any, sender: string, sender_name?: string | null, sender_avatar_url?: string | null, content?: string | null, message_type?: string | null, message_sender_type?: string | null, updated_at: any, message_medias: Array<{ __typename?: 'message_medias', id: any, message_id: any, media_url?: string | null, mime_type?: string | null, updated_at: any }> }> }> };
+export type GetConversationsQuery = { __typename?: 'query_root', conversations: Array<{ __typename?: 'conversations', id: any, product_id: any, user_id: string, last_image_url?: string | null, last_text_message?: string | null, created_at: any, updated_at: any, conversation_messages: Array<{ __typename?: 'messages', id: any, conversation_id: any, sender: string, sender_name?: string | null, sender_avatar_url?: string | null, content?: string | null, message_type?: string | null, message_sender_type?: string | null, created_at: any, updated_at: any, message_medias: Array<{ __typename?: 'message_medias', id: any, message_id: any, media_url?: string | null, mime_type?: string | null, updated_at: any }> }>, conversation_product?: { __typename?: 'products', id: any, name: string, slug: string, description?: string | null, long_description?: string | null, technical_description?: string | null, image_url?: string | null, author?: string | null, greeting?: string | null, source_url?: string | null, version?: string | null, inputs?: any | null, outputs?: any | null, nsfw: boolean } | null }> };
 
 export type GetProductsByCollectionSlugQueryVariables = Exact<{
   slug?: InputMaybe<Scalars['String']['input']>;
@@ -3624,19 +3741,30 @@ export type GetProductsInQueryVariables = Exact<{
 
 export type GetProductsInQuery = { __typename?: 'query_root', products: Array<{ __typename?: 'products', id: any, name: string, slug: string, description?: string | null, long_description?: string | null, technical_description?: string | null, image_url?: string | null, author?: string | null, greeting?: string | null, source_url?: string | null, version?: string | null, inputs?: any | null, outputs?: any | null, nsfw: boolean }> };
 
+export type SubscribeMessageSubscriptionVariables = Exact<{
+  id?: InputMaybe<Scalars['uuid']['input']>;
+}>;
+
+
+export type SubscribeMessageSubscription = { __typename?: 'subscription_root', messages_by_pk?: { __typename?: 'messages', content?: string | null, status?: string | null } | null };
+
 export const CollectionDetailFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CollectionDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"collections"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]} as unknown as DocumentNode<CollectionDetailFragment, unknown>;
-export const ConversationDetailFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ConversationDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"conversations"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"product_id"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"last_image_url"}},{"kind":"Field","name":{"kind":"Name","value":"last_text_message"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]} as unknown as DocumentNode<ConversationDetailFragment, unknown>;
-export const MessageMediaFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageMedia"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"message_medias"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"message_id"}},{"kind":"Field","name":{"kind":"Name","value":"media_url"}},{"kind":"Field","name":{"kind":"Name","value":"mime_type"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]} as unknown as DocumentNode<MessageMediaFragment, unknown>;
-export const MessageDetailFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"messages"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_id"}},{"kind":"Field","name":{"kind":"Name","value":"sender"}},{"kind":"Field","name":{"kind":"Name","value":"sender_name"}},{"kind":"Field","name":{"kind":"Name","value":"sender_avatar_url"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"message_type"}},{"kind":"Field","name":{"kind":"Name","value":"message_sender_type"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]} as unknown as DocumentNode<MessageDetailFragment, unknown>;
 export const ProductDetailFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"products"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"long_description"}},{"kind":"Field","name":{"kind":"Name","value":"technical_description"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}},{"kind":"Field","name":{"kind":"Name","value":"source_url"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"inputs"}},{"kind":"Field","name":{"kind":"Name","value":"outputs"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}}]}}]} as unknown as DocumentNode<ProductDetailFragment, unknown>;
+export const ConversationDetailFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ConversationDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"conversations"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"product_id"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"last_image_url"}},{"kind":"Field","name":{"kind":"Name","value":"last_text_message"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"products"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"long_description"}},{"kind":"Field","name":{"kind":"Name","value":"technical_description"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}},{"kind":"Field","name":{"kind":"Name","value":"source_url"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"inputs"}},{"kind":"Field","name":{"kind":"Name","value":"outputs"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}}]}}]} as unknown as DocumentNode<ConversationDetailFragment, unknown>;
+export const MessageMediaFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageMedia"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"message_medias"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"message_id"}},{"kind":"Field","name":{"kind":"Name","value":"media_url"}},{"kind":"Field","name":{"kind":"Name","value":"mime_type"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]} as unknown as DocumentNode<MessageMediaFragment, unknown>;
+export const MessageDetailFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"messages"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_id"}},{"kind":"Field","name":{"kind":"Name","value":"sender"}},{"kind":"Field","name":{"kind":"Name","value":"sender_name"}},{"kind":"Field","name":{"kind":"Name","value":"sender_avatar_url"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"message_type"}},{"kind":"Field","name":{"kind":"Name","value":"message_sender_type"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"message_medias"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MessageMedia"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageMedia"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"message_medias"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"message_id"}},{"kind":"Field","name":{"kind":"Name","value":"media_url"}},{"kind":"Field","name":{"kind":"Name","value":"mime_type"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]} as unknown as DocumentNode<MessageDetailFragment, unknown>;
 export const PromptDetailFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PromptDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"prompts"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}}]}}]} as unknown as DocumentNode<PromptDetailFragment, unknown>;
-export const CreateConversationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createConversation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"product_id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}},"defaultValue":{"kind":"StringValue","value":"","block":false}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_conversations_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"product_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"product_id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"user_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"user_id"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ConversationDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ConversationDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"conversations"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"product_id"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"last_image_url"}},{"kind":"Field","name":{"kind":"Name","value":"last_text_message"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]} as unknown as DocumentNode<CreateConversationMutation, CreateConversationMutationVariables>;
-export const CreateMessageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createMessage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"convId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"content"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sender"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"messageType"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"senderType"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"mediaUrl"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_messages_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"conversation_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"convId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"content"},"value":{"kind":"Variable","name":{"kind":"Name","value":"content"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"sender"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sender"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"message_type"},"value":{"kind":"Variable","name":{"kind":"Name","value":"messageType"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"message_sender_type"},"value":{"kind":"Variable","name":{"kind":"Name","value":"senderType"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"message_medias"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"data"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"media_url"},"value":{"kind":"Variable","name":{"kind":"Name","value":"mediaUrl"}}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MessageDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"messages"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_id"}},{"kind":"Field","name":{"kind":"Name","value":"sender"}},{"kind":"Field","name":{"kind":"Name","value":"sender_name"}},{"kind":"Field","name":{"kind":"Name","value":"sender_avatar_url"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"message_type"}},{"kind":"Field","name":{"kind":"Name","value":"message_sender_type"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]} as unknown as DocumentNode<CreateMessageMutation, CreateMessageMutationVariables>;
+export const CreateConversationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createConversation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"conversations_insert_input"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_conversations_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ConversationDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"products"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"long_description"}},{"kind":"Field","name":{"kind":"Name","value":"technical_description"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}},{"kind":"Field","name":{"kind":"Name","value":"source_url"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"inputs"}},{"kind":"Field","name":{"kind":"Name","value":"outputs"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ConversationDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"conversations"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"product_id"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"last_image_url"}},{"kind":"Field","name":{"kind":"Name","value":"last_text_message"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductDetail"}}]}}]}}]} as unknown as DocumentNode<CreateConversationMutation, CreateConversationMutationVariables>;
+export const CreateMessageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createMessage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"messages_insert_input"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_messages_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MessageDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageMedia"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"message_medias"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"message_id"}},{"kind":"Field","name":{"kind":"Name","value":"media_url"}},{"kind":"Field","name":{"kind":"Name","value":"mime_type"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"messages"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_id"}},{"kind":"Field","name":{"kind":"Name","value":"sender"}},{"kind":"Field","name":{"kind":"Name","value":"sender_name"}},{"kind":"Field","name":{"kind":"Name","value":"sender_avatar_url"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"message_type"}},{"kind":"Field","name":{"kind":"Name","value":"message_sender_type"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"message_medias"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MessageMedia"}}]}}]}}]} as unknown as DocumentNode<CreateMessageMutation, CreateMessageMutationVariables>;
 export const DeleteConversationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteConversation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"delete_conversations_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<DeleteConversationMutation, DeleteConversationMutationVariables>;
-export const UpdateConversationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateConversation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"lastMessageText"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"lastMessageUrl"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_conversations_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"last_text_message"},"value":{"kind":"Variable","name":{"kind":"Name","value":"lastMessageText"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"last_image_url"},"value":{"kind":"Variable","name":{"kind":"Name","value":"lastMessageUrl"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ConversationDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ConversationDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"conversations"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"product_id"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"last_image_url"}},{"kind":"Field","name":{"kind":"Name","value":"last_text_message"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]} as unknown as DocumentNode<UpdateConversationMutation, UpdateConversationMutationVariables>;
+export const GenerateImageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"generateImage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"model"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"","block":false}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"neg_prompt"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"","block":false}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"prompt"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"","block":false}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"seed"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}},"defaultValue":{"kind":"IntValue","value":"10"}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"steps"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}},"defaultValue":{"kind":"IntValue","value":"10"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"imageGeneration"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"model"},"value":{"kind":"Variable","name":{"kind":"Name","value":"model"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"neg_prompt"},"value":{"kind":"Variable","name":{"kind":"Name","value":"neg_prompt"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"prompt"},"value":{"kind":"Variable","name":{"kind":"Name","value":"prompt"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"seed"},"value":{"kind":"Variable","name":{"kind":"Name","value":"seed"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"steps"},"value":{"kind":"Variable","name":{"kind":"Name","value":"steps"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]} as unknown as DocumentNode<GenerateImageMutation, GenerateImageMutationVariables>;
+export const UpdateConversationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateConversation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"lastMessageText"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"lastMessageUrl"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_conversations_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"last_text_message"},"value":{"kind":"Variable","name":{"kind":"Name","value":"lastMessageText"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"last_image_url"},"value":{"kind":"Variable","name":{"kind":"Name","value":"lastMessageUrl"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ConversationDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"products"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"long_description"}},{"kind":"Field","name":{"kind":"Name","value":"technical_description"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}},{"kind":"Field","name":{"kind":"Name","value":"source_url"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"inputs"}},{"kind":"Field","name":{"kind":"Name","value":"outputs"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ConversationDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"conversations"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"product_id"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"last_image_url"}},{"kind":"Field","name":{"kind":"Name","value":"last_text_message"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductDetail"}}]}}]}}]} as unknown as DocumentNode<UpdateConversationMutation, UpdateConversationMutationVariables>;
+export const UpdateMessageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateMessage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}},"defaultValue":{"kind":"StringValue","value":"","block":false}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"messages_set_input"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_messages_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MessageDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageMedia"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"message_medias"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"message_id"}},{"kind":"Field","name":{"kind":"Name","value":"media_url"}},{"kind":"Field","name":{"kind":"Name","value":"mime_type"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"messages"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_id"}},{"kind":"Field","name":{"kind":"Name","value":"sender"}},{"kind":"Field","name":{"kind":"Name","value":"sender_name"}},{"kind":"Field","name":{"kind":"Name","value":"sender_avatar_url"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"message_type"}},{"kind":"Field","name":{"kind":"Name","value":"message_sender_type"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"message_medias"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MessageMedia"}}]}}]}}]} as unknown as DocumentNode<UpdateMessageMutation, UpdateMessageMutationVariables>;
 export const GetCollectionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getCollections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CollectionDetail"}},{"kind":"Field","name":{"kind":"Name","value":"collection_products"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductDetail"}},{"kind":"Field","name":{"kind":"Name","value":"product_prompts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"prompts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PromptDetail"}}]}}]}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CollectionDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"collections"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"products"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"long_description"}},{"kind":"Field","name":{"kind":"Name","value":"technical_description"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}},{"kind":"Field","name":{"kind":"Name","value":"source_url"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"inputs"}},{"kind":"Field","name":{"kind":"Name","value":"outputs"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PromptDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"prompts"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}}]}}]} as unknown as DocumentNode<GetCollectionsQuery, GetCollectionsQueryVariables>;
-export const GetConversationsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getConversations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"conversations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ConversationDetail"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_messages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MessageDetail"}},{"kind":"Field","name":{"kind":"Name","value":"message_medias"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MessageMedia"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ConversationDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"conversations"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"product_id"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"last_image_url"}},{"kind":"Field","name":{"kind":"Name","value":"last_text_message"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"messages"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_id"}},{"kind":"Field","name":{"kind":"Name","value":"sender"}},{"kind":"Field","name":{"kind":"Name","value":"sender_name"}},{"kind":"Field","name":{"kind":"Name","value":"sender_avatar_url"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"message_type"}},{"kind":"Field","name":{"kind":"Name","value":"message_sender_type"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageMedia"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"message_medias"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"message_id"}},{"kind":"Field","name":{"kind":"Name","value":"media_url"}},{"kind":"Field","name":{"kind":"Name","value":"mime_type"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}}]} as unknown as DocumentNode<GetConversationsQuery, GetConversationsQueryVariables>;
+export const GetConversationMessagesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getConversationMessages"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"conversation_id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}},"defaultValue":{"kind":"StringValue","value":"","block":false}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}},"defaultValue":{"kind":"IntValue","value":"100"}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}},"defaultValue":{"kind":"IntValue","value":"100"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"messages"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"conversation_id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"conversation_id"}}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"updated_at"},"value":{"kind":"EnumValue","value":"desc"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MessageDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageMedia"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"message_medias"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"message_id"}},{"kind":"Field","name":{"kind":"Name","value":"media_url"}},{"kind":"Field","name":{"kind":"Name","value":"mime_type"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"messages"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_id"}},{"kind":"Field","name":{"kind":"Name","value":"sender"}},{"kind":"Field","name":{"kind":"Name","value":"sender_name"}},{"kind":"Field","name":{"kind":"Name","value":"sender_avatar_url"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"message_type"}},{"kind":"Field","name":{"kind":"Name","value":"message_sender_type"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"message_medias"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MessageMedia"}}]}}]}}]} as unknown as DocumentNode<GetConversationMessagesQuery, GetConversationMessagesQueryVariables>;
+export const GetConversationsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getConversations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"conversations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ConversationDetail"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_messages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MessageDetail"}},{"kind":"Field","name":{"kind":"Name","value":"message_medias"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MessageMedia"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"products"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"long_description"}},{"kind":"Field","name":{"kind":"Name","value":"technical_description"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}},{"kind":"Field","name":{"kind":"Name","value":"source_url"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"inputs"}},{"kind":"Field","name":{"kind":"Name","value":"outputs"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageMedia"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"message_medias"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"message_id"}},{"kind":"Field","name":{"kind":"Name","value":"media_url"}},{"kind":"Field","name":{"kind":"Name","value":"mime_type"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ConversationDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"conversations"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"product_id"}},{"kind":"Field","name":{"kind":"Name","value":"user_id"}},{"kind":"Field","name":{"kind":"Name","value":"last_image_url"}},{"kind":"Field","name":{"kind":"Name","value":"last_text_message"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_product"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MessageDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"messages"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"conversation_id"}},{"kind":"Field","name":{"kind":"Name","value":"sender"}},{"kind":"Field","name":{"kind":"Name","value":"sender_name"}},{"kind":"Field","name":{"kind":"Name","value":"sender_avatar_url"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"message_type"}},{"kind":"Field","name":{"kind":"Name","value":"message_sender_type"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"message_medias"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MessageMedia"}}]}}]}}]} as unknown as DocumentNode<GetConversationsQuery, GetConversationsQueryVariables>;
 export const GetProductsByCollectionSlugDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProductsByCollectionSlug"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"slug"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"product_collections"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"collections"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"slug"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"slug"}}}]}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductDetail"}},{"kind":"Field","name":{"kind":"Name","value":"product_prompts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"prompts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PromptDetail"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"product_collections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CollectionDetail"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"products"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"long_description"}},{"kind":"Field","name":{"kind":"Name","value":"technical_description"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}},{"kind":"Field","name":{"kind":"Name","value":"source_url"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"inputs"}},{"kind":"Field","name":{"kind":"Name","value":"outputs"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PromptDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"prompts"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CollectionDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"collections"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]} as unknown as DocumentNode<GetProductsByCollectionSlugQuery, GetProductsByCollectionSlugQueryVariables>;
 export const GetProductPromptsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProductPrompts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"productSlug"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}},"defaultValue":{"kind":"StringValue","value":"","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"prompts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"prompt_products"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"products"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"slug"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"productSlug"}}}]}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PromptDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PromptDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"prompts"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}}]}}]} as unknown as DocumentNode<GetProductPromptsQuery, GetProductPromptsQueryVariables>;
 export const GetProductsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProducts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductDetail"}},{"kind":"Field","name":{"kind":"Name","value":"product_prompts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"prompts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"PromptDetail"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"product_collections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CollectionDetail"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"products"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"long_description"}},{"kind":"Field","name":{"kind":"Name","value":"technical_description"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}},{"kind":"Field","name":{"kind":"Name","value":"source_url"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"inputs"}},{"kind":"Field","name":{"kind":"Name","value":"outputs"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"PromptDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"prompts"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CollectionDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"collections"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]} as unknown as DocumentNode<GetProductsQuery, GetProductsQueryVariables>;
 export const GetProductsInDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getProductsIn"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"_in"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},"defaultValue":{"kind":"StringValue","value":"","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"slug"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"_in"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ProductDetail"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ProductDetail"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"products"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"long_description"}},{"kind":"Field","name":{"kind":"Name","value":"technical_description"}},{"kind":"Field","name":{"kind":"Name","value":"image_url"}},{"kind":"Field","name":{"kind":"Name","value":"author"}},{"kind":"Field","name":{"kind":"Name","value":"greeting"}},{"kind":"Field","name":{"kind":"Name","value":"source_url"}},{"kind":"Field","name":{"kind":"Name","value":"version"}},{"kind":"Field","name":{"kind":"Name","value":"inputs"}},{"kind":"Field","name":{"kind":"Name","value":"outputs"}},{"kind":"Field","name":{"kind":"Name","value":"nsfw"}}]}}]} as unknown as DocumentNode<GetProductsInQuery, GetProductsInQueryVariables>;
+export const SubscribeMessageDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"subscribeMessage"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}},"defaultValue":{"kind":"StringValue","value":"","block":false}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"messages_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"content"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<SubscribeMessageSubscription, SubscribeMessageSubscriptionVariables>;

@@ -8,6 +8,13 @@ import Image from "next/image";
 import { observer } from "mobx-react-lite";
 import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
 import useSignIn from "@/_hooks/useSignIn";
+import { useMutation } from "@apollo/client";
+import {
+  CreateMessageDocument,
+  CreateMessageMutation,
+  GenerateImageMutation,
+  GenerateImageDocument,
+} from "@/graphql";
 
 type Props = {
   prefillPrompt: string;
@@ -20,8 +27,16 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
   const { user } = useGetCurrentUser();
   const { signInWithKeyCloak } = useSignIn();
 
+  const [createMessageMutation] = useMutation<CreateMessageMutation>(
+    CreateMessageDocument
+  );
+
+  const [imageGenerationMutation] = useMutation<GenerateImageMutation>(
+    GenerateImageDocument
+  );
+
   const shouldShowEnhanceButton =
-    historyStore.getActiveConversation()?.aiModel.aiModelType ===
+    historyStore.getActiveConversation()?.product.type ===
       AiModelType.GenerativeArt ?? false;
 
   useEffect(() => {
@@ -65,7 +80,14 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
     }
 
     if (text.trim().length === 0) return;
-    historyStore.sendMessage(text, user.id, user.displayName, user.avatarUrl);
+    historyStore.sendMessage(
+      createMessageMutation,
+      imageGenerationMutation,
+      text,
+      user.id,
+      user.displayName,
+      user.avatarUrl
+    );
     setText("");
   };
 
@@ -95,7 +117,7 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
   };
 
   const shouldShowAdvancedPrompt =
-    historyStore.getActiveConversation()?.aiModel?.aiModelType ===
+    historyStore.getActiveConversation()?.product?.type ===
       AiModelType.ControlNet ?? false;
 
   return (

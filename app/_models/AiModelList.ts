@@ -1,9 +1,9 @@
 import { types } from "mobx-state-tree";
-import { AiModel } from "./AiModel";
+import { Product } from "./AiModel";
 
 export const AiModelList = types
   .model("AiModelList", {
-    modelList: types.array(AiModel),
+    modelList: types.array(Product),
   })
   .actions((self) => ({
     getAiModelByName(name: string) {

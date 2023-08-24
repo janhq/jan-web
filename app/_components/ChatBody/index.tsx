@@ -11,6 +11,11 @@ import { GenerativeSampleContainer } from "../GenerativeSampleContainer";
 import { AiModelType } from "@/_models/AiModel";
 import SampleLlmContainer from "@/_components/SampleLlmContainer";
 import SimpleControlNetMessage from "../SimpleControlNetMessage";
+import {
+  GetConversationMessagesQuery,
+  GetConversationMessagesDocument,
+} from "@/graphql";
+import { useLazyQuery } from "@apollo/client";
 
 type Props = {
   onPromptSelected: (prompt: string) => void;
@@ -26,7 +31,9 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
 
   const refContent = useRef<HTMLDivElement>(null);
   const convo = historyStore.getActiveConversation();
-  const hasMore = !convo?.isFetching && (convo?.hasMore ?? false);
+  const [getConversationMessages] = useLazyQuery<GetConversationMessagesQuery>(
+    GetConversationMessagesDocument
+  );
 
   useEffect(() => {
     refSmooth.current?.scrollIntoView({ behavior: "instant" });
@@ -44,7 +51,7 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
   }, []);
 
   const loadFunc = () => {
-    historyStore.fetchMoreMessages();
+    historyStore.fetchMoreMessages(getConversationMessages);
   };
 
   const messages = historyStore.getActiveMessages();
@@ -54,9 +61,9 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
   const shouldShowImageSampleContainer =
     shouldShowSampleContainer &&
     convo &&
-    convo.aiModel.aiModelType === AiModelType.GenerativeArt;
+    convo.product.type === AiModelType.GenerativeArt;
 
-  const model = convo?.aiModel;
+  const model = convo?.product;
 
   const handleScroll = () => {
     if (!scrollRef.current) return;
@@ -81,12 +88,12 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
       {shouldShowSampleContainer && model ? (
         shouldShowImageSampleContainer ? (
           <GenerativeSampleContainer
-            model={convo?.aiModel}
+            model={convo?.product}
             onPromptSelected={onPromptSelected}
           />
         ) : (
           <SampleLlmContainer
-            model={convo?.aiModel}
+            model={convo?.product}
             onPromptSelected={onPromptSelected}
           />
         )
@@ -127,6 +134,7 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
 const renderItem = (
   index: number,
   {
+    id,
     messageType,
     senderAvatarUrl,
     senderName,
@@ -140,7 +148,7 @@ const renderItem = (
       return (
         <SimpleControlNetMessage
           key={index}
-          avatarUrl={senderAvatarUrl}
+          avatarUrl={senderAvatarUrl ?? "/icons/app_icon.svg"}
           senderName={senderName}
           createdAt={createdAt}
           imageUrls={imageUrls ?? []}
@@ -151,7 +159,7 @@ const renderItem = (
       return (
         <SimpleImageMessage
           key={index}
-          avatarUrl={senderAvatarUrl}
+          avatarUrl={senderAvatarUrl ?? "/icons/app_icon.svg"}
           senderName={senderName}
           createdAt={createdAt}
           imageUrls={imageUrls ?? []}
@@ -161,8 +169,9 @@ const renderItem = (
     case MessageType.Text:
       return (
         <SimpleTextMessage
+          uuid={id}
           key={index}
-          avatarUrl={senderAvatarUrl}
+          avatarUrl={senderAvatarUrl ?? "/icons/app_icon.svg"}
           senderName={senderName}
           createdAt={createdAt}
           text={text}
