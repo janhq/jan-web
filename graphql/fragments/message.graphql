@@ -7,5 +7,9 @@ fragment MessageDetail on messages {
   content
   message_type
   message_sender_type
+  created_at
   updated_at
+  message_medias {
+      ...MessageMedia
+    }
 }

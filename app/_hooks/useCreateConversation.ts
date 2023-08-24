@@ -7,7 +7,7 @@ import {
 import { useStore } from "../_models/RootStore";
 import useGetCurrentUser from "./useGetCurrentUser";
 import { useMutation } from "@apollo/client";
-import { MessageSenderType } from "@/_models/ChatMessage";
+import { MessageSenderType, MessageType } from "@/_models/ChatMessage";
 
 const useCreateConversation = () => {
   const { historyStore } = useStore();
@@ -47,6 +47,8 @@ const useCreateConversation = () => {
               sender: MessageSenderType.Ai,
               sender_name: product.name,
               sender_avatar_url: product.image_url ?? "",
+              message_type: MessageType.Text,
+              message_sender_type: MessageSenderType.Ai,
             },
           ],
         },

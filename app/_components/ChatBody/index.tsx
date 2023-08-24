@@ -11,6 +11,11 @@ import { GenerativeSampleContainer } from "../GenerativeSampleContainer";
 import { AiModelType } from "@/_models/AiModel";
 import SampleLlmContainer from "@/_components/SampleLlmContainer";
 import SimpleControlNetMessage from "../SimpleControlNetMessage";
+import {
+  GetConversationMessagesQuery,
+  GetConversationMessagesDocument,
+} from "@/graphql";
+import { useLazyQuery } from "@apollo/client";
 
 type Props = {
   onPromptSelected: (prompt: string) => void;
@@ -26,7 +31,9 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
 
   const refContent = useRef<HTMLDivElement>(null);
   const convo = historyStore.getActiveConversation();
-  const hasMore = !convo?.isFetching && (convo?.hasMore ?? false);
+  const [getConversationMessages] = useLazyQuery<GetConversationMessagesQuery>(
+    GetConversationMessagesDocument
+  );
 
   useEffect(() => {
     refSmooth.current?.scrollIntoView({ behavior: "instant" });
@@ -44,7 +51,7 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
   }, []);
 
   const loadFunc = () => {
-    historyStore.fetchMoreMessages();
+    historyStore.fetchMoreMessages(getConversationMessages);
   };
 
   const messages = historyStore.getActiveMessages();

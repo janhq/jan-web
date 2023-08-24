@@ -5,10 +5,20 @@ import { User } from "./User";
 import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
 import { api } from "../_services/api";
 import { Role } from "../_services/api/api.types";
-import { MessageResponse } from "@/_services/api/models/message.response";
 import { MESSAGE_PER_PAGE } from "../_utils/const";
 import { controlNetRequest } from "@/_services/controlnet";
-import { ConversationDetailFragment, ProductDetailFragment } from "@/graphql";
+import {
+  ConversationDetailFragment,
+  GetConversationMessagesQuery,
+  GetConversationMessagesQueryVariables,
+  MessageDetailFragment,
+  ProductDetailFragment,
+} from "@/graphql";
+import {
+  LazyQueryExecFunction,
+  OperationVariables,
+  QueryResult,
+} from "@apollo/client";
 
 export const History = types
   .model("History", {
@@ -45,80 +55,6 @@ export const History = types
       return self.conversations.find((c) => c.id === conversationId);
     },
   }))
-  .actions((self) => {
-    const fetchConversationMessages = flow(function* (convoId: string) {
-      const convo = self.getConversationById(convoId);
-      if (!convo) {
-        console.error("Could not get convo", convoId);
-        return;
-      }
-      if (convo?.isFetching) {
-        return;
-      }
-
-      if (!convo.hasMore) {
-        console.info("Already load all messages of convo", convoId);
-        return;
-      }
-      convo.isFetching = true;
-
-      const result = yield api.getConversationMessages(
-        convoId,
-        MESSAGE_PER_PAGE,
-        convo.offset
-      );
-
-      if (result.kind !== "ok") {
-        convo.isFetching = false;
-        console.error(`Error`, JSON.stringify(result));
-        return;
-      }
-
-      if (result.messages.length < MESSAGE_PER_PAGE) {
-        convo.setHasMore(false);
-      }
-
-      convo.offset += result.messages.length;
-
-      const messages: Instance<typeof ChatMessage>[] = [];
-      result.messages.forEach((m: MessageResponse) => {
-        const createdAt = new Date(m.created_at).getTime();
-        const imageUrls: string[] = [];
-        const imageUrl = m.images.length > 0 ? m.images[0].image_url : null;
-        if (imageUrl) {
-          imageUrls.push(imageUrl);
-        }
-
-        const messageType =
-          MessageType[m.message_type as keyof typeof MessageType];
-        const messageSenderType =
-          MessageSenderType[
-            m.message_sender_type as keyof typeof MessageSenderType
-          ];
-        messages.push(
-          ChatMessage.create({
-            id: m.id,
-            conversationId: m.conversation_id,
-            messageType: messageType,
-            messageSenderType: messageSenderType,
-            senderUid: m.sender_uuid,
-            senderName: m.sender_name,
-            senderAvatarUrl: m.sender_avatar_url,
-            text: m.content,
-            imageUrls: imageUrls,
-            createdAt: createdAt,
-          })
-        );
-      });
-      convo.setProp(
-        "chatMessages",
-        messages.reverse().concat(convo.chatMessages)
-      );
-      convo.isFetching = false;
-    });
-
-    return { fetchConversationMessages };
-  })
   .actions((self) => ({
     // Model detail
     toggleModelDetail() {
@@ -136,13 +72,90 @@ export const History = types
     },
   }))
   .actions((self) => {
-    const fetchMoreMessages = flow(function* () {
-      const activeId = self.activeConversationId;
-      if (!activeId) {
+    const fetchMoreMessages = flow(function* (
+      func: LazyQueryExecFunction<
+        GetConversationMessagesQuery,
+        OperationVariables
+      >
+    ) {
+      const convoId = self.activeConversationId;
+      if (!convoId) {
         console.error("No active conversation found");
         return;
       }
-      yield self.fetchConversationMessages(activeId);
+
+      const convo = self.getConversationById(convoId);
+      if (!convo) {
+        console.error("Could not get convo", convoId);
+        return;
+      }
+      if (convo?.isFetching) {
+        return;
+      }
+
+      if (!convo.hasMore) {
+        console.info("Already load all messages of convo", convoId);
+        return;
+      }
+      convo.isFetching = true;
+      const variables: GetConversationMessagesQueryVariables = {
+        conversation_id: convoId,
+        limit: MESSAGE_PER_PAGE,
+        offset: convo.offset,
+      };
+      const result: QueryResult<
+        GetConversationMessagesQuery,
+        OperationVariables
+      > = yield func({ variables });
+
+      if (!result.data?.messages) {
+        return;
+      }
+
+      if (result.data?.messages.length < MESSAGE_PER_PAGE) {
+        convo.setHasMore(false);
+      }
+
+      convo.offset += result.data.messages.length;
+
+      const messages: Instance<typeof ChatMessage>[] = [];
+      result.data.messages.forEach((m: MessageDetailFragment) => {
+        const createdAt = new Date(m.created_at).getTime();
+        const imageUrls: string[] = [];
+        const imageUrl =
+          m.message_medias.length > 0 ? m.message_medias[0].media_url : null;
+        if (imageUrl) {
+          imageUrls.push(imageUrl);
+        }
+
+        const messageType = m.message_type
+          ? MessageType[m.message_type as keyof typeof MessageType]
+          : MessageType.Text;
+        const messageSenderType = m.message_sender_type
+          ? MessageSenderType[
+              m.message_sender_type as keyof typeof MessageSenderType
+            ]
+          : MessageSenderType.Ai;
+        messages.push(
+          ChatMessage.create({
+            id: m.id,
+            conversationId: m.conversation_id,
+            messageType: messageType,
+            messageSenderType: messageSenderType,
+            senderUid: m.sender,
+            senderName: m.sender_name || "",
+            senderAvatarUrl: m.sender_avatar_url || "",
+            text: m.content || "",
+            imageUrls: imageUrls,
+            createdAt: createdAt,
+          })
+        );
+      });
+      convo.setProp(
+        "chatMessages",
+        messages.reverse().concat(convo.chatMessages)
+      );
+      convo.isFetching = false;
     });
 
     const deleteConversationById = flow(function* (convoId: string) {
@@ -163,9 +176,6 @@ export const History = types
       convoId: string | undefined
     ) {
       self.activeConversationId = convoId;
-      if (convoId) {
-        yield self.fetchConversationMessages(convoId);
-      }
     });
 
     return { setActiveConversationId };
@@ -184,7 +194,6 @@ export const History = types
     clearAllConversations() {
       self.conversations = castToSnapshot([]);
     },
-
   }))
   .actions((self) => {
     const sendTextToTextMessage = flow(function* (
