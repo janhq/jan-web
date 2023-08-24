@@ -1,8 +1,4 @@
 import { ApiResponse, ApisauceInstance, create } from "apisauce";
-import {
-  fetchEventSource,
-  EventStreamContentType,
-} from "@microsoft/fetch-event-source";
 import type {
   ApiConfig,
   MagicPromptResponse,
@@ -10,9 +6,6 @@ import type {
   StreamMessageOptions,
 } from "./api.types";
 import { GeneralApiProblem, getGeneralApiProblem } from "./api.problems";
-import { ChatMessage, MessageType } from "@/_models/ChatMessage";
-import { MessageResponse } from "./models/message.response";
-import { Instance } from "mobx-state-tree";
 import { getAccessToken } from "@/_utils/tokenAccessor";
 
 /**
@@ -54,6 +47,7 @@ export class Api {
    * @param prompt prompt content
    * @returns
    */
+  // TODO: GraphQL Action Endpoint
   async magicPrompt(
     prompt: string
   ): Promise<{ kind: "ok"; data: MagicPromptText } | GeneralApiProblem> {
@@ -77,101 +71,6 @@ export class Api {
       kind: "ok",
       data: response.data?.data ? response.data.data : { text: "" },
     };
-  }
-
-  
-  /**
-   * Sending messages to Cloudflare SSE.
-   * @description Using callbacks to decouple sending message from modifying DOM / data store
-   * @param options
-   */
-  async streamMessageChat(options: StreamMessageOptions) {
-    const streamURL =
-      process.env.NEXT_PUBLIC_SSE_INFERENCE_ENDPOINT + options.model;
-    try {
-      const chatPayload = {
-        messages: options.messages,
-        stream: options.stream,
-        max_tokens: options.max_tokens,
-      };
-
-      const authToken = await getAccessToken();
-      const chatRequestPayload = {
-        method: "POST",
-        body: JSON.stringify(chatPayload),
-        headers: {
-          Accept: "text/event-stream",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          Authorization: `Bearer ${authToken}`,
-          be_key: process.env.NEXT_PUBLIC_BE_KEY ?? "",
-        },
-        debug: false,
-        pollingInterval: 100000,
-      };
-
-      const controller = new AbortController();
-      const reqTimeoutId = setTimeout(() => controller.abort(), 10000); // TODO: make time out value be configurable
-      let responseText = "";
-      const finish = () => {
-        options.onFinish(responseText);
-      };
-
-      fetchEventSource(streamURL, {
-        ...chatRequestPayload,
-        async onopen(res) {
-          clearTimeout(reqTimeoutId);
-          // if the returned content does not have type as epxected
-          if (
-            res.ok &&
-            !res.headers.get("content-type")?.includes(EventStreamContentType)
-          ) {
-            responseText += await res.clone().json();
-            return finish();
-          }
-
-          if (res.status === 401) {
-            let extraInfo = { error: undefined };
-            try {
-              extraInfo = await res.clone().json();
-            } catch {}
-
-            if (extraInfo.error) {
-              responseText += "\n\n" + JSON.stringify(extraInfo);
-            }
-            return finish();
-          }
-          options.onOpen?.();
-        },
-        onmessage(msg) {
-          if (msg.data === "[DONE]") {
-            return finish();
-          }
-
-          const text = msg.data;
-          try {
-            const json = JSON.parse(text);
-            const delta = json.choices[0].delta.content;
-            if (delta) {
-              responseText += delta;
-              options.onUpdate?.(responseText, delta);
-            }
-          } catch (e) {
-            console.error("[Response] parsing data error", text, msg);
-          }
-        },
-        onclose() {
-          finish();
-        },
-        onerror(e) {
-          options.onError?.(e);
-        },
-        openWhenHidden: true,
-      });
-    } catch (error) {
-      console.error("[Request] could not send chat message", error);
-      options.onError?.(error as Error);
-    }
   }
 }
 // Singleton instance of the API for convenience
