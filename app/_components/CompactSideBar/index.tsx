@@ -23,7 +23,7 @@ export const CompactSideBar: React.FC = observer(() => {
           <CompactHistoryItem
             key={id}
             conversationId={id}
-            imageUrl={aiModel.avatarUrl || ""}
+            imageUrl={aiModel.avatarUrl ?? ""}
             isSelected={historyStore.activeConversationId === id}
           />
         ))}

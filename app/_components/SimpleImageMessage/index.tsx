@@ -4,6 +4,8 @@ import { displayDate } from "@/_utils/datetime";
 import Link from "next/link";
 import { useStore } from "@/_models/RootStore";
 import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
+import { CreateMessageMutation, CreateMessageDocument } from "@/graphql";
+import { useMutation } from "@apollo/client";
 
 type Props = {
   avatarUrl?: string;
@@ -22,13 +24,23 @@ const SimpleImageMessage: React.FC<Props> = ({
 }) => {
   const { historyStore } = useStore();
   const { user } = useGetCurrentUser();
+  const [createMessageMutation] = useMutation<CreateMessageMutation>(
+    CreateMessageDocument
+  );
 
   const onRegenerate = () => {
     if (!user) {
       // TODO: we should show an error here
       return;
     }
-    historyStore.sendMessage(text ?? "", user.id, senderName, avatarUrl);
+
+    historyStore.sendMessage(
+      createMessageMutation,
+      text ?? "",
+      user.id,
+      senderName,
+      avatarUrl
+    );
   };
 
   return (

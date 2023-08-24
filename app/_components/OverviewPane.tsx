@@ -75,7 +75,7 @@ const OverviewPane: React.FC<Props> = ({
             const showBorder = index !== data?.prompts.length - 1;
             return (
               <button
-                onClick={() => onPromptClick?.(prompt.content || "")}
+                onClick={() => onPromptClick?.(prompt.content ?? "")}
                 key={prompt.slug}
                 className={`text-sm text-gray-500 leading-[20px] flex gap-[10px] border-b-[${
                   showBorder ? "1" : "0"

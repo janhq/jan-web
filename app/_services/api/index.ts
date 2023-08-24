@@ -297,32 +297,6 @@ export class Api {
     }
   }
 
-  async getConversationMessages(
-    convoId: string,
-    limit: number,
-    offset: number
-  ) {
-    const response: ApiResponse<any> = await this.apisauce.get(
-      `message/${convoId}?limit=${limit}&offset=${offset}`
-    );
-
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response);
-      if (problem) {
-        return problem;
-      }
-    }
-
-    const messages = response.data?.["data"] as MessageResponse[];
-
-    try {
-      return { kind: "ok", messages };
-    } catch (e) {
-      console.error("getConversationMessages error", e);
-      return { kind: "bad-data" };
-    }
-  }
-
   async updateChatMessage(chatMessage: Instance<typeof ChatMessage>) {
     const response: ApiResponse<any> = await this.apisauce.patch("message", {
       id: chatMessage.id,

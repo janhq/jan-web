@@ -34,7 +34,7 @@ export const GenerativeSampleContainer: React.FC<Props> = ({
           {data?.prompts.map((item) => (
             <button
               key={item.slug}
-              onClick={() => onPromptSelected(item.content || "")}
+              onClick={() => onPromptSelected(item.content ?? "")}
               className="w-full h-full"
             >
               <img

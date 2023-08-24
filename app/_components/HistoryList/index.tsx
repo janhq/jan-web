@@ -45,7 +45,7 @@ const HistoryList: React.FC<IHistoryListProps> = observer((props) => {
             <HistoryItem
               key={id}
               conversationId={id}
-              avatarUrl={aiModel.avatarUrl || ""}
+              avatarUrl={aiModel.avatarUrl ?? ""}
               name={aiModel.name}
               updatedAt={updatedAt}
             />

@@ -147,7 +147,7 @@ const renderItem = (
       return (
         <SimpleControlNetMessage
           key={index}
-          avatarUrl={senderAvatarUrl}
+          avatarUrl={senderAvatarUrl ?? "/icons/app_icon.svg"}
           senderName={senderName}
           createdAt={createdAt}
           imageUrls={imageUrls ?? []}
@@ -158,7 +158,7 @@ const renderItem = (
       return (
         <SimpleImageMessage
           key={index}
-          avatarUrl={senderAvatarUrl}
+          avatarUrl={senderAvatarUrl ?? "/icons/app_icon.svg"}
           senderName={senderName}
           createdAt={createdAt}
           imageUrls={imageUrls ?? []}
@@ -169,7 +169,7 @@ const renderItem = (
       return (
         <SimpleTextMessage
           key={index}
-          avatarUrl={senderAvatarUrl}
+          avatarUrl={senderAvatarUrl ?? "/icons/app_icon.svg"}
           senderName={senderName}
           createdAt={createdAt}
           text={text}

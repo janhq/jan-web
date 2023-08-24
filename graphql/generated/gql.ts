@@ -20,11 +20,11 @@ const documents = {
     "fragment ProductDetail on products {\n  id\n  name\n  slug\n  description\n  long_description\n  technical_description\n  image_url\n  author\n  greeting\n  source_url\n  version\n  inputs\n  outputs\n  nsfw\n}": types.ProductDetailFragmentDoc,
     "fragment PromptDetail on prompts {\n  slug\n  content\n  image_url\n}": types.PromptDetailFragmentDoc,
     "mutation createConversation($data: conversations_insert_input!) {\n  insert_conversations_one(object: $data) {\n    ...ConversationDetail\n  }\n}": types.CreateConversationDocument,
-    "mutation createMessage($convId: uuid, $content: String, $sender: String, $messageType: String, $senderType: String, $mediaUrl: String) {\n  insert_messages_one(\n    object: {conversation_id: $convId, content: $content, sender: $sender, message_type: $messageType, message_sender_type: $senderType, message_medias: {data: {media_url: $mediaUrl}}}\n  ) {\n    ...MessageDetail\n  }\n}": types.CreateMessageDocument,
+    "mutation createMessage($data: messages_insert_input!) {\n  insert_messages_one(object: $data) {\n    ...MessageDetail\n  }\n}": types.CreateMessageDocument,
     "mutation deleteConversation($id: uuid!) {\n  delete_conversations_by_pk(id: $id) {\n    id\n  }\n}": types.DeleteConversationDocument,
     "mutation updateConversation($id: uuid!, $lastMessageText: String, $lastMessageUrl: String) {\n  update_conversations_by_pk(\n    pk_columns: {id: $id}\n    _set: {last_text_message: $lastMessageText, last_image_url: $lastMessageUrl}\n  ) {\n    ...ConversationDetail\n  }\n}": types.UpdateConversationDocument,
     "query getCollections {\n  collections {\n    ...CollectionDetail\n    collection_products {\n      products {\n        ...ProductDetail\n        product_prompts {\n          prompts {\n            ...PromptDetail\n          }\n        }\n      }\n    }\n  }\n}": types.GetCollectionsDocument,
-    "query getConversationMessages($conversation_id: uuid = \"\", $limit: Int = 100, $offset: Int = 100) {\n  messages(\n    offset: $offset\n    limit: $limit\n    where: {conversation_id: {_eq: $conversation_id}}\n  ) {\n    ...MessageDetail\n  }\n}": types.GetConversationMessagesDocument,
+    "query getConversationMessages($conversation_id: uuid = \"\", $limit: Int = 100, $offset: Int = 100) {\n  messages(\n    offset: $offset\n    limit: $limit\n    where: {conversation_id: {_eq: $conversation_id}}\n    order_by: {updated_at: desc}\n  ) {\n    ...MessageDetail\n  }\n}": types.GetConversationMessagesDocument,
     "query getConversations {\n  conversations {\n    ...ConversationDetail\n    conversation_messages {\n      ...MessageDetail\n      message_medias {\n        ...MessageMedia\n      }\n    }\n  }\n}": types.GetConversationsDocument,
     "query getProductsByCollectionSlug($slug: String = \"\") {\n  products(where: {product_collections: {collections: {slug: {_eq: $slug}}}}) {\n    ...ProductDetail\n    product_prompts {\n      prompts {\n        ...PromptDetail\n      }\n    }\n    product_collections {\n      collections {\n        ...CollectionDetail\n      }\n    }\n  }\n}": types.GetProductsByCollectionSlugDocument,
     "query getProductPrompts($productSlug: String = \"\") {\n  prompts(where: {prompt_products: {products: {slug: {_eq: $productSlug}}}}) {\n    ...PromptDetail\n  }\n}": types.GetProductPromptsDocument,
@@ -77,7 +77,7 @@ export function gql(source: "mutation createConversation($data: conversations_in
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "mutation createMessage($convId: uuid, $content: String, $sender: String, $messageType: String, $senderType: String, $mediaUrl: String) {\n  insert_messages_one(\n    object: {conversation_id: $convId, content: $content, sender: $sender, message_type: $messageType, message_sender_type: $senderType, message_medias: {data: {media_url: $mediaUrl}}}\n  ) {\n    ...MessageDetail\n  }\n}"): (typeof documents)["mutation createMessage($convId: uuid, $content: String, $sender: String, $messageType: String, $senderType: String, $mediaUrl: String) {\n  insert_messages_one(\n    object: {conversation_id: $convId, content: $content, sender: $sender, message_type: $messageType, message_sender_type: $senderType, message_medias: {data: {media_url: $mediaUrl}}}\n  ) {\n    ...MessageDetail\n  }\n}"];
+export function gql(source: "mutation createMessage($data: messages_insert_input!) {\n  insert_messages_one(object: $data) {\n    ...MessageDetail\n  }\n}"): (typeof documents)["mutation createMessage($data: messages_insert_input!) {\n  insert_messages_one(object: $data) {\n    ...MessageDetail\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -93,7 +93,7 @@ export function gql(source: "query getCollections {\n  collections {\n    ...Col
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "query getConversationMessages($conversation_id: uuid = \"\", $limit: Int = 100, $offset: Int = 100) {\n  messages(\n    offset: $offset\n    limit: $limit\n    where: {conversation_id: {_eq: $conversation_id}}\n  ) {\n    ...MessageDetail\n  }\n}"): (typeof documents)["query getConversationMessages($conversation_id: uuid = \"\", $limit: Int = 100, $offset: Int = 100) {\n  messages(\n    offset: $offset\n    limit: $limit\n    where: {conversation_id: {_eq: $conversation_id}}\n  ) {\n    ...MessageDetail\n  }\n}"];
+export function gql(source: "query getConversationMessages($conversation_id: uuid = \"\", $limit: Int = 100, $offset: Int = 100) {\n  messages(\n    offset: $offset\n    limit: $limit\n    where: {conversation_id: {_eq: $conversation_id}}\n    order_by: {updated_at: desc}\n  ) {\n    ...MessageDetail\n  }\n}"): (typeof documents)["query getConversationMessages($conversation_id: uuid = \"\", $limit: Int = 100, $offset: Int = 100) {\n  messages(\n    offset: $offset\n    limit: $limit\n    where: {conversation_id: {_eq: $conversation_id}}\n    order_by: {updated_at: desc}\n  ) {\n    ...MessageDetail\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

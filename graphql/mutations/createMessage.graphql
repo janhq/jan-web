@@ -1,7 +1,9 @@
-mutation createMessage($convId: uuid, $content: String, $sender:String, $messageType:String, $senderType:String, $mediaUrl: String) {
-  insert_messages_one(object: {conversation_id: $convId, content: $content, sender:$sender, message_type:$messageType, message_sender_type:$senderType, message_medias:{data:{
-    media_url:$mediaUrl
-  }}}) {
+mutation createMessage(
+  $data: messages_insert_input!
+) {
+  insert_messages_one(
+    object: $data
+  ) {
     ...MessageDetail
   }
 }

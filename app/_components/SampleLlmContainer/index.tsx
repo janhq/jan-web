@@ -30,7 +30,7 @@ const SampleLlmContainer: React.FC<Props> = ({ model, onPromptSelected }) => {
         <div className="flex flex-col">
           {data?.prompts.map((item) => (
             <button
-              onClick={() => onPromptSelected(item.content || "")}
+              onClick={() => onPromptSelected(item.content ?? "")}
               key={item.slug}
               className="rounded p-2 hover:bg-[#0000000F] text-xs leading-[18px] text-gray-500 text-left"
             >

@@ -7,18 +7,36 @@ import { api } from "../_services/api";
 import { Role } from "../_services/api/api.types";
 import { MESSAGE_PER_PAGE } from "../_utils/const";
 import { controlNetRequest } from "@/_services/controlnet";
+
+import {
+  ApolloCache,
+  DefaultContext,
+  FetchResult,
+  LazyQueryExecFunction,
+  MutationFunctionOptions,
+  OperationVariables,
+  QueryResult,
+} from "@apollo/client";
 import {
   ConversationDetailFragment,
+  CreateMessageMutation,
+  CreateMessageMutationVariables,
   GetConversationMessagesQuery,
   GetConversationMessagesQueryVariables,
   MessageDetailFragment,
   ProductDetailFragment,
 } from "@/graphql";
-import {
-  LazyQueryExecFunction,
-  OperationVariables,
-  QueryResult,
-} from "@apollo/client";
+
+type CreateMessageMutationFunc = (
+  options?:
+    | MutationFunctionOptions<
+        CreateMessageMutation,
+        OperationVariables,
+        DefaultContext,
+        ApolloCache<any>
+      >
+    | undefined
+) => Promise<FetchResult<CreateMessageMutation>>;
 
 export const History = types
   .model("History", {
@@ -143,9 +161,9 @@ export const History = types
             messageType: messageType,
             messageSenderType: messageSenderType,
             senderUid: m.sender,
-            senderName: m.sender_name || "",
-            senderAvatarUrl: m.sender_avatar_url || "",
-            text: m.content || "",
+            senderName: m.sender_name ?? "",
+            senderAvatarUrl: m.sender_avatar_url,
+            text: m.content ?? "",
             imageUrls: imageUrls,
             createdAt: createdAt,
           })
@@ -309,7 +327,7 @@ export const History = types
           conversation.product.id,
           conversation.product.name,
           conversation.product.avatarUrl ?? "",
-          message || "",
+          message ?? "",
           imageUrl,
           MessageType.Image
         );
@@ -327,7 +345,7 @@ export const History = types
           messageSenderType: MessageSenderType.Ai,
           senderUid: conversation.product.id,
           senderName: conversation.product.name,
-          senderAvatarUrl: conversation.product.avatarUrl ?? "",
+          senderAvatarUrl: conversation.product.avatarUrl,
           text: message,
           imageUrls: data.outputs,
           createdAt: Date.now(),
@@ -404,7 +422,7 @@ export const History = types
         messageSenderType: MessageSenderType.Ai,
         senderUid: conversation.product.id,
         senderName: conversation.product.name,
-        senderAvatarUrl: conversation.product.avatarUrl ?? "",
+        senderAvatarUrl: conversation.product.avatarUrl,
         text: message,
         imageUrls: [imageUrl],
         createdAt: Date.now(),
@@ -447,7 +465,7 @@ export const History = types
       const newConvo = Conversation.create({
         id: conversation.id,
         product: productModel,
-        lastTextMessage: conversation.last_text_message || "",
+        lastTextMessage: conversation.last_text_message ?? "",
         user: User.create({
           id: userId,
           displayName,
@@ -462,6 +480,7 @@ export const History = types
     });
 
     const sendMessage = flow(function* (
+      func: CreateMessageMutationFunc,
       message: string,
       userId: string,
       displayName: string,
@@ -481,28 +500,33 @@ export const History = types
         return;
       }
       conversation.setWaitingForModelResponse(true);
+      const variables: CreateMessageMutationVariables = {
+        data: {
+          conversation_id: conversation.id,
+          content: message,
+          sender: userId,
+          message_sender_type: MessageSenderType.User,
+          message_type: MessageType.Text,
+          sender_avatar_url: avatarUrl,
+          sender_name: displayName,
+        },
+      };
+      const result: FetchResult<CreateMessageMutation> = yield func({
+        variables,
+      });
 
-      const createMessageResult = yield api.createNewTextChatMessage(
-        conversation.id,
-        MessageSenderType.User,
-        userId,
-        displayName,
-        avatarUrl ?? "",
-        message
-      );
-
-      if (createMessageResult.kind !== "ok") {
+      if (!result.data?.insert_messages_one?.id) {
         // TODO: display error
         console.error(
           "Error creating user message",
-          JSON.stringify(createMessageResult)
+          JSON.stringify(result.errors)
         );
         conversation.setWaitingForModelResponse(false);
         return;
       }
 
       const userMesssage = ChatMessage.create({
-        id: createMessageResult.messageId,
+        id: result.data.insert_messages_one.id,
         conversationId: self.activeConversationId,
         messageType: MessageType.Text,
         messageSenderType: MessageSenderType.User,

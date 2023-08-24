@@ -21,7 +21,7 @@ export const ChatMessage = types
     messageSenderType: types.enumeration(Object.values(MessageSenderType)),
     senderUid: types.string,
     senderName: types.string,
-    senderAvatarUrl: types.maybe(types.string),
+    senderAvatarUrl: types.maybeNull(types.string),
     text: types.maybe(types.string),
     imageUrls: types.maybe(types.array(types.string)),
     createdAt: types.number,

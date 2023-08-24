@@ -42,7 +42,7 @@ const Header: React.FC = () => {
             <div
               key={item.name}
               className={`px-3 py-1 flex gap-2 rounded-lg ${
-                checkLink(router || "", item.href)
+                checkLink(router ?? "", item.href)
                   ? "bg-[#E5E7EB] text-[#1F2A37]"
                   : "text-[#9CA3AF] bg-transparent"
               }`}

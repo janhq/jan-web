@@ -27,7 +27,7 @@ const useGetUserConversations = () => {
         id: convo.id!!,
         product: {
           id: convo.conversation_product?.id,
-          name: convo.conversation_product?.name || "",
+          name: convo.conversation_product?.name ?? "",
           type:
             convo.conversation_product?.inputs.slug === "llm"
               ? AiModelType.LLM
@@ -44,8 +44,8 @@ const useGetUserConversations = () => {
         user: user,
         createdAt: new Date(convo.created_at).getTime(),
         updatedAt: new Date(convo.updated_at).getTime(),
-        lastImageUrl: convo.last_image_url || "",
-        lastTextMessage: convo.last_text_message || "",
+        lastImageUrl: convo.last_image_url ?? "",
+        lastTextMessage: convo.last_text_message ?? "",
       });
 
       finalConvo.push(conversation);

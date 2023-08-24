@@ -18,7 +18,7 @@ const Slide: React.FC<Props> = ({ product }) => {
     <div className="w-full embla__slide h-[435px] relative">
       <Image
         className="object-cover w-full h-full embla__slide__img"
-        src={image_url || ""}
+        src={image_url ?? ""}
         layout="fill"
         alt=""
       />
