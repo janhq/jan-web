@@ -213,40 +213,6 @@ export class Api {
     }
   }
 
-  async createConversation(
-    modelId: string
-  ): Promise<{ kind: "ok"; conversationId: string } | GeneralApiProblem> {
-    const response: ApiResponse<any> = await this.apisauce.post(
-      "conversation",
-      {
-        ai_model: modelId,
-      }
-    );
-
-    // the typical ways to die when calling an api
-    if (!response.ok && !response.data) {
-      const problem = getGeneralApiProblem(response);
-      if (problem) {
-        return problem;
-      }
-    }
-
-    // transform the data into the format we are expecting
-    const conversationId: string | undefined =
-      response.data.data.conversation_id;
-    if (!conversationId) {
-      console.error("createConversation error", response);
-      return { kind: "bad-data" };
-    }
-
-    try {
-      return { kind: "ok", conversationId };
-    } catch (e) {
-      console.error("createConversation error", e);
-      return { kind: "bad-data" };
-    }
-  }
-
   async createNewTextChatMessage(
     conversationId: string,
     messageSenderType: string,
