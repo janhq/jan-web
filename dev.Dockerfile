@@ -17,8 +17,6 @@ COPY package*.json /app
 # Install dependencies in /app
 RUN yarn install
 
-RUN npm i -g @nestjs/cli typescript ts-node
-
 # Copy the rest of our Next.js folder into /app
 COPY . /app
 
