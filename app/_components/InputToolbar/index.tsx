@@ -2,7 +2,6 @@ import SendButton from "../SendButton";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useStore } from "@/_models/RootStore";
 import { AiModelType } from "@/_models/AiModel";
-import { api } from "@/_services/api";
 import ActionButton from "../ActionButton";
 import Image from "next/image";
 import { observer } from "mobx-react-lite";
@@ -48,29 +47,11 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
   };
 
   const onEnhanceClick = () => {
-    setPromptGenerating(true);
-    api
-      .magicPrompt(text)
-      .then((res) => {
-        if (res.kind === "ok")
-          setText([text.trim(), res.data.text.trim()].join(" "));
-      })
-      .finally(() => {
-        setPromptGenerating(false);
-      });
+    // setPromptGenerating(true);
   };
 
   const onRandomClick = () => {
-    setPromptGenerating(true);
-    api
-      .magicPrompt("")
-      .then((res) => {
-        if (res.kind === "ok" && res.data.text.trim() !== "")
-          setText(res.data.text.trim());
-      })
-      .finally(() => {
-        setPromptGenerating(false);
-      });
+    // setPromptGenerating(true);
   };
 
   const onSubmitClick = () => {

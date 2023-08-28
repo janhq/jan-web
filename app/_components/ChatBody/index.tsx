@@ -5,7 +5,6 @@ import { ChatMessage, MessageType } from "@/_models/ChatMessage";
 import SimpleImageMessage from "../SimpleImageMessage";
 import SimpleTextMessage from "../SimpleTextMessage";
 import { Instance } from "mobx-state-tree";
-import Lottie from "lottie-react";
 import animationData from "@/../public/lotties/typing.json";
 import { GenerativeSampleContainer } from "../GenerativeSampleContainer";
 import { AiModelType } from "@/_models/AiModel";
@@ -16,6 +15,7 @@ import {
   GetConversationMessagesDocument,
 } from "@/graphql";
 import { useLazyQuery } from "@apollo/client";
+import LoadingIndicator from "../LoadingIndicator";
 
 type Props = {
   onPromptSelected: (prompt: string) => void;
@@ -113,14 +113,8 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
             {messages.map((message, index) => renderItem(index, message))}
             <div ref={refSmooth}>
               {convo?.isWaitingForModelResponse && (
-                <div className="w-[50px] h-[50px] flex flex-row items-start justify-start">
-                  <Lottie
-                    animationData={animationData}
-                    loop={true}
-                    autoPlay={true}
-                    height={50}
-                    width={50}
-                  />
+                <div className="w-[50px] h-[50px] px-2 flex flex-row items-start justify-start">
+                  <LoadingIndicator/>
                 </div>
               )}
             </div>
