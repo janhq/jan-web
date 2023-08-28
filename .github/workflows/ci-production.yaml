@@ -30,12 +30,6 @@ jobs:
         env:
           ENV_FILE_BASE64: ${{ secrets.ENV_FILE_BASE64 }}
 
-      - name: Get Firebase config
-        run: rm -rf ./app/_services/firebase/firebase_configs.json && base64 -d <<< "$FIRE_BASE_CONFIG" > ./app/_services/firebase/firebase_configs.json
-        shell: bash
-        env:
-          FIRE_BASE_CONFIG: ${{ secrets.FIRE_BASE_CONFIG_BASE64 }}
-
       - run: |
           docker build -t ${{ env.ACR_REPOSITORY_URL }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }} .
           docker push ${{ env.ACR_REPOSITORY_URL }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
