@@ -3,8 +3,6 @@ import { Conversation } from "./Conversation";
 import { Product, AiModelType } from "./AiModel";
 import { User } from "./User";
 import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
-import { api } from "../_services/api";
-import { Role } from "../_services/api/api.types";
 import { MESSAGE_PER_PAGE } from "../_utils/const";
 import { controlNetRequest } from "@/_services/controlnet";
 
@@ -27,9 +25,12 @@ import {
   GetConversationMessagesQueryVariables,
   MessageDetailFragment,
   ProductDetailFragment,
-  UpdateMessageMutation,
-  UpdateMessageMutationVariables,
 } from "@/graphql";
+
+export enum Role {
+  User = "user",
+  Assistant = "assistant",
+}
 
 type CreateMessageMutationFunc = (
   options?:
@@ -41,17 +42,6 @@ type CreateMessageMutationFunc = (
       >
     | undefined
 ) => Promise<FetchResult<CreateMessageMutation>>;
-
-type UpdateMessageMutationFunc = (
-  options?:
-    | MutationFunctionOptions<
-        UpdateMessageMutation,
-        OperationVariables,
-        DefaultContext,
-        ApolloCache<any>
-      >
-    | undefined
-) => Promise<FetchResult<UpdateMessageMutation>>;
 
 type ImageGenerationMutationFunc = (
   options?:
