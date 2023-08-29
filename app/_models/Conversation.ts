@@ -1,7 +1,7 @@
 import { Instance, castToSnapshot, types } from "mobx-state-tree";
-import { Product } from "./AiModel";
+import { Product } from "./Product";
 import { ChatMessage } from "./ChatMessage";
-import { User } from "./User";
+import { User } from "../_models/User";
 import { withSetPropAction } from "../_helpers/withSetPropAction";
 import { mergeAndRemoveDuplicates } from "../_utils/message";
 

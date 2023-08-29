@@ -6,7 +6,6 @@ import { UserToolbar } from "../UserToolbar";
 import ModelMenu from "../ModelMenu";
 import { useStore } from "@/_models/RootStore";
 import { observer } from "mobx-react-lite";
-import Gleap from "gleap";
 import ConfirmDeleteConversationModal from "../ConfirmDeleteConversationModal";
 import { ModelDetailSideBar } from "../ModelDetailSideBar";
 import NewChatBlankState from "../NewChatBlankState";
@@ -33,10 +32,6 @@ const ChatContainer: React.FC = observer(() => {
       historyStore.clearAllConversations();
     }
   }, [user]);
-
-  useEffect(() => {
-    Gleap.showFeedbackButton(!conversation);
-  }, [conversation]);
 
   const [open, setOpen] = useState(false);
 

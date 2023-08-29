@@ -1,7 +1,7 @@
 import SendButton from "../SendButton";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useStore } from "@/_models/RootStore";
-import { AiModelType } from "@/_models/AiModel";
+import { AiModelType } from "@/_models/Product";
 import ActionButton from "../ActionButton";
 import Image from "next/image";
 import { observer } from "mobx-react-lite";

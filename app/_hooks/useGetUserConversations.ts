@@ -1,6 +1,6 @@
 import { Instance } from "mobx-state-tree";
 import { useStore } from "../_models/RootStore";
-import { AiModelType } from "../_models/AiModel";
+import { AiModelType } from "../_models/Product";
 import { Conversation } from "../_models/Conversation";
 import { User } from "../_models/User";
 import { GetConversationsQuery, GetConversationsDocument } from "@/graphql";
