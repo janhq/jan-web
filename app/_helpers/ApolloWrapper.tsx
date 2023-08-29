@@ -1,13 +1,5 @@
 "use client";
-import Header from "@/_components/Header";
-import { AdvancedPrompt } from "@/_components/AdvancedPrompt";
-import ChatContainer from "@/_components/ChatContainer";
-import { CompactSideBar } from "@/_components/CompactSideBar";
-import { SidebarLeft } from "@/_components/SidebarLeft";
-import { withAnalytics } from "@/_helpers/withAnalytics";
-import { Provider, RootInstance, initializeStore } from "@/_models/RootStore";
-import { useRef } from "react";
-import { ThemeProvider } from "next-themes";
+
 import {
   ApolloProvider,
   ApolloClient,
@@ -19,8 +11,9 @@ import {
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { setContext } from "@apollo/client/link/context";
 import { createClient } from "graphql-ws";
-import { getAccessToken } from "./_utils/tokenAccessor";
 import { getMainDefinition } from "@apollo/client/utilities";
+import { getAccessToken } from "@/_utils/tokenAccessor";
+import { ReactNode } from "react";
 
 const authMiddleware = setContext(async (_, { headers }) => {
   const token = await getAccessToken();
@@ -67,37 +60,15 @@ const link =
       )
     : httpLink;
 
-const PageClient: React.FC = () => {
-  const store = useRef<RootInstance>(initializeStore());
+type Props = {
+  children: ReactNode;
+};
 
+export const ApolloWrapper: React.FC<Props> = ({ children }) => {
   const client = new ApolloClient({
     link: concat(authMiddleware, link),
     cache: new InMemoryCache(),
   });
 
-  return (
-    <ApolloProvider client={client}>
-      <ThemeProvider enableSystem={true} attribute="class">
-        {store && (
-          <Provider value={store.current}>
-            <div className="flex w-full h-screen">
-              <div className="flex h-screen z-100">
-                <SidebarLeft />
-                <CompactSideBar />
-                <AdvancedPrompt />
-              </div>
-              <div className="w-full max-h-screen flex-1 flex flex-col">
-                <div className="flex-shrink-0 flex-0">
-                  <Header />
-                </div>
-                <ChatContainer />
-              </div>
-            </div>
-          </Provider>
-        )}
-      </ThemeProvider>
-    </ApolloProvider>
-  );
+  return <ApolloProvider client={client}>{children}</ApolloProvider>;
 };
-
-export default withAnalytics(PageClient);
