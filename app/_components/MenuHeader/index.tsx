@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Popover, Transition } from "@headlessui/react";
 import { Fragment } from "react";
@@ -7,25 +6,6 @@ import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
 type Props = {
   onLogOutClick: () => void;
 };
-
-const menu = [
-  {
-    icon: "ic_api.svg",
-    title: "API",
-  },
-  {
-    icon: "ic_dashboard.svg",
-    title: "Dashboard",
-  },
-  {
-    icon: "ic_billing.svg",
-    title: "Billing",
-  },
-  {
-    icon: "ic_member.svg",
-    title: "Members",
-  },
-];
 
 export const MenuHeader: React.FC<Props> = ({ onLogOutClick }) => {
   const { user } = useGetCurrentUser();
@@ -52,23 +32,6 @@ export const MenuHeader: React.FC<Props> = ({ onLogOutClick }) => {
           <span className="text-[#6B7280] leading-[17.5px] text-sm">
             {user.email}
           </span>
-        </div>
-        <hr />
-        <div className="flex flex-col py-3 px-[15px]">
-          <ul className="flex flex-col gap-4">
-            {menu.map((item, index) => (
-              <li key={index} className="flex gap-2 items-center">
-                <Image
-                  className="rounded"
-                  src={`/icons/${item.icon}`}
-                  width={28}
-                  height={28}
-                  alt=""
-                />
-                <span className="text-gray-600 text-base">{item.title}</span>
-              </li>
-            ))}
-          </ul>
         </div>
         <hr />
         <button

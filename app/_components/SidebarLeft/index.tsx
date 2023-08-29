@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import SearchBar from "../SearchBar";
 import ShortcutList from "../ShortcutList";
 import HistoryList from "../HistoryList";
-import HistoryEmpty from "../HistoryEmpty";
 import { observer } from "mobx-react-lite";
 import { useStore } from "@/_models/RootStore";
 import Image from "next/image";
@@ -37,8 +36,6 @@ export const SidebarLeft: React.FC = observer(() => {
       createConversationAndActive();
     }
   }, [user]);
-
-  const showHistoryList = historyStore.conversations.length > 0;
 
   const onLogoClick = () => {
     historyStore.clearActiveConversationId();
@@ -91,11 +88,7 @@ export const SidebarLeft: React.FC = observer(() => {
                 />
               </div>
             )}
-            {showHistoryList ? (
-              <HistoryList searchText={searchText} />
-            ) : (
-              <HistoryEmpty />
-            )}
+            <HistoryList searchText={searchText} />
           </div>
         </div>
       </div>

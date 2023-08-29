@@ -2,7 +2,6 @@ import SendButton from "../SendButton";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useStore } from "@/_models/RootStore";
 import { AiModelType } from "@/_models/Product";
-import ActionButton from "../ActionButton";
 import Image from "next/image";
 import { observer } from "mobx-react-lite";
 import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
@@ -22,7 +21,6 @@ type Props = {
 export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
   const { historyStore } = useStore();
   const [text, setText] = useState(prefillPrompt);
-  const [promptGenerating, setPromptGenerating] = useState(false);
   const { user } = useGetCurrentUser();
   const { signInWithKeyCloak } = useSignIn();
 
@@ -34,24 +32,12 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
     GenerateImageDocument
   );
 
-  const shouldShowEnhanceButton =
-    historyStore.getActiveConversation()?.product.type ===
-      AiModelType.GenerativeArt ?? false;
-
   useEffect(() => {
     setText(prefillPrompt);
   }, [prefillPrompt]);
 
   const handleMessageChange = (event: any) => {
     setText(event.target.value);
-  };
-
-  const onEnhanceClick = () => {
-    // setPromptGenerating(true);
-  };
-
-  const onRandomClick = () => {
-    // setPromptGenerating(true);
   };
 
   const onSubmitClick = () => {
@@ -145,26 +131,7 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
             <span className="text-sm leading-5 text-gray-600">Advanced</span>
           </button>
         )}
-        <div className="flex justify-end items-center space-x-1 w-full pr-3">
-          {shouldShowEnhanceButton ? (
-            <>
-              {text !== "" && !promptGenerating && (
-                <ActionButton
-                  icon={"/icons/ic_enhance.svg"}
-                  title={"Enhance"}
-                  isLoading={promptGenerating}
-                  onClick={onEnhanceClick}
-                />
-              )}
-              <ActionButton
-                icon={"/icons/ic_random.svg"}
-                title={"Random"}
-                isLoading={promptGenerating}
-                onClick={onRandomClick}
-              />
-            </>
-          ) : undefined}
-        </div>
+        <div className="flex justify-end items-center space-x-1 w-full pr-3" />
         <div className="flex-shrink-0">
           {!shouldShowAdvancedPrompt && (
             <SendButton

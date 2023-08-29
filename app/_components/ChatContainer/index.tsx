@@ -13,7 +13,6 @@ import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
 import {
   DeleteConversationMutation,
   DeleteConversationDocument,
-  DeleteConversationMutationVariables,
 } from "@/graphql";
 import { useMutation } from "@apollo/client";
 
