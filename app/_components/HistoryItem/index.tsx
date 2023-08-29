@@ -1,4 +1,4 @@
-import { AiModelType } from "@/_models/AiModel";
+import { AiModelType } from "@/_models/Product";
 import { useStore } from "@/_models/RootStore";
 import { observer } from "mobx-react-lite";
 import React from "react";

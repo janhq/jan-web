@@ -1,7 +1,7 @@
 import { Instance, castToSnapshot, flow, types } from "mobx-state-tree";
 import { Conversation } from "./Conversation";
-import { Product, AiModelType } from "./AiModel";
-import { User } from "./User";
+import { Product, AiModelType } from "./Product";
+import { User } from "../_models/User";
 import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
 import { MESSAGE_PER_PAGE } from "../_utils/const";
 import { controlNetRequest } from "@/_services/controlnet";

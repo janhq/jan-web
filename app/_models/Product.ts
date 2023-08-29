@@ -8,16 +8,6 @@ export enum AiModelType {
   ControlNet = "ControlNet",
 }
 
-export const PromptModel = types.model("Prompt", {
-  id: types.number,
-  createdAt: types.string,
-  updatedAt: types.maybeNull(types.string),
-  deletedAt: types.maybeNull(types.string),
-  slug: types.string,
-  content: types.string,
-  imageUrl: types.maybeNull(types.string),
-});
-
 export const Product = types.model("Product", {
   id: types.string, // TODO change to slug
   name: types.string,

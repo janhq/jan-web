@@ -1,5 +1,5 @@
 // Should change name to Product after we remove the old one
-import { AiModelType } from "./AiModel";
+import { AiModelType } from "../_models/Product";
 
 export interface Collection {
   id: number;

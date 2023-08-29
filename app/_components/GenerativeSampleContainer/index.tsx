@@ -1,5 +1,5 @@
 import JanWelcomeTitle from "../JanWelcomeTitle";
-import { Product } from "@/_models/AiModel";
+import { Product } from "@/_models/Product";
 import { Instance } from "mobx-state-tree";
 import { GetProductPromptsQuery, GetProductPromptsDocument } from "@/graphql";
 import { useQuery } from "@apollo/client";

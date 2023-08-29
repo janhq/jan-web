@@ -5,9 +5,8 @@ import { ChatMessage, MessageType } from "@/_models/ChatMessage";
 import SimpleImageMessage from "../SimpleImageMessage";
 import SimpleTextMessage from "../SimpleTextMessage";
 import { Instance } from "mobx-state-tree";
-import animationData from "@/../public/lotties/typing.json";
 import { GenerativeSampleContainer } from "../GenerativeSampleContainer";
-import { AiModelType } from "@/_models/AiModel";
+import { AiModelType } from "@/_models/Product";
 import SampleLlmContainer from "@/_components/SampleLlmContainer";
 import SimpleControlNetMessage from "../SimpleControlNetMessage";
 import {
