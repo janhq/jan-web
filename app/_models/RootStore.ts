@@ -1,4 +1,3 @@
-"use client";
 import { createContext, useContext } from "react";
 import { Instance, types } from "mobx-state-tree";
 import { History } from "./History";
@@ -17,7 +16,6 @@ export const RootStore = types
       return values(self.historyStore.conversations);
     },
   }));
-
 
 export function initializeStore(): RootInstance {
   const _store: RootInstance = RootStore.create({});
