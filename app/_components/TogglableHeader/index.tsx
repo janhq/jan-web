@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 
 type Props = {
   icon: string;
@@ -21,13 +22,11 @@ const TogglableHeader: React.FC<Props> = ({
         {title}
       </span>
     </div>
-    <Image
-      className={`${!expand ? "rotate-180" : "rotate-0"}`}
-      src={"/icons/unicorn_angle-up.svg"}
-      width={24}
-      height={24}
-      alt=""
-    />
+    {expand ? (
+      <ChevronUpIcon width={24} height={24} />
+    ) : (
+      <ChevronDownIcon width={24} height={24} />
+    )}
   </button>
 );
 

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { ArrowSmallRightIcon } from "@heroicons/react/24/outline";
 
 type Props = {
   onClick: () => void;
@@ -16,12 +16,13 @@ const SendButton: React.FC<Props> = ({ onClick, disabled = false }) => {
 
   return (
     <button
+      disabled={disabled}
       onClick={onClick}
       style={disabled ? disabledStyle : enabledStyle}
       type="submit"
       className="p-2 gap-[10px] inline-flex items-center rounded-[12px] text-sm font-semibold shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
     >
-      <Image src={"/icons/ic_arrowright.svg"} width={24} height={24} alt="" />
+      <ArrowSmallRightIcon className="h-6 w-6" aria-hidden="true" />
     </button>
   );
 };

@@ -10,7 +10,9 @@
     "compile": "tsc --noEmit -p . --pretty",
     "configure": "op read op://Shared/WebDevelopmentEnv/.env > .env && op read op://Shared/WebDevelopmentFirebaseConfig/firebase_configs.json > app/_services/firebase/firebase_configs.json",
     "generate": "graphql-codegen --config codegen.ts",
-    "watch": "graphql-codegen -w"
+    "watch": "graphql-codegen -w",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@apollo/client": "^3.8.1",
@@ -54,8 +56,18 @@
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/client-preset": "4.1.0",
+    "@graphql-codegen/introspection": "4.0.0",
+    "@storybook/addon-essentials": "7.3.2",
+    "@storybook/addon-interactions": "7.3.2",
+    "@storybook/addon-links": "7.3.2",
+    "@storybook/addon-onboarding": "1.0.8",
+    "@storybook/blocks": "7.3.2",
+    "@storybook/nextjs": "7.3.2",
+    "@storybook/react": "7.3.2",
+    "@storybook/testing-library": "0.2.0",
     "@tailwindcss/forms": "^0.5.4",
     "encoding": "^0.1.13",
-    "@graphql-codegen/introspection": "4.0.0"
+    "eslint-plugin-storybook": "^0.6.13",
+    "storybook": "7.3.2"
   }
 }

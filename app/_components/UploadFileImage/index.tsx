@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { FieldValues, UseFormRegister } from "react-hook-form";
+import { PlusIcon } from "@heroicons/react/24/outline";
 
 type Props = {
   register: UseFormRegister<FieldValues>;
@@ -26,10 +27,6 @@ export const UploadFileImage: React.FC<Props> = ({ register }) => {
     event.preventDefault();
   };
 
-  const handleClick = () => {
-    ref.current?.click();
-  };
-
   const onSelectedFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
@@ -51,38 +48,37 @@ export const UploadFileImage: React.FC<Props> = ({ register }) => {
       className={`flex flex-col gap-[10px] py-3`}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
+      onClick={() => ref.current?.click()}
     >
-      {/* {image ? (
-        <div className="relative group">
-          <Image
-            style={{ width: "100%", height: "107px", objectFit: "cover" }}
-            src={image}
-            width={246}
-            height={104}
-            alt={fileName}
-          />
-          <div className="hidden justify-center items-center absolute top-0 left-0 w-full h-full group-hover:flex group-hover:bg-[rgba(255, 255, 255, 0.2)]">
-            <button onClick={handleDelete}>Delete</button>
-          </div>
-        </div>
-      ) : ( */}
-      <div
-        onClick={handleClick}
-        className="flex flex-col justify-center items-center py-5 px-2 gap-2 round-[2px] border border-dashed border-[#C8D0E0] rounded-sm"
-      >
-        {/* <Image src={"/icons/ic_plus.svg"} width={14} height={14} alt="" />
-          <span className="text-gray-700 font-normal text-sm">
-            Drag an image here, or click to select
-          </span> */}
+      <div className="relative flex flex-col justify-center items-center py-5 px-2 gap-2 round-[2px] border border-dashed border-[#C8D0E0] rounded-sm">
+        <PlusIcon width={14} height={14}/>
+        <span className="text-gray-700 font-normal text-sm">
+          Drag an image here, or click to select
+        </span>
         <input
+          className="opacity-0 absolute w-full h-full top-0 left-0"
           {...register("fileInput", { required: true })}
-          // ref={ref}
           type="file"
           onChange={onSelectedFile}
           accept="image/*"
         />
+        {image && (
+          <div className="absolute w-full h-full">
+            <div className="relative group">
+              <Image
+                style={{ width: "100%", height: "107px", objectFit: "cover" }}
+                src={image}
+                width={246}
+                height={104}
+                alt={fileName}
+              />
+              <div className="hidden justify-center items-center absolute top-0 left-0 w-full h-full group-hover:flex group-hover:bg-[rgba(255, 255, 255, 0.2)]">
+                <button onClick={handleDelete}>Delete</button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-      ){/* } */}
       <div
         className="flex gap-2 items-center cursor-pointer"
         onClick={() => setChecked(!checked)}

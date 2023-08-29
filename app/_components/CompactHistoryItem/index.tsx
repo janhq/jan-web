@@ -1,4 +1,4 @@
-import { useStore } from "@/_models/RootStore";
+import { useStore } from "../../_models/RootStore";
 import Image from "next/image";
 import React from "react";
 

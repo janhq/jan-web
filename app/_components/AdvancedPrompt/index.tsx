@@ -5,6 +5,7 @@ import { useStore } from "@/_models/RootStore";
 import { observer } from "mobx-react-lite";
 import { MenuAdvancedPrompt } from "../MenuAdvancedPrompt";
 import { useForm } from "react-hook-form";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 export const AdvancedPrompt: React.FC = observer(() => {
   const { register, handleSubmit } = useForm();
@@ -27,13 +28,13 @@ export const AdvancedPrompt: React.FC = observer(() => {
       className={`${
         historyStore.showAdvancedPrompt ? "w-[288px]" : "hidden"
       } h-screen flex flex-col border-r border-gray-200`}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={(event) => event.preventDefault()}
     >
       <button
         onClick={onAdvancedPrompt}
         className="flex items-center mx-2 mt-3 mb-[10px] flex-none gap-1 text-xs leading-[18px] text-[#6B7280]"
       >
-        <Image src={"/icons/chevron-left.svg"} width={20} height={20} alt="" />
+        <ChevronLeftIcon width={20} height={20} />
         <span className="font-semibold text-gray-500 text-xs">
           BASIC PROMPT
         </span>

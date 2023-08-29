@@ -1,6 +1,6 @@
 import Image from "next/image";
 import GenerateImageCard from "../GenerateImageCard";
-import { ProductDetailFragment } from "@/graphql";
+import { ProductDetailFragment } from "../../../graphql/generated/graphql";
 
 type Props = {
   products: ProductDetailFragment[];

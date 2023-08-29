@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 type Props = {
   onClick: () => void;
@@ -11,12 +11,7 @@ const ShowMoreButton: React.FC<Props> = ({ onClick }) => (
     onClick={onClick}
   >
     Show more
-    <Image
-      src={"/icons/unicorn_angle-down.svg"}
-      width={16}
-      height={16}
-      alt=""
-    />
+    <ChevronDownIcon width={16} height={16} />
   </button>
 );
 

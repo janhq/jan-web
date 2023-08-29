@@ -1,7 +1,7 @@
 import React from "react";
-import { displayDate } from "@/_utils/datetime";
+import { displayDate } from "../../_utils/datetime";
 import { TextCode } from "../TextCode";
-import { getMessageCode } from "@/_utils/message";
+import { getMessageCode } from "../../_utils/message";
 
 type Props = {
   avatarUrl?: string;

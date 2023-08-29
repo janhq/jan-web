@@ -1,4 +1,4 @@
-import { displayDate } from "@/_utils/datetime";
+import { displayDate } from "../../_utils/datetime";
 import React from "react";
 
 type Props = {

@@ -3,7 +3,8 @@ import { useState } from "react";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import js from "react-syntax-highlighter/dist/esm/languages/hljs/javascript";
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import useGetModelApiInfo from "@/_hooks/useGetModelApiInfo";
+import useGetModelApiInfo from "../../_hooks/useGetModelApiInfo";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 SyntaxHighlighter.registerLanguage("javascript", js);
 
@@ -19,12 +20,7 @@ const ApiPane: React.FC = () => {
           onClick={() => setExpend(!expend)}
           className="flex items-center flex-none"
         >
-          <Image
-            src={"/icons/unicorn_angle-down.svg"}
-            width={24}
-            height={24}
-            alt=""
-          />
+          <ChevronDownIcon width={24} height={24} />
           <span>Request</span>
         </button>
         <div

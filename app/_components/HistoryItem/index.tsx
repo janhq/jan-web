@@ -4,7 +4,6 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 import JanImage from "../JanImage";
 import { displayDate } from "@/_utils/datetime";
-import Image from "next/image";
 
 type Props = {
   conversationId: string;
