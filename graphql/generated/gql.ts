@@ -16,13 +16,13 @@ const documents = {
     "fragment CollectionDetail on collections {\n  slug\n  name\n}": types.CollectionDetailFragmentDoc,
     "fragment ConversationDetail on conversations {\n  id\n  product_id\n  user_id\n  last_image_url\n  last_text_message\n  created_at\n  updated_at\n  conversation_product {\n    ...ProductDetail\n  }\n}": types.ConversationDetailFragmentDoc,
     "fragment MessageMedia on message_medias {\n  id\n  message_id\n  media_url\n  mime_type\n  updated_at\n}": types.MessageMediaFragmentDoc,
-    "fragment MessageDetail on messages {\n  id\n  conversation_id\n  sender\n  sender_name\n  sender_avatar_url\n  content\n  message_type\n  message_sender_type\n  created_at\n  updated_at\n  message_medias {\n    ...MessageMedia\n  }\n}": types.MessageDetailFragmentDoc,
+    "fragment MessageDetail on messages {\n  id\n  conversation_id\n  sender\n  sender_name\n  sender_avatar_url\n  content\n  message_type\n  message_sender_type\n  created_at\n  updated_at\n  status\n  message_medias {\n    ...MessageMedia\n  }\n}": types.MessageDetailFragmentDoc,
     "fragment ProductDetail on products {\n  id\n  name\n  slug\n  description\n  long_description\n  technical_description\n  image_url\n  author\n  greeting\n  source_url\n  version\n  inputs\n  outputs\n  nsfw\n}": types.ProductDetailFragmentDoc,
     "fragment PromptDetail on prompts {\n  slug\n  content\n  image_url\n}": types.PromptDetailFragmentDoc,
     "mutation createConversation($data: conversations_insert_input!) {\n  insert_conversations_one(object: $data) {\n    ...ConversationDetail\n  }\n}": types.CreateConversationDocument,
     "mutation createMessage($data: messages_insert_input!) {\n  insert_messages_one(object: $data) {\n    ...MessageDetail\n  }\n}": types.CreateMessageDocument,
     "mutation deleteConversation($id: uuid!) {\n  delete_conversations_by_pk(id: $id) {\n    id\n  }\n}": types.DeleteConversationDocument,
-    "mutation generateImage($model: String = \"\", $neg_prompt: String = \"\", $prompt: String = \"\", $seed: Int = 10, $steps: Int = 10) {\n  imageGeneration(\n    input: {model: $model, neg_prompt: $neg_prompt, prompt: $prompt, seed: $seed, steps: $steps}\n  ) {\n    url\n  }\n}": types.GenerateImageDocument,
+    "mutation generateImage($model: String = \"\", $neg_prompt: String = \"\", $prompt: String = \"\", $seed: Int = 10, $steps: Int = 10, $width: Int = 512, $height: Int = 512) {\n  imageGeneration(\n    input: {model: $model, neg_prompt: $neg_prompt, prompt: $prompt, seed: $seed, steps: $steps, width: $width, height: $height}\n  ) {\n    url\n  }\n}": types.GenerateImageDocument,
     "mutation updateConversation($id: uuid!, $lastMessageText: String, $lastMessageUrl: String) {\n  update_conversations_by_pk(\n    pk_columns: {id: $id}\n    _set: {last_text_message: $lastMessageText, last_image_url: $lastMessageUrl}\n  ) {\n    ...ConversationDetail\n  }\n}": types.UpdateConversationDocument,
     "mutation updateMessage($id: uuid = \"\", $data: messages_set_input!) {\n  update_messages_by_pk(pk_columns: {id: $id}, _set: $data) {\n    ...MessageDetail\n  }\n}": types.UpdateMessageDocument,
     "query getCollections {\n  collections {\n    ...CollectionDetail\n    collection_products {\n      products {\n        ...ProductDetail\n        product_prompts {\n          prompts {\n            ...PromptDetail\n          }\n        }\n      }\n    }\n  }\n}": types.GetCollectionsDocument,
@@ -64,7 +64,7 @@ export function gql(source: "fragment MessageMedia on message_medias {\n  id\n  
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "fragment MessageDetail on messages {\n  id\n  conversation_id\n  sender\n  sender_name\n  sender_avatar_url\n  content\n  message_type\n  message_sender_type\n  created_at\n  updated_at\n  message_medias {\n    ...MessageMedia\n  }\n}"): (typeof documents)["fragment MessageDetail on messages {\n  id\n  conversation_id\n  sender\n  sender_name\n  sender_avatar_url\n  content\n  message_type\n  message_sender_type\n  created_at\n  updated_at\n  message_medias {\n    ...MessageMedia\n  }\n}"];
+export function gql(source: "fragment MessageDetail on messages {\n  id\n  conversation_id\n  sender\n  sender_name\n  sender_avatar_url\n  content\n  message_type\n  message_sender_type\n  created_at\n  updated_at\n  status\n  message_medias {\n    ...MessageMedia\n  }\n}"): (typeof documents)["fragment MessageDetail on messages {\n  id\n  conversation_id\n  sender\n  sender_name\n  sender_avatar_url\n  content\n  message_type\n  message_sender_type\n  created_at\n  updated_at\n  status\n  message_medias {\n    ...MessageMedia\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -88,7 +88,7 @@ export function gql(source: "mutation deleteConversation($id: uuid!) {\n  delete
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "mutation generateImage($model: String = \"\", $neg_prompt: String = \"\", $prompt: String = \"\", $seed: Int = 10, $steps: Int = 10) {\n  imageGeneration(\n    input: {model: $model, neg_prompt: $neg_prompt, prompt: $prompt, seed: $seed, steps: $steps}\n  ) {\n    url\n  }\n}"): (typeof documents)["mutation generateImage($model: String = \"\", $neg_prompt: String = \"\", $prompt: String = \"\", $seed: Int = 10, $steps: Int = 10) {\n  imageGeneration(\n    input: {model: $model, neg_prompt: $neg_prompt, prompt: $prompt, seed: $seed, steps: $steps}\n  ) {\n    url\n  }\n}"];
+export function gql(source: "mutation generateImage($model: String = \"\", $neg_prompt: String = \"\", $prompt: String = \"\", $seed: Int = 10, $steps: Int = 10, $width: Int = 512, $height: Int = 512) {\n  imageGeneration(\n    input: {model: $model, neg_prompt: $neg_prompt, prompt: $prompt, seed: $seed, steps: $steps, width: $width, height: $height}\n  ) {\n    url\n  }\n}"): (typeof documents)["mutation generateImage($model: String = \"\", $neg_prompt: String = \"\", $prompt: String = \"\", $seed: Int = 10, $steps: Int = 10, $width: Int = 512, $height: Int = 512) {\n  imageGeneration(\n    input: {model: $model, neg_prompt: $neg_prompt, prompt: $prompt, seed: $seed, steps: $steps, width: $width, height: $height}\n  ) {\n    url\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

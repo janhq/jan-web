@@ -2,14 +2,8 @@ import React from "react";
 import { displayDate } from "@/_utils/datetime";
 import { TextCode } from "../TextCode";
 import { getMessageCode } from "@/_utils/message";
-import { useSubscription } from "@apollo/client";
-import {
-  SubscribeMessageDocument,
-  SubscribeMessageSubscription,
-} from "@/graphql";
 
 type Props = {
-  uuid?: string;
   avatarUrl?: string;
   senderName: string;
   createdAt: number;
@@ -17,26 +11,11 @@ type Props = {
 };
 
 const SimpleTextMessage: React.FC<Props> = ({
-  uuid,
   senderName,
   createdAt,
   avatarUrl = "",
   text = "",
 }) => {
-  // Becareful with subscription
-  // Should not subscribe for every single message
-  // TODO:
-  // Move this to child component. i.e. <CachedMessage> vs <StreamingMessage> (subscriptino right here)
-  // And update stored messaged here
-  const { data } = useSubscription<SubscribeMessageSubscription>(
-    SubscribeMessageDocument,
-    {
-      variables: {
-        id: uuid,
-      },
-    }
-  );
-
   return (
     <div className="flex items-start gap-2">
       <img
@@ -55,18 +34,18 @@ const SimpleTextMessage: React.FC<Props> = ({
             {displayDate(createdAt)}
           </div>
         </div>
-        {(data?.messages_by_pk?.content || text).includes("```") ? (
+        {text.includes("```") ? (
           getMessageCode(text).map((item, i) => (
             <div className="flex gap-1 flex-col" key={i}>
               <p className="leading-[20px] whitespace-break-spaces text-[14px] font-normal dark:text-[#d1d5db]">
-                {data?.messages_by_pk?.content || item.text}
+                {item.text}
               </p>
               {item.code.trim().length > 0 && <TextCode text={item.code} />}
             </div>
           ))
         ) : (
           <p className="leading-[20px] whitespace-break-spaces text-[14px] font-normal dark:text-[#d1d5db]">
-            {data?.messages_by_pk?.content || text}
+            {text}
           </p>
         )}
       </div>

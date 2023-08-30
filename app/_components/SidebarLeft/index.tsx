@@ -10,7 +10,11 @@ import { usePathname } from "next/navigation";
 import useGetUserConversations from "@/_hooks/useGetUserConversations";
 import DiscordContainer from "../DiscordContainer";
 import { useQuery } from "@apollo/client";
-import { GetProductsQuery, GetProductsDocument } from "@/graphql";
+import {
+  GetProductsQuery,
+  GetProductsDocument,
+  ProductDetailFragment,
+} from "@/graphql";
 import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
 
 export const SidebarLeft: React.FC = observer(() => {
@@ -18,6 +22,9 @@ export const SidebarLeft: React.FC = observer(() => {
   const [searchText, setSearchText] = useState("");
   const { user } = useGetCurrentUser();
   const { getUserConversations } = useGetUserConversations();
+  const [featuredProducts, setFeaturedProducts] = useState<
+    ProductDetailFragment[]
+  >([]);
 
   const { historyStore } = useStore();
   const navigation = ["pricing", "docs", "about"];
@@ -36,6 +43,21 @@ export const SidebarLeft: React.FC = observer(() => {
       createConversationAndActive();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (data?.products) {
+      setFeaturedProducts(
+        [...(data.products || [])]
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 3)
+          .filter(
+            (e) =>
+              searchText === "" ||
+              e.name.toLowerCase().includes(searchText.toLowerCase())
+          ) || []
+      );
+    }
+  }, [data?.products, searchText]);
 
   const onLogoClick = () => {
     historyStore.clearActiveConversationId();
@@ -64,20 +86,7 @@ export const SidebarLeft: React.FC = observer(() => {
             <SearchBar onTextChanged={onSearching} />
           </div>
           <div className="flex flex-col h-full overflow-x-hidden scroll gap-3">
-            {data && (
-              <ShortcutList
-                products={
-                  [...(data.products || [])]
-                    .sort(() => 0.5 - Math.random())
-                    .slice(0, 3)
-                    .filter(
-                      (e) =>
-                        searchText === "" ||
-                        e.name.toLowerCase().includes(searchText.toLowerCase())
-                    ) || []
-                }
-              />
-            )}
+            {data && <ShortcutList products={featuredProducts} />}
             {loading && (
               <div className="w-full flex flex-row justify-center items-center">
                 <Image

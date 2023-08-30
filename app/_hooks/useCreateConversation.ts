@@ -8,10 +8,12 @@ import { useStore } from "../_models/RootStore";
 import useGetCurrentUser from "./useGetCurrentUser";
 import { useMutation } from "@apollo/client";
 import { MessageSenderType, MessageType } from "@/_models/ChatMessage";
+import useSignIn from "./useSignIn";
 
 const useCreateConversation = () => {
   const { historyStore } = useStore();
   const { user } = useGetCurrentUser();
+  const { signInWithKeyCloak } = useSignIn();
   const [createConversation] = useMutation<CreateConversationMutation>(
     CreateConversationDocument
   );
@@ -21,6 +23,7 @@ const useCreateConversation = () => {
     forceCreate: boolean = false
   ) => {
     if (!user) {
+      signInWithKeyCloak();
       return;
     }
 

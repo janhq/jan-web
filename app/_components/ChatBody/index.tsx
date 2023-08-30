@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useStore } from "@/_models/RootStore";
 import { observer } from "mobx-react-lite";
-import { ChatMessage, MessageType } from "@/_models/ChatMessage";
+import { ChatMessage, MessageStatus, MessageType } from "@/_models/ChatMessage";
 import SimpleImageMessage from "../SimpleImageMessage";
 import SimpleTextMessage from "../SimpleTextMessage";
 import { Instance } from "mobx-state-tree";
@@ -15,6 +15,7 @@ import {
 } from "@/graphql";
 import { useLazyQuery } from "@apollo/client";
 import LoadingIndicator from "../LoadingIndicator";
+import StreamTextMessage from "../StreamTextMessage";
 
 type Props = {
   onPromptSelected: (prompt: string) => void;
@@ -113,7 +114,7 @@ export const ChatBody: React.FC<Props> = observer(({ onPromptSelected }) => {
             <div ref={refSmooth}>
               {convo?.isWaitingForModelResponse && (
                 <div className="w-[50px] h-[50px] px-2 flex flex-row items-start justify-start">
-                  <LoadingIndicator/>
+                  <LoadingIndicator />
                 </div>
               )}
             </div>
@@ -134,6 +135,7 @@ const renderItem = (
     createdAt,
     imageUrls,
     text,
+    status,
   }: Instance<typeof ChatMessage>
 ) => {
   switch (messageType) {
@@ -160,10 +162,18 @@ const renderItem = (
         />
       );
     case MessageType.Text:
-      return (
+      return status === MessageStatus.Ready ? (
         <SimpleTextMessage
-          uuid={id}
           key={index}
+          avatarUrl={senderAvatarUrl ?? "/icons/app_icon.svg"}
+          senderName={senderName}
+          createdAt={createdAt}
+          text={text}
+        />
+      ) : (
+        <StreamTextMessage
+          key={index}
+          id={id}
           avatarUrl={senderAvatarUrl ?? "/icons/app_icon.svg"}
           senderName={senderName}
           createdAt={createdAt}

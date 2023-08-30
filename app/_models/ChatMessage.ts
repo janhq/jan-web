@@ -13,6 +13,11 @@ export enum MessageSenderType {
   User = "User",
 }
 
+export enum MessageStatus {
+  Ready = "ready",
+  Pending = "pending",
+}
+
 export const ChatMessage = types
   .model("ChatMessage", {
     id: types.string,
@@ -25,5 +30,6 @@ export const ChatMessage = types
     text: types.maybe(types.string),
     imageUrls: types.maybe(types.array(types.string)),
     createdAt: types.number,
+    status: types.enumeration(Object.values(MessageStatus)),
   })
   .actions(withSetPropAction);
