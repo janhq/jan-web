@@ -77,6 +77,18 @@ Replace above configuration with your actual infrastructure.
 | [mobx-state-tree](https://mobx-state-tree.js.org/) | State management | ^5.1.8 |
 
 
+## Deploy to Netlify
+Clone this repository on own GitHub account and deploy to Netlify:
+
+[![Netlify Deploy button](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/janhq/jan-web)
+
+## Deploy to Vercel
+
+Deploy Jan Web on Vercel in one click:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/janhq/jan-web)
+
+
 ## Contributing
 
 Contributions are welcome! If you find a bug or have suggestions for improvements, feel free to open an issue or submit a pull request on the [GitHub repository](https://github.com/janhq/jan-web/tree/6337306c54e735a4a5c2132dcd1377f21fd76a33).
