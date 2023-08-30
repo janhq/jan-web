@@ -25,6 +25,8 @@ const StreamTextMessage: React.FC<Props> = ({
   text = "",
 }) => {
   const [textMessage, setTextMessage] = React.useState(text);
+  const [completedTyping, setCompletedTyping] = React.useState(false);
+  const tokenIndex = React.useRef(0);
   const { historyStore } = useStore();
   const { data } = useSubscription<SubscribeMessageSubscription>(
     SubscribeMessageDocument,
@@ -44,6 +46,25 @@ const StreamTextMessage: React.FC<Props> = ({
     }
     setTextMessage(data?.messages_by_pk?.content || text);
   }, [data, text]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    setCompletedTyping(false);
+
+    const stringResponse = data?.messages_by_pk?.content ?? text;
+
+    const intervalId = setInterval(() => {
+      setTextMessage(stringResponse.slice(0, tokenIndex.current));
+
+      tokenIndex.current++;
+
+      if (tokenIndex.current > stringResponse.length) {
+        clearInterval(intervalId);
+        setCompletedTyping(true);
+      }
+    }, 20);
+
+    return () => clearInterval(intervalId);
+  }, [data?.messages_by_pk?.content, text]);
 
   return textMessage.length > 0 ? (
     <div className="flex items-start gap-2">
