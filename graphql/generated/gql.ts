@@ -16,7 +16,7 @@ const documents = {
     "fragment CollectionDetail on collections {\n  slug\n  name\n}": types.CollectionDetailFragmentDoc,
     "fragment ConversationDetail on conversations {\n  id\n  product_id\n  user_id\n  last_image_url\n  last_text_message\n  created_at\n  updated_at\n  conversation_product {\n    ...ProductDetail\n  }\n}": types.ConversationDetailFragmentDoc,
     "fragment MessageMedia on message_medias {\n  id\n  message_id\n  media_url\n  mime_type\n  updated_at\n}": types.MessageMediaFragmentDoc,
-    "fragment MessageDetail on messages {\n  id\n  conversation_id\n  sender\n  sender_name\n  sender_avatar_url\n  content\n  message_type\n  message_sender_type\n  created_at\n  updated_at\n  message_medias {\n    ...MessageMedia\n  }\n}": types.MessageDetailFragmentDoc,
+    "fragment MessageDetail on messages {\n  id\n  conversation_id\n  sender\n  sender_name\n  sender_avatar_url\n  content\n  message_type\n  message_sender_type\n  created_at\n  updated_at\n  status\n  message_medias {\n    ...MessageMedia\n  }\n}": types.MessageDetailFragmentDoc,
     "fragment ProductDetail on products {\n  id\n  name\n  slug\n  description\n  long_description\n  technical_description\n  image_url\n  author\n  greeting\n  source_url\n  version\n  inputs\n  outputs\n  nsfw\n}": types.ProductDetailFragmentDoc,
     "fragment PromptDetail on prompts {\n  slug\n  content\n  image_url\n}": types.PromptDetailFragmentDoc,
     "mutation createConversation($data: conversations_insert_input!) {\n  insert_conversations_one(object: $data) {\n    ...ConversationDetail\n  }\n}": types.CreateConversationDocument,
@@ -64,7 +64,7 @@ export function gql(source: "fragment MessageMedia on message_medias {\n  id\n  
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "fragment MessageDetail on messages {\n  id\n  conversation_id\n  sender\n  sender_name\n  sender_avatar_url\n  content\n  message_type\n  message_sender_type\n  created_at\n  updated_at\n  message_medias {\n    ...MessageMedia\n  }\n}"): (typeof documents)["fragment MessageDetail on messages {\n  id\n  conversation_id\n  sender\n  sender_name\n  sender_avatar_url\n  content\n  message_type\n  message_sender_type\n  created_at\n  updated_at\n  message_medias {\n    ...MessageMedia\n  }\n}"];
+export function gql(source: "fragment MessageDetail on messages {\n  id\n  conversation_id\n  sender\n  sender_name\n  sender_avatar_url\n  content\n  message_type\n  message_sender_type\n  created_at\n  updated_at\n  status\n  message_medias {\n    ...MessageMedia\n  }\n}"): (typeof documents)["fragment MessageDetail on messages {\n  id\n  conversation_id\n  sender\n  sender_name\n  sender_avatar_url\n  content\n  message_type\n  message_sender_type\n  created_at\n  updated_at\n  status\n  message_medias {\n    ...MessageMedia\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

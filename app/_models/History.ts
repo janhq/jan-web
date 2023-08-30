@@ -2,7 +2,12 @@ import { Instance, castToSnapshot, flow, types } from "mobx-state-tree";
 import { Conversation } from "./Conversation";
 import { Product, AiModelType } from "./Product";
 import { User } from "../_models/User";
-import { ChatMessage, MessageSenderType, MessageType } from "./ChatMessage";
+import {
+  ChatMessage,
+  MessageSenderType,
+  MessageStatus,
+  MessageType,
+} from "./ChatMessage";
 import { MESSAGE_PER_PAGE } from "../_utils/const";
 import { controlNetRequest } from "@/_services/controlnet";
 
@@ -104,6 +109,10 @@ export const History = types
         self.showModelDetail = false;
       }
     },
+
+    finishActiveConversationWaiting() {
+      self.getActiveConversation()?.setWaitingForModelResponse(false);
+    },
   }))
   .actions((self) => {
     const fetchMoreMessages = flow(function* (
@@ -180,6 +189,7 @@ export const History = types
             senderName: m.sender_name ?? "",
             senderAvatarUrl: m.sender_avatar_url,
             text: m.content ?? "",
+            status: m.status as MessageStatus,
             imageUrls: imageUrls,
             createdAt: createdAt,
           })
@@ -252,7 +262,8 @@ export const History = types
           message_type: MessageType.Text,
           sender_avatar_url: conversation.product.avatarUrl,
           sender_name: conversation.product.name,
-          prompt_cache: latestMessages
+          prompt_cache: latestMessages,
+          status: MessageStatus.Pending,
         },
       };
       const result: FetchResult<CreateMessageMutation> = yield create({
@@ -277,10 +288,10 @@ export const History = types
         senderName: conversation.product.name,
         senderAvatarUrl: conversation.product.avatarUrl ?? "",
         text: "",
+        status: MessageStatus.Pending,
         createdAt: Date.now(),
       });
       conversation.addMessage(aiResponseMessage);
-      conversation.setWaitingForModelResponse(false);
     });
 
     const sendTextToImageMessage = flow(function* (
@@ -323,6 +334,7 @@ export const History = types
           message_type: MessageType.Image,
           sender_avatar_url: conversation.product.avatarUrl,
           sender_name: conversation.product.name,
+          status: MessageStatus.Ready,
           message_medias: {
             data: [
               {
@@ -358,6 +370,7 @@ export const History = types
         text: message,
         imageUrls: [imageUrl],
         createdAt: Date.now(),
+        status: MessageStatus.Ready,
       });
 
       conversation.addMessage(imageResponseMessage);
@@ -448,6 +461,7 @@ export const History = types
         text: message,
         imageUrls: [imageUrl],
         createdAt: Date.now(),
+        status: MessageStatus.Ready,
       });
       conversation.addMessage(chatMessage);
       conversation.setProp("lastTextMessage", message);
@@ -558,15 +572,13 @@ export const History = types
         senderAvatarUrl: avatarUrl,
         text: message,
         createdAt: Date.now(),
+        status: MessageStatus.Ready,
       });
       conversation.addMessage(userMesssage);
       conversation.setProp("lastTextMessage", message);
 
       if (conversation.product.type === AiModelType.LLM) {
-        yield self.sendTextToTextMessage(
-          create,
-          conversation
-        );
+        yield self.sendTextToTextMessage(create, conversation);
       } else if (conversation.product.type === AiModelType.GenerativeArt) {
         yield self.sendTextToImageMessage(
           create,
