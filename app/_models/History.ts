@@ -308,6 +308,8 @@ export const History = types
         neg_prompt: "",
         seed: Math.floor(Math.random() * 429496729),
         steps: 30,
+        width: 512,
+        height: 512,
       };
       const data: FetchResult<GenerateImageMutation> = yield generateImage({
         variables,

@@ -4,6 +4,8 @@ mutation generateImage(
   $prompt: String = ""
   $seed: Int = 10
   $steps: Int = 10
+  $width: Int = 512
+  $height: Int = 512
 ) {
   imageGeneration(
     input: {
@@ -12,6 +14,8 @@ mutation generateImage(
       prompt: $prompt
       seed: $seed
       steps: $steps
+      width: $width
+      height: $height
     }
   ) {
     url
