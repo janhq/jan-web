@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "Free AI Image Generator and Interact with Ai Chat - Jan.ai",
   description:
     "Create unique ai images or chat with open source AI models trained on various models. Run Open Source Ai Models on our GPUs, and make them accessible in one user-friendly app.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_WEB_URL || "https://jan.ai"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_WEB_URL || "https://cloud.jan.ai"),
   openGraph: {
     images: "/images/preview.jpg",
   },
