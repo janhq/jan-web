@@ -8,14 +8,11 @@ import Image from "next/image";
 
 const NewChatBlankState: React.FC = () => {
   // This can be achieved by separating queries using GetProductsByCollectionSlugQuery
-  const { loading, error, data } = useQuery<GetProductsQuery>(
-    GetProductsDocument,
-    {
-      variables: { slug: "conversational" },
-    }
-  );
+  const { loading, data } = useQuery<GetProductsQuery>(GetProductsDocument, {
+    variables: { slug: "conversational" },
+  });
 
-  const featured = [...(data?.products || [])]
+  const featured = [...(data?.products ?? [])]
     .sort(() => 0.5 - Math.random())
     .slice(0, 3);
 
@@ -24,14 +21,14 @@ const NewChatBlankState: React.FC = () => {
       e.product_collections.some((c) =>
         c.collections.some((s) => s.slug == "conversational")
       )
-    ) || [];
+    ) ?? [];
 
   const generativeArts =
     data?.products.filter((e) =>
       e.product_collections.some((c) =>
         c.collections.some((s) => s.slug == "text-to-image")
       )
-    ) || [];
+    ) ?? [];
 
   if (loading) {
     return (
@@ -39,6 +36,10 @@ const NewChatBlankState: React.FC = () => {
         <Image src="/icons/loading.svg" width={32} height={32} alt="loading" />
       </div>
     );
+  }
+
+  if (!data || data.products.length === 0) {
+    return <div></div>;
   }
 
   return (

@@ -1,8 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Bars3Icon } from "@heroicons/react/24/outline";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import MobileMenuPane from "../MobileMenuPane";
 import ConfirmSignOutModal from "../ConfirmSignOutModal";
 import useSignOut from "@/_hooks/useSignOut";
@@ -11,15 +9,7 @@ import UserProfileDropDown from "../UserProfileDropDown";
 import useSignIn from "@/_hooks/useSignIn";
 import useGetCurrentUser from "@/_hooks/useGetCurrentUser";
 
-export const navigation = [
-  { name: "Products", href: "/" },
-  { name: "Pricing", href: "/pricing" },
-  { name: "Docs", href: "/docs" },
-  { name: "About", href: "/about" },
-];
-
 const Header: React.FC = () => {
-  const router = usePathname();
   const { signInWithKeyCloak } = useSignIn();
   const { user, loading } = useGetCurrentUser();
   const { signOut } = useSignOut();
@@ -27,32 +17,13 @@ const Header: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLogOutModal, setShowLogOutModal] = useState(false);
 
-  const checkLink = (link: string, router: string) => {
-    return link.includes(router);
-  };
-
   return (
     <header
       id="header"
       className="text-sm bg-white border-b-[1px] border-gray-200 relative w-full py-3 px-6 dark:bg-gray-800"
     >
       <nav className="mx-auto flex items-center" aria-label="Global">
-        <div className="flex items-center flex-1 justify-center">
-          {navigation.map((item) => (
-            <div
-              key={item.name}
-              className={`px-3 py-1 flex gap-2 rounded-lg ${
-                checkLink(router ?? "", item.href)
-                  ? "bg-[#E5E7EB] text-[#1F2A37]"
-                  : "text-[#9CA3AF] bg-transparent"
-              }`}
-            >
-              <Link href={item.href} className="text-sm leading-5">
-                {item.name}
-              </Link>
-            </div>
-          ))}
-        </div>
+        <div className="flex items-center flex-1 justify-center" />
 
         <div className="hidden md:flex items-center gap-2">
           <ThemeChanger />
