@@ -9,7 +9,7 @@ on:
       - dev
 
 env:
-  PROJECT_KEY: janhq_jan-web_AYm6Za3wSUovpIEBeLCU
+  PROJECT_KEY: ${{ secrets.PROJECT_KEY }}
 
 jobs:
   test-lint:
