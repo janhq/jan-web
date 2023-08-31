@@ -44,7 +44,6 @@ const StreamTextMessage: React.FC<Props> = ({
     ) {
       historyStore.finishActiveConversationWaiting();
     }
-    setTextMessage(data?.messages_by_pk?.content || text);
   }, [data, text]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
