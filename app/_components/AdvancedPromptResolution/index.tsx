@@ -10,7 +10,7 @@ const AdvancedPromptResolution = () => {
   return (
     <>
       <TogglableHeader
-        icon={"/icons/unicorn_layers-alt.svg"}
+        icon={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/unicorn_layers-alt.svg`}
         title={"Resolution"}
         expand={expand}
         onTitleClick={() => setExpand(!expand)}

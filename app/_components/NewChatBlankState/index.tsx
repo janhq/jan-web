@@ -33,7 +33,7 @@ const NewChatBlankState: React.FC = () => {
   if (loading) {
     return (
       <div className="w-full flex flex-row justify-center items-center">
-        <Image src="/icons/loading.svg" width={32} height={32} alt="loading" />
+        <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/loading.svg`} width={32} height={32} alt="loading" />
       </div>
     );
   }

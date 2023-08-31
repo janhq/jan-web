@@ -12,7 +12,7 @@ const ShowMoreButton: React.FC<Props> = ({ onClick }) => (
   >
     Show more
     <Image
-      src={"/icons/unicorn_angle-down.svg"}
+      src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/unicorn_angle-down.svg`}
       width={16}
       height={16}
       alt=""

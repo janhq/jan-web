@@ -21,7 +21,7 @@ const SendButton: React.FC<Props> = ({ onClick, disabled = false }) => {
       type="submit"
       className="p-2 gap-[10px] inline-flex items-center rounded-[12px] text-sm font-semibold shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
     >
-      <Image src={"/icons/ic_arrowright.svg"} width={24} height={24} alt="" />
+      <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/ic_arrowright.svg`} width={24} height={24} alt="" />
     </button>
   );
 };

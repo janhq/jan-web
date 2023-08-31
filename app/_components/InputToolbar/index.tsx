@@ -123,7 +123,7 @@ export const InputToolbar: React.FC<Props> = observer(({ prefillPrompt }) => {
             className="flex items-center gap-1 py-[1px]"
           >
             <Image
-              src={"/icons/ic_setting.svg"}
+              src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/ic_setting.svg`}
               width={20}
               height={20}
               alt=""

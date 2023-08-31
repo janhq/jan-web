@@ -8,7 +8,11 @@ type Props = {
 const CompactLogo: React.FC<Props> = ({ onClick }) => {
   return (
     <button onClick={onClick}>
-      <JanImage imageUrl="/icons/app_icon.svg" width={28} height={28} />
+      <JanImage
+        imageUrl={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/app_icon.svg`}
+        width={28}
+        height={28}
+      />
     </button>
   );
 };

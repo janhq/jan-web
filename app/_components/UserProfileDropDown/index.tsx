@@ -20,7 +20,10 @@ const UserProfileDropDown: React.FC<Props> = ({ onLogOutClick }) => {
         <Popover.Button className="flex items-center gap-2 outline-none">
           <img
             className="rounded-sm w-8 aspect-square"
-            src={user.avatarUrl ?? "/icons/app_icon.svg"}
+            src={
+              user.avatarUrl ??
+              `${process.env.NEXT_PUBLIC_BASE_PATH}/icons/app_icon.svg`
+            }
             alt=""
           />
           <div className="flex flex-col justify-start">

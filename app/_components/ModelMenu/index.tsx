@@ -19,17 +19,27 @@ const ModelMenu: React.FC<Props> = observer(
     return (
       <div className="flex items-center gap-3">
         <button onClick={onCreateConvClick}>
-          <Image src="/icons/unicorn_plus.svg" width={24} height={24} alt="" />
+          <Image
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/unicorn_plus.svg`}
+            width={24}
+            height={24}
+            alt=""
+          />
         </button>
         <button onClick={onDeleteClick}>
-          <Image src="/icons/unicorn_trash.svg" width={24} height={24} alt="" />
+          <Image
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/unicorn_trash.svg`}
+            width={24}
+            height={24}
+            alt=""
+          />
         </button>
         <button onClick={onModelInfoClick}>
           <Image
             src={
               historyStore.showModelDetail
-                ? "/icons/ic_sidebar_fill.svg"
-                : "/icons/ic_sidebar.svg"
+                ? `${process.env.NEXT_PUBLIC_BASE_PATH}/icons/ic_sidebar_fill.svg`
+                : `${process.env.NEXT_PUBLIC_BASE_PATH}/icons/ic_sidebar.svg`
             }
             width={24}
             height={24}

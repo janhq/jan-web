@@ -20,7 +20,7 @@ const ApiPane: React.FC = () => {
           className="flex items-center flex-none"
         >
           <Image
-            src={"/icons/unicorn_angle-down.svg"}
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/unicorn_angle-down.svg`}
             width={24}
             height={24}
             alt=""
@@ -54,7 +54,7 @@ const ApiPane: React.FC = () => {
               }
             >
               <Image
-                src={"/icons/unicorn_clipboard-alt.svg"}
+                src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/unicorn_clipboard-alt.svg`}
                 width={24}
                 height={24}
                 alt=""

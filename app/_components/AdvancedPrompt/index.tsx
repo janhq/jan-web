@@ -39,7 +39,7 @@ export const AdvancedPrompt: React.FC = observer(() => {
         onClick={onAdvancedPrompt}
         className="flex items-center mx-2 mt-3 mb-[10px] flex-none gap-1 text-xs leading-[18px] text-[#6B7280]"
       >
-        <Image src={"/icons/chevron-left.svg"} width={20} height={20} alt="" />
+        <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/chevron-left.svg`} width={20} height={20} alt="" />
         <span className="font-semibold text-gray-500 text-xs">
           BASIC PROMPT
         </span>
@@ -50,7 +50,7 @@ export const AdvancedPrompt: React.FC = observer(() => {
       <div className="py-3 px-2 flex flex-none gap-3 items-center justify-between border-t border-gray-200">
         <button className="w-1/2 flex items-center text-gray-900 py-2 px-3 rounded-lg gap-1 justify-center bg-gray-100 text-sm leading-5">
           <Image
-            src={"/icons/unicorn_arrow-random.svg"}
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/unicorn_arrow-random.svg`}
             width={16}
             height={16}
             alt=""

@@ -9,7 +9,7 @@ type Props = {
 const ConversationalList: React.FC<Props> = ({ products }) => (
   <>
     <div className="flex items-center gap-3 mt-8 mb-2">
-      <Image src={"/icons/messicon.svg"} width={24} height={24} alt="" />
+      <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/messicon.svg`} width={24} height={24} alt="" />
       <span className="font-semibold text-gray-900 dark:text-white">
         Conversational
       </span>

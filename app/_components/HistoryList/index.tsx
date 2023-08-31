@@ -22,7 +22,7 @@ const HistoryList: React.FC<IHistoryListProps> = observer((props) => {
         </h2>
         <Image
           className={`${showHistory ? "" : "rotate-180"}`}
-          src={"/icons/unicorn_angle-up.svg"}
+          src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/unicorn_angle-up.svg`}
           width={24}
           height={24}
           alt=""

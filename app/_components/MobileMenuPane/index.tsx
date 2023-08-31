@@ -19,7 +19,7 @@ const MobileMenuPane: React.FC<Props> = ({ open, setOpen }) => (
             className="h-8 w-auto"
             width={32}
             height={32}
-            src="/icons/app_icon.svg"
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/app_icon.svg`}
             alt=""
           />
         </a>

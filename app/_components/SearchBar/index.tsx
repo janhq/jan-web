@@ -7,7 +7,7 @@ const SearchBar: React.FC<ISearchBarProps> = (props) => {
   return (
     <div className="relative mt-3 flex items-center w-full">
       <div className="absolute top-0 left-2 h-full flex items-center">
-        <Image src={"/icons/search.svg"} width={16} height={16} alt="" />
+        <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/search.svg`} width={16} height={16} alt="" />
       </div>
       <input
         type="text"

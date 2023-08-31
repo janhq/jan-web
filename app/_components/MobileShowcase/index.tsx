@@ -15,7 +15,7 @@ const MobileShowcase = () => {
       />
       <div className="flex flex-col items-center justify-center mb-20">
         <Image
-          src="/icons/app_icon.svg"
+          src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/app_icon.svg`}
           width={200}
           height={200}
           className="w-[10%]"
@@ -35,7 +35,7 @@ const MobileShowcase = () => {
           >
             <div className="flex box-border h-11 rounded-md bg-gray-300 p-2 items-center hover:bg-gray-200 focus:bg-gray-600">
               <Image
-                src="/icons/social_icon_apple.svg"
+                src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/social_icon_apple.svg`}
                 alt={""}
                 width={26}
                 height={26}
@@ -55,7 +55,7 @@ const MobileShowcase = () => {
           >
             <div className="flex box-border h-11 rounded-md bg-gray-300 p-2 items-center hover:bg-gray-200 focus:bg-gray-600">
               <Image
-                src="/icons/google_play_logo.svg"
+                src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/google_play_logo.svg`}
                 alt={""}
                 width={26}
                 height={26}

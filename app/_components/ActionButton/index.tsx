@@ -27,7 +27,7 @@ const ActionButton: React.FC<Props> = (props) => {
       {props.isLoading && (
         <div className="w-[80px] flex flex-row justify-center items-center">
           <Image
-            src="/icons/loading.svg"
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/loading.svg`}
             width={32}
             height={32}
             alt="loading"

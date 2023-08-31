@@ -143,7 +143,7 @@ const renderItem = (
       return (
         <SimpleControlNetMessage
           key={index}
-          avatarUrl={senderAvatarUrl ?? "/icons/app_icon.svg"}
+          avatarUrl={senderAvatarUrl ?? `${process.env.NEXT_PUBLIC_BASE_PATH}/icons/app_icon.svg`}
           senderName={senderName}
           createdAt={createdAt}
           imageUrls={imageUrls ?? []}
@@ -154,7 +154,7 @@ const renderItem = (
       return (
         <SimpleImageMessage
           key={index}
-          avatarUrl={senderAvatarUrl ?? "/icons/app_icon.svg"}
+          avatarUrl={senderAvatarUrl ?? `${process.env.NEXT_PUBLIC_BASE_PATH}/icons/app_icon.svg`}
           senderName={senderName}
           createdAt={createdAt}
           imageUrls={imageUrls ?? []}
@@ -165,7 +165,7 @@ const renderItem = (
       return status === MessageStatus.Ready ? (
         <SimpleTextMessage
           key={index}
-          avatarUrl={senderAvatarUrl ?? "/icons/app_icon.svg"}
+          avatarUrl={senderAvatarUrl ?? `${process.env.NEXT_PUBLIC_BASE_PATH}/icons/app_icon.svg`}
           senderName={senderName}
           createdAt={createdAt}
           text={text}
@@ -174,7 +174,7 @@ const renderItem = (
         <StreamTextMessage
           key={index}
           id={id}
-          avatarUrl={senderAvatarUrl ?? "/icons/app_icon.svg"}
+          avatarUrl={senderAvatarUrl ?? `${process.env.NEXT_PUBLIC_BASE_PATH}/icons/app_icon.svg`}
           senderName={senderName}
           createdAt={createdAt}
           text={text}

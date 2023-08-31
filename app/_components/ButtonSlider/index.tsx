@@ -19,7 +19,7 @@ export const PrevButton: React.FC<PropType> = (props) => {
     >
       <Image
         className="rotate-180"
-        src={"/icons/chevron-right.svg"}
+        src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/chevron-right.svg`}
         width={20}
         height={20}
         alt=""
@@ -38,7 +38,7 @@ export const NextButton: React.FC<PropType> = (props) => {
       type="button"
       {...restProps}
     >
-      <Image src={"/icons/chevron-right.svg"} width={20} height={20} alt="" />
+      <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/chevron-right.svg`} width={20} height={20} alt="" />
       {children}
     </button>
   );

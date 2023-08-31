@@ -29,7 +29,7 @@ const HistoryItem: React.FC<Props> = observer(
 
     let rightImageUrl: string | undefined;
     if (conversation && conversation.isWaitingForModelResponse) {
-      rightImageUrl = "/icons/loading.svg";
+      rightImageUrl = `${process.env.NEXT_PUBLIC_BASE_PATH}/icons/loading.svg`;
     } else if (
       conversation &&
       conversation.product.type === AiModelType.GenerativeArt &&

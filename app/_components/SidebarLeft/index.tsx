@@ -77,8 +77,8 @@ export const SidebarLeft: React.FC = observer(() => {
       <div className="h-full flex grow flex-col overflow-hidden">
         <button className="p-3 flex gap-3" onClick={onLogoClick}>
           <div className="flex gap-[2px] items-center">
-            <Image src={"/icons/app_icon.svg"} width={28} height={28} alt="" />
-            <Image src={"/icons/Jan.svg"} width={27} height={12} alt="" />
+            <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/app_icon.svg`} width={28} height={28} alt="" />
+            <Image src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/Jan.svg`} width={27} height={12} alt="" />
           </div>
         </button>
         <div className="flex flex-col gap-3 overflow-x-hidden h-full">
@@ -90,7 +90,7 @@ export const SidebarLeft: React.FC = observer(() => {
             {loading && (
               <div className="w-full flex flex-row justify-center items-center">
                 <Image
-                  src="/icons/loading.svg"
+                  src={`${process.env.NEXT_PUBLIC_BASE_PATH}/icons/loading.svg`}
                   width={32}
                   height={32}
                   alt="loading"
