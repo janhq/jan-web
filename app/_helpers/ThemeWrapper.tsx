@@ -7,10 +7,9 @@ type Props = {
   children: ReactNode;
 };
 
-export const ThemeWrapper: React.FC<Props> = ({ children }) => {
-  return (
-    <ThemeProvider enableSystem={true} attribute="class">
-      {children}
-    </ThemeProvider>
-  );
-};
+// TODO: consider this one. This caused the error Warning: Extra attributes from the server: class,style at html
+export const ThemeWrapper: React.FC<Props> = ({ children }) => (
+  <ThemeProvider enableSystem={false} attribute="class">
+    {children}
+  </ThemeProvider>
+);
