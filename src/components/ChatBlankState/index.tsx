@@ -27,14 +27,18 @@ export const ChatBlankState: React.FC<Props> = ({ products }) => {
             ))}
           </div>
         </div>
-        <div className="flex gap-2 flex-col">
-          <TitleBlankState title="Generate artworks" />
-          <div className="flex gap-2">
-            {imageGeneratorProducts.map((item, index) => (
-              <ImageBlankState key={index} product={item} />
-            ))}
-          </div>
-        </div>
+        {imageGeneratorProducts.length > 0 && (
+          <>
+            <div className="flex gap-2 flex-col">
+              <TitleBlankState title="Generate artworks" />
+              <div className="flex gap-2">
+                {imageGeneratorProducts.map((item, index) => (
+                  <ImageBlankState key={index} product={item} />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

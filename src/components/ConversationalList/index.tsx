@@ -11,7 +11,7 @@ const ConversationalList: React.FC<IConversational> = (props) => {
     <div>
       <div className="flex items-center gap-3 mt-4 mb-2">
         <Image src={"/icons/messicon.svg"} width={24} height={24} alt="" />
-        <span className="font-bold text-gray-900">Conversational</span>
+        <span className="mt-2 font-bold text-gray-900">Conversational</span>
       </div>
       <div className="flex gap-2 items-stretch mt-4 flex-wrap">
         {props.products.map((item, index) => (

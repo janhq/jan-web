@@ -1,7 +1,6 @@
 "use client";
 import { Slider } from "@/components";
 import ConversationalList from "@/components/ConversationalList";
-import GenerateImageList from "@/components/GenerateImageList";
 import { SpinnerCircularSplit } from "@/components/Indicators/SpinnerCircularSplit";
 import { withAnalytics } from "@/helpers/withAnalytics";
 import { ProductsProps } from "@/services/products";
@@ -30,9 +29,6 @@ const Discover: React.FC<ProductsProps> = (props) => {
           </div>
           <ConversationalList
             products={props.categories?.conversationals || []}
-          />
-          <GenerateImageList
-            products={props.categories?.generativeArts || []}
           />
         </>
       ) : (

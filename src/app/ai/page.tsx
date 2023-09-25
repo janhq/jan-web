@@ -11,14 +11,15 @@ export const metadata: Metadata = {
 
 const fetchServerSideProducts = async () => {
   "use server";
-  return fetchDiscoverShortcuts()
+  return fetchDiscoverShortcuts();
 };
 
 const AiPage = async ({}) => {
   const props = await fetchServerSideProducts();
   return (
-    <main className="container m-auto flex flex-col space-y-8">
+    <main className="h-screen container m-auto flex flex-col space-y-8">
       <Discover {...props} />
+      <div className='h-full'/>
       <Footer />
     </main>
   );

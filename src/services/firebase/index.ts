@@ -21,7 +21,7 @@ async function getFirebaseToken() {
     if (user) {
       return user.getIdToken();
     }
-    return null
+    return null;
   });
 }
 

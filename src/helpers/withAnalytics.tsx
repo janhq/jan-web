@@ -2,7 +2,7 @@
 import { ProductsProps } from "@/services/products";
 import useTracking from "@/utils/posthog";
 import Gleap from "gleap";
-import React, { useEffect } from "react";
+import React from "react";
 
 export function withAnalytics<P extends Record<string, any>>(
   Component: React.ComponentType<P>
